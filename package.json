@@ -9,7 +9,11 @@
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "lint": "bunx --bun eslint .",
-    "lint:fix": "bunx --bun eslint . --fix"
+    "lint:fix": "bunx --bun eslint . --fix",
+    "db": "bunx drizzle-kit",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:migrate": "bunx drizzle-kit migrate",
+    "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.6",
