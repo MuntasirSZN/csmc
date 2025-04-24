@@ -1,7 +1,5 @@
 'use client'
 
-/* eslint-disable-next-line unicorn/prefer-node-protocol */
-import process from 'process'
 import Script from 'next/script'
 import React from 'react'
 

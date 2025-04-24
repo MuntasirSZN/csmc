@@ -1,6 +1,6 @@
 import type { PluginOptions } from '@ducanh2912/next-pwa'
 import type { NextConfig } from 'next'
-import process from 'node:process'
+
 import withPWAInit from '@ducanh2912/next-pwa'
 import { createMDX } from 'fumadocs-mdx/next'
 

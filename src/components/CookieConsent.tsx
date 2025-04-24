@@ -65,12 +65,12 @@ export default function CookieConsent() {
     setShowPreferences(true)
   }
 
-  const handleToggle = (cookieType: boolean) => {
+  const handleToggle = (cookieType: string) => {
     if (cookieType === 'necessary')
       return // Can't toggle necessary cookies
     setCookiePreferences({
       ...cookiePreferences,
-      [cookieType]: !cookiePreferences[cookieType],
+      [cookieType]: !cookiePreferences[cookieType as keyof typeof cookiePreferences],
     })
   }
 
@@ -210,7 +210,7 @@ export default function CookieConsent() {
                         className="h-8 px-2"
                         onClick={() => handleToggle('functional')}
                       >
-                        {cookiePreferences.functional ? 'Enabled' : 'Disabled'}
+                        {cookiePreferences.functional === true ? 'Enabled' : 'Disabled'}
                       </Button>
                       <div
                         className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.functional ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}

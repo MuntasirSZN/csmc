@@ -5,14 +5,17 @@ import rehypeKatex from 'rehype-katex'
 import rehypeMermaid from 'rehype-mermaid'
 import remarkMath from 'remark-math'
 
-// Options: https://fumadocs.vercel.app/docs/mdx/collections#define-docs
-export const docs = defineDocs({
+export const blogs = defineDocs({
   dir: 'blogs',
+})
+
+export const contests = defineDocs({
+  dir: 'contests',
 })
 
 export default defineConfig({
   mdxOptions: {
     remarkPlugins: [remarkMath, remarkImage],
-    rehypePlugins: v => [rehypeKatex, rehypeCallouts, rehypeMermaid, ...v],
+    rehypePlugins: v => [rehypeKatex, rehypeMermaid, rehypeCallouts, ...v],
   },
 })

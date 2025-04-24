@@ -1,4 +1,4 @@
-import { blogs_source } from '@/lib/source'
+import { contests_source } from '@/lib/source'
 import { getMDXComponents } from '@/mdx-components'
 import { createRelativeLink } from 'fumadocs-ui/mdx'
 import {
@@ -13,7 +13,7 @@ export default async function Page(props: {
   params: Promise<{ slug?: string[] }>
 }) {
   const params = await props.params
-  const page = blogs_source.getPage(params.slug)
+  const page = contests_source.getPage(params.slug)
   if (!page)
     notFound()
 
@@ -27,7 +27,7 @@ export default async function Page(props: {
         <MDXContent
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(blogs_source, page),
+            a: createRelativeLink(contests_source, page),
           })}
         />
       </DocsBody>
@@ -36,14 +36,14 @@ export default async function Page(props: {
 }
 
 export async function generateStaticParams() {
-  return blogs_source.generateParams()
+  return contests_source.generateParams()
 }
 
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>
 }) {
   const params = await props.params
-  const page = blogs_source.getPage(params.slug)
+  const page = contests_source.getPage(params.slug)
   if (!page)
     notFound()
 

@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { db } from '@/lib/db'
 import { ContactSubmissions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'
@@ -45,12 +44,20 @@ export async function POST(request: Request) {
     const result = contactFormSchema.safeParse(body)
 
     if (!result.success) {
-      const formattedErrors = {}
+      const formattedErrors: Record<string, string> = {}
       const errors = result.error.format()
 
       Object.keys(errors).forEach((key) => {
-        if (key !== '_errors' && errors[key]?._errors?.length > 0) {
-          formattedErrors[key] = errors[key]._errors[0]
+        if (key !== '_errors' && key in errors) {
+          const fieldErrors = errors[key as keyof typeof errors]
+          // Fix: Check if fieldErrors is an object and has the _errors property
+          if (fieldErrors
+            && typeof fieldErrors === 'object'
+            && '_errors' in fieldErrors
+            && Array.isArray(fieldErrors._errors)
+            && fieldErrors._errors.length > 0) {
+            formattedErrors[key] = fieldErrors._errors[0]
+          }
         }
       })
 

@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import 'dotenv/config'
 

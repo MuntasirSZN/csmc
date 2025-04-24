@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { db } from '@/lib/db'
 import { NewsletterSubscriptions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'

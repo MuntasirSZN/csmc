@@ -7,10 +7,10 @@ export default antfu({
   plugins: {
     '@next/next': pluginNext,
   },
-
   rules: {
     ...pluginNext.configs.recommended.rules,
     ...pluginNext.configs['core-web-vitals'].rules,
+    'node/prefer-global/process': 'off',
   },
   ignores: [
     'public/**/*',

@@ -11,8 +11,7 @@ import {
   NavBody,
   NavItems,
 } from '@/components/ui/resizable-navbar'
-import { authClient } from '@/lib/auth-client'
-import { UserButton } from '@daveyplate/better-auth-ui'
+import { SignedIn, SignedOut, UserButton } from '@daveyplate/better-auth-ui'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -45,8 +44,6 @@ export default function NavBar() {
   const [visible, setVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
 
-  const { data } = authClient.useSession()
-
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY
@@ -78,16 +75,13 @@ export default function NavBar() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            {data
-              ? (
-                  <UserButton />
-                )
-              : (
-                  <>
-                    <NavbarButton variant="secondary">Sign In</NavbarButton>
-                    <NavbarButton variant="primary">Sign Up</NavbarButton>
-                  </>
-                )}
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <NavbarButton variant="secondary" href="/auth/sign-in">Sign In</NavbarButton>
+              <NavbarButton variant="primary" href="/auth/sign-up">Sign Up</NavbarButton>
+            </SignedOut>
           </div>
         </NavBody>
 
@@ -120,6 +114,7 @@ export default function NavBar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
+                href="/auth/sign-in"
               >
                 Sign In
               </NavbarButton>
@@ -127,6 +122,7 @@ export default function NavBar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
+                href="/auth/sign-up"
               >
                 Sign Up
               </NavbarButton>

@@ -1,5 +1,4 @@
 import type { NextRequest } from 'next/server'
-import process from 'node:process'
 import arcjet, { detectBot, shield, tokenBucket } from '@arcjet/next'
 import { NextResponse } from 'next/server'
 

@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 import { DocsLayout } from '@/components/layouts/docs'
-import { blogs_source } from '@/lib/source'
+import { contests_source } from '@/lib/source'
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
-      tree={blogs_source.pageTree}
+      tree={contests_source.pageTree}
       sidebar={{
         enabled: false,
       }}

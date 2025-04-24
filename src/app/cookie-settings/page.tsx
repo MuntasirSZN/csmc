@@ -22,7 +22,9 @@ export default function CookiePolicy() {
     marketing: false,
   })
 
-  const handleToggle = (cookieType: string) => {
+  type CookieType = keyof typeof cookiePreferences
+
+  const handleToggle = (cookieType: CookieType) => {
     if (cookieType === 'necessary')
       return // Can't toggle necessary cookies
     setCookiePreferences({
