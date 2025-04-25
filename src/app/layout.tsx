@@ -3,7 +3,7 @@ import CookieConsent from '@/components/CookieConsent'
 import NavBar from '@/components/navbar'
 import { Footer } from '@/components/ui/footer-section'
 import { Toaster } from '@/components/ui/sonner'
-import { RootProvider } from 'fumadocs-ui/provider'
+import { ThemeProvider } from 'next-themes'
 import { Fira_Code, Inter } from 'next/font/google'
 import { Providers } from './providers'
 import './global.css'
@@ -21,7 +21,12 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.className} ${firaCode.variable}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
-        <RootProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <Providers>
             <Toaster />
             <NavBar />
@@ -29,7 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             {children}
           </Providers>
           <Footer />
-        </RootProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

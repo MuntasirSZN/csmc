@@ -9,6 +9,8 @@ export default async function AuthPage({ params }: { params: Promise<{ pathname:
   const { pathname } = await params
 
   return (
-    <AuthView pathname={pathname} />
+    <div className="pt-15">
+      <AuthView pathname={pathname} />
+    </div>
   )
 }

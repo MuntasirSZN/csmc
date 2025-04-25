@@ -1,18 +1,19 @@
 'use client'
+
 import type { HTMLAttributes } from 'react'
+import { cn } from '@/lib/utils'
 import { cva } from 'class-variance-authority'
 import { Airplay, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useLayoutEffect, useState } from 'react'
-import { cn } from '../../lib/cn'
 
 const itemVariants = cva(
-  'size-6.5 rounded-full p-1.5 text-fd-muted-foreground',
+  'size-6.5 rounded-full p-1.5 text-muted-foreground',
   {
     variants: {
       active: {
-        true: 'bg-fd-accent text-fd-accent-foreground',
-        false: 'text-fd-muted-foreground',
+        true: 'bg-accent text-accent-foreground',
+        false: 'text-muted-foreground',
       },
     },
   },

@@ -103,7 +103,7 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-primary" />
               </div>
               <h3 className="mb-2 font-medium">Email</h3>
-              <p className="text-sm text-muted-foreground">hmccs36@yahoo.com</p>
+              <p className="text-sm text-muted-foreground">csmc24.24@gmail.com</p>
             </CardContent>
           </Card>
 

@@ -1,10 +1,10 @@
 'use client'
 
 import type { ChangeEvent, FormEvent } from 'react'
-import { ThemeToggle } from '@/components/layout/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import {
   Tooltip,
   TooltipContent,
@@ -102,9 +102,6 @@ function Footer() {
               <Link href="/contests" className="block transition-colors hover:text-primary">
                 Contests
               </Link>
-              <Link href="/blogs" className="block transition-colors hover:text-primary">
-                Blogs
-              </Link>
               <Link href="/contact" className="block transition-colors hover:text-primary">
                 Contact
               </Link>
@@ -116,7 +113,7 @@ function Footer() {
               <p>Ice Factory Road, Sadarghat</p>
               <p>Chattogram, Bangladesh</p>
               <p>Phone: 031-2863055</p>
-              <p>Email: hmccs36@yahoo.com</p>
+              <p>Email: csmc24.24@gmail.com</p>
             </address>
           </div>
           <div className="relative">
@@ -125,9 +122,11 @@ function Footer() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Facebook className="h-4 w-4" />
-                      <span className="sr-only">Facebook</span>
+                    <Button variant="outline" size="icon" className="rounded-full cursor-pointer">
+                      <Link href="https://www.facebook.com/collegiateschoolmathclub">
+                        <Facebook className="h-4 w-4" />
+                        <span className="sr-only">Facebook</span>
+                      </Link>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

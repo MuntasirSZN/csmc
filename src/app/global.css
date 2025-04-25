@@ -1,8 +1,4 @@
 @import 'tailwindcss';
-@import 'fumadocs-ui/css/dusk.css';
-@import 'fumadocs-ui/css/preset.css';
-@import 'katex/dist/katex.css';
-@import 'rehype-callouts/theme/obsidian';
 @source "../../node_modules/@daveyplate/better-auth-ui";
 @import 'tw-animate-css';
 
