@@ -84,7 +84,7 @@ function Footer() {
                 disabled={isSubmitting}
                 className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
               >
-                <Send className={`h-4 w-4 ${isSubmitting ? 'animate-pulse' : ''}`} />
+                <Send className={`h-4 w-4 cursor-pointer ${isSubmitting ? 'animate-pulse' : ''}`} />
                 <span className="sr-only">Subscribe</span>
               </Button>
             </form>

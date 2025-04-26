@@ -15,6 +15,13 @@
       "when": 1745227710367,
       "tag": "0001_yellow_microchip",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745657915041,
+      "tag": "0002_chunky_thor_girl",
+      "breakpoints": true
     }
   ]
 }

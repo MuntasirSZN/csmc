@@ -75,8 +75,8 @@ export default function NavBar() {
               <UserButton />
             </SignedIn>
             <SignedOut>
-              <NavbarButton variant="secondary" href="/auth/sign-in">Sign In</NavbarButton>
-              <NavbarButton variant="primary" href="/auth/sign-up">Sign Up</NavbarButton>
+              <NavbarButton variant="primary" href="/auth/sign-in">Sign In</NavbarButton>
+              <NavbarButton variant="gradient" href="/auth/sign-up">Sign Up</NavbarButton>
             </SignedOut>
           </div>
         </NavBody>
@@ -106,22 +106,27 @@ export default function NavBar() {
               </Link>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-                href="/auth/sign-in"
-              >
-                Sign In
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-                href="/auth/sign-up"
-              >
-                Sign Up
-              </NavbarButton>
+              <SignedIn>
+                <UserButton size="full" />
+              </SignedIn>
+              <SignedOut>
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                  href="/auth/sign-in"
+                >
+                  Sign In
+                </NavbarButton>
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="gradient"
+                  className="w-full"
+                  href="/auth/sign-up"
+                >
+                  Sign Up
+                </NavbarButton>
+              </SignedOut>
             </div>
           </MobileNavMenu>
         </MobileNav>

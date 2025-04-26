@@ -19,6 +19,10 @@ export function Providers({ children }: { children: ReactNode }) {
         router.refresh()
       }}
       Link={Link}
+      colorIcons
+      passkey
+      rememberMe
+      avatar
     >
       {children}
     </AuthUIProvider>

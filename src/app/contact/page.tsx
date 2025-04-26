@@ -87,7 +87,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container py-12 mt-10">
+    <div className="container py-12 pt-25 mx-auto">
       <div className="mx-auto max-w-5xl space-y-12">
         <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight">Get in Touch</h1>
@@ -129,9 +129,9 @@ export default function ContactPage() {
         </div>
 
         <Card className="overflow-hidden border-none shadow-lg">
-          <CardContent className="p-0">
+          <CardContent className="p-5">
             <div className="grid md:grid-cols-2">
-              <div className="bg-muted p-8 md:p-10">
+              <div className="bg-muted p-8 md:p-10 rounded-sm">
                 <div className="space-y-4">
                   <h2 className="text-2xl font-semibold tracking-tight">Contact Form</h2>
                   <p className="text-muted-foreground">

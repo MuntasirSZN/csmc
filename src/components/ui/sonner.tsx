@@ -12,6 +12,7 @@ function Toaster({ ...props }: ToasterProps) {
       theme={theme as ToasterProps['theme']}
       className="toaster group"
       richColors
+      closeButton
       style={
         {
           '--normal-bg': 'var(--popover)',
