@@ -16,6 +16,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs'
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -171,7 +172,7 @@ export default function AboutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {foundingTeamMembers.map(member => (
                     <div key={member.id} className="flex items-center p-3 rounded-lg border">
-                      <img
+                      <Image
                         src={member.image}
                         alt={member.name}
                         className="h-12 w-12 rounded-full mr-4 object-cover"
