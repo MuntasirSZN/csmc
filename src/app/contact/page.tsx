@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Mail, MapPinIcon, PhoneIcon } from 'lucide-react'
+import { parseAsString, useQueryStates } from 'nuqs'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -22,12 +23,15 @@ interface FormErrors {
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    message: '',
-  })
+  const [formData, setFormData] = useQueryStates(
+    {
+      firstName: parseAsString.withDefault(''),
+      lastName: parseAsString.withDefault(''),
+      email: parseAsString.withDefault(''),
+      message: parseAsString.withDefault(''),
+    },
+    { history: 'replace' },
+  )
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target

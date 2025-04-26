@@ -118,7 +118,4 @@
   body {
     @apply bg-background text-foreground;
   }
-  code {
-    font-family: var(--font-fira-code);
-  }
 }

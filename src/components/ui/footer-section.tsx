@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/tooltip'
 import { Facebook, Instagram, Linkedin, Send, Twitter } from 'lucide-react'
 import Link from 'next/link'
+import { useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 function Footer() {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useQueryState('email', { defaultValue: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -187,15 +188,15 @@ function Footer() {
             © 2025 CSMC. All rights reserved.
           </p>
           <nav className="flex gap-4 text-sm">
-            <a href="/privacy-policy" className="transition-colors hover:text-primary">
+            <Link href="/privacy-policy" className="transition-colors hover:text-primary">
               Privacy Policy
-            </a>
-            <a href="/terms-and-conditions" className="transition-colors hover:text-primary">
+            </Link>
+            <Link href="/terms-and-conditions" className="transition-colors hover:text-primary">
               Terms of Service
-            </a>
-            <a href="/cookie-settings" className="transition-colors hover:text-primary">
+            </Link>
+            <Link href="/cookie-settings" className="transition-colors hover:text-primary">
               Cookie Settings
-            </a>
+            </Link>
           </nav>
         </div>
       </div>

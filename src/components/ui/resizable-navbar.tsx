@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { IconMenu2, IconX } from '@tabler/icons-react'
+import { Menu, X } from 'lucide-react'
 import {
   AnimatePresence,
   motion,
@@ -9,6 +9,7 @@ import {
 } from 'motion/react'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 
 interface NavbarProps {
@@ -125,7 +126,7 @@ export function NavItems({ items, className, onItemClick }: NavItemsProps) {
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
           className="relative px-4 py-2 text-neutral-600 dark:text-neutral-300"
@@ -139,7 +140,7 @@ export function NavItems({ items, className, onItemClick }: NavItemsProps) {
             />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </Link>
       ))}
     </motion.div>
   )
@@ -224,17 +225,17 @@ export function MobileNavToggle({
 }) {
   return isOpen
     ? (
-        <IconX className="text-black dark:text-white" onClick={onClick} />
+        <X className="text-black dark:text-white" onClick={onClick} />
       )
     : (
-        <IconMenu2 className="text-black dark:text-white" onClick={onClick} />
+        <Menu className="text-black dark:text-white" onClick={onClick} />
       )
 }
 
 export function NavbarLogo() {
   return (
-    <a
-      href="#"
+    <Link
+      href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
       <Image
@@ -244,7 +245,7 @@ export function NavbarLogo() {
         height={30}
       />
       <span className="font-medium text-black dark:text-white">CSMC</span>
-    </a>
+    </Link>
   )
 }
 
