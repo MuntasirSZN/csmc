@@ -42,8 +42,8 @@ export default function AboutPage() {
     },
     {
       id: 4,
-      name: 'Muntasir Muhmood',
-      designation: 'Founding IT Advisor',
+      name: 'Muntasir Mahmud',
+      designation: 'Founding IT Director',
       image: '/png-logos/android/mipmap-hdpi/logos.png',
     },
     {
@@ -72,13 +72,13 @@ export default function AboutPage() {
     },
     {
       id: 9,
-      name: 'Orbin Deb',
+      name: 'Arvin Deb',
       designation: 'Founding Executive Member',
       image: '/png-logos/android/mipmap-hdpi/logos.png',
     },
     {
       id: 10,
-      name: 'Ayman Safee',
+      name: 'Ayman Shafi',
       designation: 'Founding Executive Member',
       image: '/png-logos/android/mipmap-hdpi/logos.png',
     },
