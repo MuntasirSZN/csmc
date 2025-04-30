@@ -108,11 +108,11 @@ export default function Home() {
             Contest Highlights
           </h2>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0" id="carousel-prev">
+            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 cursor-pointer" id="carousel-prev">
               <ChevronRight className="rotate-180" size={16} />
               <span className="sr-only">Previous slide</span>
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0" id="carousel-next">
+            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 cursor-pointer" id="carousel-next">
               <ChevronRight size={16} />
               <span className="sr-only">Next slide</span>
             </Button>

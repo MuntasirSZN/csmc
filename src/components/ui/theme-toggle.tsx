@@ -1,6 +1,7 @@
 'use client'
 
 import type { HTMLAttributes } from 'react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { cva } from 'class-variance-authority'
 import { Airplay, Moon, Sun } from 'lucide-react'
@@ -48,11 +49,12 @@ export function ThemeToggle({
     const value = mounted ? resolvedTheme : null
 
     return (
-      <button
+      <Button
         className={container}
         aria-label="Toggle Theme"
         onClick={() => setTheme(value === 'light' ? 'dark' : 'light')}
         data-theme-toggle=""
+        variant="ghost"
         {...props}
       >
         {full.map(([key, Icon]) => {
@@ -68,7 +70,7 @@ export function ThemeToggle({
             />
           )
         })}
-      </button>
+      </Button>
     )
   }
 
@@ -77,14 +79,15 @@ export function ThemeToggle({
   return (
     <div className={container} data-theme-toggle="" {...props}>
       {full.map(([key, Icon]) => (
-        <button
+        <Button
+          variant="ghost"
           key={key}
           aria-label={key}
           className={cn(itemVariants({ active: value === key }))}
           onClick={() => setTheme(key)}
         >
           <Icon className="size-full" fill="currentColor" />
-        </button>
+        </Button>
       ))}
     </div>
   )
