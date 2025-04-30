@@ -1,8 +1,12 @@
-'use client'
-
+import type { Metadata } from 'next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+
+export const metadata: Metadata = {
+  title: 'Contests',
+  description: 'Contests held by CSMC.',
+}
 
 interface Contest {
   id: number

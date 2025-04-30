@@ -1,45 +1,22 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
+import type { Metadata } from 'next'
+import CookiePreferencesForm from '@/components/cookie-preferences-form'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
 import { CookieIcon } from 'lucide-react'
-import React, { useState } from 'react'
-import { toast } from 'sonner'
+
+export const metadata: Metadata = {
+  title: 'Cookie Settings',
+  description: 'All about cookies in CSMC page.',
+}
 
 export default function CookiePolicy() {
-  const [cookiePreferences, setCookiePreferences] = useState({
-    necessary: true, // Always enabled
-    functional: true,
-    analytics: true,
-    marketing: false,
-  })
-
-  type CookieType = keyof typeof cookiePreferences
-
-  const handleToggle = (cookieType: CookieType) => {
-    if (cookieType === 'necessary')
-      return // Can't toggle necessary cookies
-    setCookiePreferences({
-      ...cookiePreferences,
-      [cookieType]: !cookiePreferences[cookieType],
-    })
-  }
-
-  const handleSavePreferences = () => {
-    localStorage.setItem('cookiePreferences', JSON.stringify(cookiePreferences))
-    toast.success('Your cookie preferences have been saved.')
-  }
-
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl pt-15">
       <Card>
         <CardHeader>
           <div className="flex items-center space-x-2">
@@ -72,60 +49,7 @@ export default function CookiePolicy() {
 
           <div>
             <h2 className="text-xl font-semibold mb-2">Types of Cookies We Use</h2>
-
-            <div className="space-y-4 mt-4">
-              <div className="flex items-center justify-between p-4 border rounded-md">
-                <div>
-                  <h3 className="font-medium">Necessary Cookies</h3>
-                  <p className="text-sm text-muted-foreground">
-                    These cookies are essential for the website to function properly. They cannot be disabled.
-                  </p>
-                </div>
-                <Switch
-                  checked={cookiePreferences.necessary}
-                  disabled={true} // Necessary cookies can't be toggled
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-md">
-                <div>
-                  <h3 className="font-medium">Functional Cookies</h3>
-                  <p className="text-sm text-muted-foreground">
-                    These cookies enable the website to provide enhanced functionality and personalization.
-                  </p>
-                </div>
-                <Switch
-                  checked={cookiePreferences.functional}
-                  onCheckedChange={() => handleToggle('functional')}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-md">
-                <div>
-                  <h3 className="font-medium">Analytics Cookies</h3>
-                  <p className="text-sm text-muted-foreground">
-                    These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously.
-                  </p>
-                </div>
-                <Switch
-                  checked={cookiePreferences.analytics}
-                  onCheckedChange={() => handleToggle('analytics')}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-md">
-                <div>
-                  <h3 className="font-medium">Marketing Cookies</h3>
-                  <p className="text-sm text-muted-foreground">
-                    These cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging.
-                  </p>
-                </div>
-                <Switch
-                  checked={cookiePreferences.marketing}
-                  onCheckedChange={() => handleToggle('marketing')}
-                />
-              </div>
-            </div>
+            <CookiePreferencesForm />
           </div>
 
           <div>
@@ -142,15 +66,6 @@ export default function CookiePolicy() {
             </p>
           </div>
         </CardContent>
-
-        <CardFooter className="flex justify-between border-t pt-4">
-          <Button variant="outline" onClick={() => window.history.back()}>
-            Back
-          </Button>
-          <Button onClick={handleSavePreferences}>
-            Save Preferences
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   )

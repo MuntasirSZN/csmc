@@ -1,9 +1,12 @@
-'use client'
-
+import type { Metadata } from 'next'
+import NotFoundButton from '@/components/not-found-button'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+
+export const metadata: Metadata = {
+  title: '404 Page Not Found',
+  description: 'The page you are looking for doesn\'t exist or has been moved.',
+}
 
 interface NotFoundProps {
   title?: string
@@ -25,8 +28,6 @@ function NotFound({
   title = 'Page not found',
   description = 'Lost, this page is. In another system, it may be.',
 }: NotFoundProps) {
-  const router = useRouter()
-
   return (
     <div className="relative text-center z-[1] pt-52">
       <h1 className="mt-4 text-balance text-5xl font-semibold tracking-tight text-primary sm:text-7xl">
@@ -36,15 +37,7 @@ function NotFound({
         {description}
       </p>
       <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-y-3 gap-x-6">
-        <Button variant="secondary" className="group" onClick={() => router.back()}>
-          <ArrowLeft
-            className="me-2 ms-0 opacity-60 transition-transform group-hover:-translate-x-0.5"
-            size={16}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-          Go back
-        </Button>
+        <NotFoundButton />
         <Button className="-order-1 sm:order-none" asChild>
           <Link href="/">Take me home</Link>
         </Button>

@@ -1,5 +1,4 @@
-'use client'
-
+import type { Metadata } from 'next'
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,7 +17,11 @@ import {
 } from '@/components/ui/tabs'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'The team behind the scenes at CSMC.',
+}
 
 export default function AboutPage() {
   const foundingTeamMembers = [
@@ -176,6 +179,8 @@ export default function AboutPage() {
                         src={member.image}
                         alt={member.name}
                         className="h-12 w-12 rounded-full mr-4 object-cover"
+                        width="100"
+                        height="100"
                       />
                       <div>
                         <h4 className="font-medium">{member.name}</h4>

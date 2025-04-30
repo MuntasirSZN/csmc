@@ -1,6 +1,5 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
+import type { Metadata } from 'next'
+import HistoryBackButton from '@/components/history-back-button'
 import {
   Card,
   CardContent,
@@ -9,11 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'Terms And Conditions',
+  description: 'Terms and conditions at CSMC.',
+}
 
 export default function TermsAndConditions() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl pt-15">
       <Card>
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Terms and Conditions</CardTitle>
@@ -77,9 +80,7 @@ export default function TermsAndConditions() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-center border-t pt-4">
-          <Button variant="outline" onClick={() => window.history.back()}>
-            Back
-          </Button>
+          <HistoryBackButton />
         </CardFooter>
       </Card>
     </div>

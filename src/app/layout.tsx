@@ -1,5 +1,5 @@
+import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
-import { Metadata, Viewport } from 'next'
 import CookieConsent from '@/components/CookieConsent'
 import NavBar from '@/components/navbar'
 import { Footer } from '@/components/ui/footer-section'
@@ -7,96 +7,101 @@ import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from 'next-themes'
 import { Inter, Noto_Sans_Bengali } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { Suspense } from 'react'
+import Loading from './loading'
 import { Providers } from './providers'
 import './global.css'
 
 const inter = Inter({
   variable: '--font-inter',
+  subsets: ['latin'],
 })
 
 const noto_sans_bengali = Noto_Sans_Bengali({
   variable: '--font-noto-sans-bengali',
+  subsets: ['bengali'],
 })
 
 export const metadata: Metadata = {
   title: {
-    template: "Collegiate School Math Club | %s",
-    default: "Collegiate School Math Club",
+    template: '%s | Collegiate School Math Club',
+    default: 'Collegiate School Math Club',
   },
-  generator: "Next.js",
-  applicationName: "CSMC Website",
+  generator: 'Next.js',
+  applicationName: 'CSMC Website',
   keywords: [
-    "Next.js",
-    "React",
-    "JavaScript",
-    "Tailwindcss",
-    "TypeScript",
-    "Shadcn UI",
-    "Aceternity UI",
-    "Bun",
+    'Next.js',
+    'React',
+    'JavaScript',
+    'Tailwindcss',
+    'TypeScript',
+    'Shadcn UI',
+    'Aceternity UI',
+    'Bun',
   ],
-  authors: [{ name: "Muntasir", url: "https://muntasirmahmud.me" }, { name: "Kayef", url: "https://github.com/Nowazish-Nur-Kayef"  }],
-  creator: "Muntasir Mahmud And Nowazish Nur Kayef",
-  publisher: "Muntasir Mahmud And Nowazish Nur Kayef",
+  authors: [{ name: 'Muntasir', url: 'https://muntasirmahmud.me' }, { name: 'Kayef', url: 'https://github.com/Nowazish-Nur-Kayef' }],
+  creator: 'Muntasir Mahmud And Nowazish Nur Kayef',
+  publisher: 'Muntasir Mahmud And Nowazish Nur Kayef',
   formatDetection: {
     email: true,
     address: true,
     telephone: true,
   },
-  metadataBase: new URL("https://csmc.vercel.app"),
+  metadataBase: new URL('https://csmc.vercel.app'),
   robots: {
     index: true,
     follow: true,
   },
   appleWebApp: {
-    statusBarStyle: "black-translucent",
-    title: "Collegiate School Math Club",
+    statusBarStyle: 'black-translucent',
+    title: 'Collegiate School Math Club',
   },
   openGraph: {
-    title: "Collegiate School Math Club",
+    title: 'Collegiate School Math Club',
     description:
-      "Meet a new range of thinking with mathematics",
-    url: "https://csmc.vercel.app",
-    type: "website",
-    siteName: "CSMC",
+      'Meet a new range of thinking with mathematics',
+    url: 'https://csmc.vercel.app',
+    type: 'website',
+    siteName: 'CSMC',
   },
   twitter: {
-    site: "https://csmc.vercel.app",
-    creator: "Muntasir Mahmud And Nowazish Nur Kayef",
-    title: "Collegiate School Math Club",
+    site: 'https://csmc.vercel.app',
+    creator: 'Muntasir Mahmud And Nowazish Nur Kayef',
+    title: 'Collegiate School Math Club',
     description:
-      "Meet a new range of thinking with mathematics",
+      'Meet a new range of thinking with mathematics',
   },
-};
+}
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#c0caf5" },
-    { media: "(prefers-color-scheme: dark)", color: "#1f2335" },
+    { media: '(prefers-color-scheme: light)', color: '#c0caf5' },
+    { media: '(prefers-color-scheme: dark)', color: '#1f2335' },
   ],
-};
-
+}
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
-        <NuqsAdapter>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
-              <Toaster />
-              <NavBar />
-              <CookieConsent />
-              {children}
-            </Providers>
-            <Footer />
-          </ThemeProvider>
-        </NuqsAdapter>
+        <Suspense fallback={<Loading />}>
+          <NuqsAdapter>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Providers>
+                <Toaster />
+                <NavBar />
+                <CookieConsent />
+                {children}
+                <Footer />
+              </Providers>
+            </ThemeProvider>
+          </NuqsAdapter>
+        </Suspense>
       </body>
     </html>
   )

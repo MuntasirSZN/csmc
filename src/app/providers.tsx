@@ -23,6 +23,11 @@ export function Providers({ children }: { children: ReactNode }) {
       passkey
       rememberMe
       avatar
+      confirmPassword
+      deleteAccountVerification
+      emailVerification
+      providers={['github', 'google', 'facebook']}
+      twoFactor={['otp', 'totp']}
     >
       {children}
     </AuthUIProvider>

@@ -43,7 +43,7 @@ export default function Error({
         <CardFooter className="flex flex-col sm:flex-row gap-2">
           <Button
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto cursor-pointer"
             onClick={() => window.history.back()}
           >
             <MoveLeft className="mr-2 h-4 w-4" />

@@ -171,7 +171,7 @@ export default function CookieConsent() {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowPreferences(false)}
-                    className="h-8 w-8"
+                    className="h-8 w-8 cursor-pointer"
                   >
                     <X size={16} />
                   </Button>
@@ -278,13 +278,14 @@ export default function CookieConsent() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowPreferences(false)}
+                  className="cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   size="sm"
                   onClick={handleSavePreferences}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-primary hover:bg-primary/90 cursor-pointer"
                 >
                   Save Preferences
                 </Button>
