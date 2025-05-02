@@ -1,3 +1,9 @@
+/*
+ * The main layout. Its like a tree, first layout then the main
+ * content. Its like the top part and bottom part, middle part is
+ * the main content.
+ */
+
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import CookieConsent from '@/components/CookieConsent'

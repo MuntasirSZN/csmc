@@ -1,3 +1,7 @@
+/*
+ * 404 page (page not found). Works globally.
+ */
+
 import type { Metadata } from 'next'
 import NotFoundButton from '@/components/not-found-button'
 import { Button } from '@/components/ui/button'

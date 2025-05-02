@@ -1,3 +1,8 @@
+/*
+ * Privacy Policy page, link in footer.
+ * /privacy-policy
+ */
+
 import type { Metadata } from 'next'
 import HistoryBackButton from '@/components/history-back-button'
 import {

@@ -1,3 +1,8 @@
+/*
+ * The Terms And Conditions page. Link in footer.
+ * /terms-and-conditions
+ */
+
 import type { Metadata } from 'next'
 import HistoryBackButton from '@/components/history-back-button'
 import {

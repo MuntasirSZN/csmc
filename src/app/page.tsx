@@ -1,3 +1,7 @@
+/*
+ * Main home page (i.e the page thats shown when in /)
+ */
+
 import type { Metadata } from 'next'
 import HomePageCarousel from '@/components/home-page-carousel'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'

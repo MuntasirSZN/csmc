@@ -1,3 +1,7 @@
+/*
+ * All /auth/* pages generator.
+ */
+
 import { authViewPaths } from '@daveyplate/better-auth-ui/server'
 import { AuthView } from './view'
 

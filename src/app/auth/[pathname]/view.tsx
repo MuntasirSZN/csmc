@@ -1,3 +1,7 @@
+/*
+ * The client part is here. See the page.tsx for generation.
+ */
+
 'use client'
 
 import { AuthCard } from '@daveyplate/better-auth-ui'

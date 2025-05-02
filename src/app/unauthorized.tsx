@@ -1,3 +1,8 @@
+/*
+ * 401 status code unauthorized access page. Shown when 401 occurs. Great
+ * for auth purposes.
+ */
+
 import type { Metadata } from 'next'
 import type React from 'react'
 import HistoryBackButton from '@/components/history-back-button'

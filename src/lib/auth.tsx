@@ -1,10 +1,15 @@
+/*
+ * The main root of authentication. Use auth in server components
+ * and pass header().
+ */
+
 import { db } from '@/lib/db'
 import { EmailTemplate } from '@daveyplate/better-auth-ui/server'
 import { Section } from '@react-email/components'
 import { render } from '@react-email/render'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
+import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
 import { passkey } from 'better-auth/plugins/passkey'
 import { transporter } from './email'
 import { authSchema } from './schema'
@@ -108,6 +113,7 @@ export const auth = betterAuth({
   plugins: [
     haveIBeenPwned(),
     openAPI(),
+    admin(),
     twoFactor({
       issuer: 'CSMC',
       otpOptions: {

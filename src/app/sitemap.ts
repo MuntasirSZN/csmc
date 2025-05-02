@@ -1,3 +1,7 @@
+/*
+ * sitemap.xml is generated from this file.
+ */
+
 import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {

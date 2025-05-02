@@ -1,3 +1,8 @@
+/*
+ * Cookie settings page, link in the footer.
+ * /cookie-settings
+ */
+
 import type { Metadata } from 'next'
 import CookiePreferencesForm from '@/components/cookie-preferences-form'
 import {

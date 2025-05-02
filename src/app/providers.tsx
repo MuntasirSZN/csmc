@@ -1,3 +1,8 @@
+/*
+ * The file thats added in layout.tsx as a wrapper. Provides different
+ * functionalities to the full web app.
+ */
+
 'use client'
 
 import type { ReactNode } from 'react'

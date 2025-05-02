@@ -1,4 +1,11 @@
-import { boolean, integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+/*
+ * Database schema, maintained with migrations
+ * by drizzle. Use db:generate to generate and db:migrate to
+ * migrate (i.e push to database.)
+ */
+
+import { relations } from 'drizzle-orm'
+import { boolean, integer, json, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -8,6 +15,10 @@ export const user = pgTable('user', {
   image: text('image'),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at').notNull(),
+  role: text('role'),
+  banned: boolean('banned'),
+  banReason: text('ban_reason'),
+  banExpires: timestamp('ban_expires'),
   twoFactorEnabled: boolean('two_factor_enabled'),
 })
 
@@ -20,6 +31,7 @@ export const session = pgTable('session', {
   ipAddress: text('ip_address'),
   userAgent: text('user_agent'),
   userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  impersonatedBy: text('impersonated_by'),
 })
 
 export const account = pgTable('account', {
@@ -68,6 +80,72 @@ export const twoFactor = pgTable('two_factor', {
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
 })
+
+export const practices = pgTable('practices', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description'),
+  content: text('content').notNull(),
+  timeLimit: integer('time_limit').default(30).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+export const questions = pgTable('questions', {
+  id: serial('id').primaryKey(),
+  practiceId: integer('practice_id')
+    .notNull()
+    .references(() => practices.id, { onDelete: 'cascade' }),
+  content: text('content').notNull(),
+  options: json('options').$type<string[]>().notNull(),
+  correctAnswer: text('correct_answer').notNull(),
+  order: integer('order').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
+export const practiceAttempts = pgTable('practice_attempts', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  practiceId: integer('practice_id')
+    .notNull()
+    .references(() => practices.id, { onDelete: 'cascade' }),
+  startedAt: timestamp('started_at').defaultNow().notNull(),
+  completedAt: timestamp('completed_at'),
+  timeSpent: integer('time_spent'),
+  score: integer('score'),
+  answers: json('answers').$type<Record<number, string>>(),
+})
+
+export const practicesRelations = relations(practices, ({ many }) => ({
+  questions: many(questions),
+  attempts: many(practiceAttempts),
+}))
+
+export const questionsRelations = relations(questions, ({ one }) => ({
+  practice: one(practices, {
+    fields: [questions.practiceId],
+    references: [practices.id],
+  }),
+}))
+
+export const usersRelations = relations(user, ({ many }) => ({
+  attempts: many(practiceAttempts),
+}))
+
+export const practiceAttemptsRelations = relations(practiceAttempts, ({ one }) => ({
+  user: one(user, {
+    fields: [practiceAttempts.userId],
+    references: [user.id],
+  }),
+  practice: one(practices, {
+    fields: [practiceAttempts.practiceId],
+    references: [practices.id],
+  }),
+}))
 
 export const ContactSubmissions = pgTable('ContactSubmissions', {
   id: serial('id').primaryKey(),

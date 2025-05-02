@@ -1,3 +1,7 @@
+/*
+ * PWA manifest file. Outputs manifest.json at build time.
+ */
+
 import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {

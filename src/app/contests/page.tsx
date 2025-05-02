@@ -1,3 +1,7 @@
+/*
+ * The /contests page is kept here.
+ */
+
 import type { Metadata } from 'next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

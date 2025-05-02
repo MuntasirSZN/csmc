@@ -1,3 +1,7 @@
+/*
+ * The /contact pages route to accept contact requests.
+ */
+
 import { db } from '@/lib/db'
 import { ContactSubmissions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'

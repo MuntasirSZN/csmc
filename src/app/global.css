@@ -1,3 +1,8 @@
+/*
+ * The main css file. Its loaded automatically.
+ * Any globally accessible css should be here.
+ */
+
 @import 'tailwindcss';
 @source "../../node_modules/@daveyplate/better-auth-ui";
 @import 'tw-animate-css';

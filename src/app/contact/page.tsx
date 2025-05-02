@@ -1,3 +1,7 @@
+/*
+ * The /contact page resides here.
+ */
+
 import type { Metadata } from 'next'
 import ContactForm from '@/components/contact-form'
 import {

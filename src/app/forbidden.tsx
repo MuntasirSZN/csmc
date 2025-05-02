@@ -1,3 +1,8 @@
+/*
+ * Component thats shown on 403 status
+ * code.
+ */
+
 import type { Metadata } from 'next'
 import type React from 'react'
 import HistoryBackButton from '@/components/history-back-button'

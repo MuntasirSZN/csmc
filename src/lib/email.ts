@@ -1,3 +1,8 @@
+/*
+ * The email root. Use transporter to do
+ * anything related to emails.
+ */
+
 import nodemailer from 'nodemailer'
 
 export const transporter = nodemailer.createTransport({

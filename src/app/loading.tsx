@@ -1,3 +1,7 @@
+/*
+ * Whenever something is loading, this component will show.
+ */
+
 import { Grid } from 'ldrs/react'
 import 'ldrs/react/Grid.css'
 

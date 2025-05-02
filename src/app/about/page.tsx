@@ -1,3 +1,7 @@
+/*
+ * The /about page
+ */
+
 import type { Metadata } from 'next'
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip'
 import { Button } from '@/components/ui/button'

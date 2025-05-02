@@ -1,3 +1,7 @@
+/*
+ * Twitter image (should be same as opengraph), gets generated with code at build time.
+ */
+
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
