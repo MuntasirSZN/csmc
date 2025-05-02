@@ -9,6 +9,9 @@ const withPWA = withPWAInit({
 } satisfies PluginOptions)
 
 const nextConfig: NextConfig = {
+  experimental: {
+    authInterrupts: true,
+  },
   reactStrictMode: true,
 }
 

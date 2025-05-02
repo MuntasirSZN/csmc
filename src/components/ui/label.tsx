@@ -1,20 +1,19 @@
-import type { VariantProps } from 'class-variance-authority'
+// Label component extends from shadcnui - https://ui.shadcn.com/docs/components/label
+
+'use client'
 import { cn } from '@/lib/utils'
 import * as LabelPrimitive from '@radix-ui/react-label'
-import { cva } from 'class-variance-authority'
 
 import * as React from 'react'
 
-const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-)
-
-function Label({ ref, className, ...props }: React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
-  VariantProps<typeof labelVariants> & { ref?: React.RefObject<React.ElementRef<typeof LabelPrimitive.Root> | null> }) {
+function Label({ ref, className, ...props }: React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { ref?: React.RefObject<React.ElementRef<typeof LabelPrimitive.Root> | null> }) {
   return (
     <LabelPrimitive.Root
       ref={ref}
-      className={cn(labelVariants(), className)}
+      className={cn(
+        'text-sm font-medium text-black dark:text-white leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        className,
+      )}
       {...props}
     />
   )
