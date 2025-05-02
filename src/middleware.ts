@@ -1,3 +1,8 @@
+/*
+ * Middlware, i.e like a pipeline in which requests go and checks
+ * done.
+ */
+
 import type { NextRequest } from 'next/server'
 import arcjet, { detectBot, shield, tokenBucket } from '@arcjet/next'
 import { NextResponse } from 'next/server'
