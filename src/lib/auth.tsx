@@ -8,6 +8,7 @@ import { EmailTemplate } from '@daveyplate/better-auth-ui/server'
 import { Section } from '@react-email/components'
 import { render } from '@react-email/render'
 import { betterAuth } from 'better-auth'
+import { emailHarmony } from 'better-auth-harmony'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
 import { passkey } from 'better-auth/plugins/passkey'
@@ -123,6 +124,7 @@ export const auth = betterAuth({
     haveIBeenPwned(),
     openAPI(),
     admin(),
+    emailHarmony(),
     twoFactor({
       issuer: 'CSMC',
       otpOptions: {
