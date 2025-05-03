@@ -12,6 +12,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
 import { passkey } from 'better-auth/plugins/passkey'
 import { transporter } from './email'
+import { redis } from './redis'
 import { authSchema } from './schema'
 
 export const auth = betterAuth({
@@ -104,10 +105,18 @@ export const auth = betterAuth({
       clientSecret: process.env.FACEBOOK_SECRET as string,
     },
   },
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
+  secondaryStorage: {
+    get: async (key) => {
+      const value = await redis.get(key)
+      return typeof value === 'string' ? value : null
+    },
+    set: async (key, value, ttl) => {
+      if (ttl)
+        await redis.set(key, value, { ex: ttl })
+      else await redis.set(key, value)
+    },
+    delete: async (key) => {
+      await redis.del(key)
     },
   },
   plugins: [
