@@ -2,6 +2,7 @@
  * The newsletter part of footers route. Accepts newsletter requests.
  */
 
+import type { NextRequest } from 'next/server'
 import { db } from '@/lib/db'
 import { NewsletterSubscriptions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'
@@ -25,7 +26,7 @@ const aj = arcjet({
   ],
 })
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { email } = body

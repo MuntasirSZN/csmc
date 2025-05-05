@@ -5,6 +5,7 @@
 
 import { upstashCache } from 'drizzle-orm/cache/upstash'
 import { drizzle } from 'drizzle-orm/node-postgres'
+import * as schema from './schema'
 import 'dotenv/config'
 
 export const db = drizzle(process.env.DATABASE_URL!, {
@@ -14,4 +15,5 @@ export const db = drizzle(process.env.DATABASE_URL!, {
     global: true,
     config: { ex: 30 * 60 },
   }),
+  schema,
 })

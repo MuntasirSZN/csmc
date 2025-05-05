@@ -2,6 +2,7 @@
  * The /contact pages route to accept contact requests.
  */
 
+import type { NextRequest } from 'next/server'
 import { db } from '@/lib/db'
 import { ContactSubmissions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'
@@ -41,7 +42,7 @@ const contactFormSchema = z.object({
   }),
 })
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 

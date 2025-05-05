@@ -1,8 +1,5 @@
-import { Redis } from '@upstash/redis'
+import Redis from 'ioredis'
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-})
+const redis = new Redis(process.env.REDIS_URL as string)
 
 export { redis }
