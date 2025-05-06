@@ -1,13 +1,14 @@
 'use client'
 
+import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { formatDuration } from '@/lib/utils'
-import { MathJax } from 'better-react-mathjax'
 import { Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
+import Markdown from 'react-markdown'
 
 import { toast } from 'sonner'
 
@@ -186,9 +187,9 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
               >
                 <CardContent className="pt-6">
                   <div className="mb-4">
-                    <MathJax>
+                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
                       {question.content}
-                    </MathJax>
+                    </Markdown>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -207,7 +208,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                               <span className="text-muted-foreground">Not answered</span>
                             )
                           : (
-                              <MathJax>{userAnswer}</MathJax>
+                              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{userAnswer}</Markdown>
                             )}
                       </div>
                     </div>
@@ -215,7 +216,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                     <div>
                       <p className="text-sm font-medium mb-2">Correct Answer:</p>
                       <div className="p-3 bg-green-500/10 border border-green-500 rounded-md">
-                        <MathJax>{question.correctAnswer}</MathJax>
+                        <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{question.correctAnswer}</Markdown>
                       </div>
                     </div>
                   </div>

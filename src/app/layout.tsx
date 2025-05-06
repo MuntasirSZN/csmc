@@ -10,7 +10,6 @@ import CookieConsent from '@/components/CookieConsent'
 import NavBar from '@/components/navbar'
 import { Footer } from '@/components/ui/footer-section'
 import { Toaster } from '@/components/ui/sonner'
-import { MathJaxContext } from 'better-react-mathjax'
 import { ThemeProvider } from 'next-themes'
 import { Inter, Noto_Sans_Bengali } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
@@ -88,37 +87,27 @@ export const viewport: Viewport = {
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const mathJaxConfig = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\\[', '\\]']],
-      processEscapes: true,
-    },
-  }
-
   return (
     <html lang="en" className={`${inter.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
-        <MathJaxContext config={mathJaxConfig}>
-          <Suspense fallback={<Loading />}>
-            <NuqsAdapter>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <Providers>
-                  <Toaster />
-                  <NavBar />
-                  <CookieConsent />
-                  {children}
-                  <Footer />
-                </Providers>
-              </ThemeProvider>
-            </NuqsAdapter>
-          </Suspense>
-        </MathJaxContext>
+        <Suspense fallback={<Loading />}>
+          <NuqsAdapter>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Providers>
+                <Toaster />
+                <NavBar />
+                <CookieConsent />
+                {children}
+                <Footer />
+              </Providers>
+            </ThemeProvider>
+          </NuqsAdapter>
+        </Suspense>
       </body>
     </html>
   )

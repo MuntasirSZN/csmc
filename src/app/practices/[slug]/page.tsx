@@ -1,5 +1,6 @@
 'use client'
 
+import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -15,10 +16,10 @@ import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { convertSecondsToTime } from '@/lib/utils'
-import { MathJax } from 'better-react-mathjax'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useRef, useState } from 'react'
+import Markdown from 'react-markdown'
 
 import { toast } from 'sonner'
 
@@ -327,9 +328,9 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
         {practice.content && (
           <Card className="mb-4">
             <CardContent className="pt-6">
-              <MathJax>
+              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
                 {practice.content}
-              </MathJax>
+              </Markdown>
             </CardContent>
           </Card>
         )}
@@ -338,9 +339,9 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
         <Card>
           <CardContent className="pt-6">
             <div className="mb-4">
-              <MathJax>
+              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
                 {currentQuestion.content}
-              </MathJax>
+              </Markdown>
             </div>
 
             <RadioGroup
@@ -352,7 +353,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                 <div key={i} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-muted/50">
                   <RadioGroupItem value={option} id={`option-${i}`} />
                   <Label htmlFor={`option-${i}`} className="flex-1 cursor-pointer">
-                    <MathJax>{option}</MathJax>
+                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
                   </Label>
                 </div>
               ))}

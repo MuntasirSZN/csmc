@@ -1,15 +1,16 @@
 'use client'
 
+import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
-import { MathJax } from 'better-react-mathjax'
 import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Markdown from 'react-markdown'
 import { toast } from 'sonner'
 
 interface Question {
@@ -230,7 +231,7 @@ export default function AddPracticesPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="content">
-                  Practice Content (supports MathJax)
+                  Practice Content (supports Markdown with LaTex math)
                   <span className="ml-2 text-xs text-muted-foreground">
                     Use $ symbols for inline math or $$ for display math
                   </span>
@@ -286,7 +287,7 @@ export default function AddPracticesPage() {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label>
-                      Question Content (supports MathJax)
+                      Question Content (supports Markdown with LaTex math)
                       <span className="ml-2 text-xs text-muted-foreground">
                         Use $ symbols for inline math or $$ for display math
                       </span>
@@ -383,7 +384,7 @@ export default function AddPracticesPage() {
               {previewMode === 'details'
                 ? (
                     <div className="prose dark:prose-invert max-w-none">
-                      <MathJax>{content || 'No content added yet'}</MathJax>
+                      <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{content || 'No content added yet'}</Markdown>
                     </div>
                   )
                 : (
@@ -395,7 +396,7 @@ export default function AddPracticesPage() {
                             {index + 1}
                           </h3>
                           <div className="mb-4">
-                            <MathJax>{question.content || 'No question content'}</MathJax>
+                            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{question.content || 'No question content'}</Markdown>
                           </div>
 
                           <div className="space-y-3">
@@ -411,7 +412,7 @@ export default function AddPracticesPage() {
                                   .
                                 </div>
                                 <div className="flex-1">
-                                  <MathJax>{option || `Option ${optIndex + 1} (empty)`}</MathJax>
+                                  <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option || `Option ${optIndex + 1} (empty)`}</Markdown>
                                 </div>
                                 {option === question.correctAnswer && (
                                   <div className="text-xs font-semibold text-green-600">
