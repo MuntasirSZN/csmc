@@ -22,6 +22,7 @@ export async function GET(
           orderBy: (questions, { asc }) => [asc(questions.order)],
           columns: {
             correctAnswer: false, // Don't send correct answers to client
+            correctAnswers: false, // Don't send correct answers to client
           },
         },
       },

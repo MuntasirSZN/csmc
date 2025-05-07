@@ -1,11 +1,11 @@
 'use client'
 
+import Loading from '@/app/loading'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { formatDuration } from '@/lib/utils'
-import { Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
@@ -77,9 +77,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <Loading />
     )
   }
 

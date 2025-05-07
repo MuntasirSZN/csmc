@@ -156,4 +156,11 @@
   .animate-accordion-up {
     animation: accordion-up 0.2s ease-out;
   }
+  .markdown-content {
+    text-align: left;
+  }
+
+  .rehype-callout {
+    text-align: left;
+  }
 }

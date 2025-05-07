@@ -103,6 +103,9 @@ function Footer() {
               <Link href="/contests" className="block transition-colors hover:text-primary">
                 Contests
               </Link>
+              <Link href="/practices" className="block transition-colors hover:text-primary">
+                Practices
+              </Link>
               <Link href="/contact" className="block transition-colors hover:text-primary">
                 Contact
               </Link>

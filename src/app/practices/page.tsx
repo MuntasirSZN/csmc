@@ -1,9 +1,11 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -19,6 +21,9 @@ interface Practice {
 export default function PracticesPage() {
   const [practices, setPractices] = useState<Practice[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedPractice, setSelectedPractice] = useState<Practice | null>(null)
+  const [showDialog, setShowDialog] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchPractices = async () => {
@@ -42,6 +47,17 @@ export default function PracticesPage() {
     fetchPractices()
   }, [])
 
+  const handlePracticeClick = (practice: Practice) => {
+    setSelectedPractice(practice)
+    setShowDialog(true)
+  }
+
+  const handleStartPractice = () => {
+    if (selectedPractice) {
+      router.push(`/practices/${selectedPractice.slug}`)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
@@ -63,7 +79,7 @@ export default function PracticesPage() {
         : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {practices.map(practice => (
-                <Link href={`/practices/${practice.slug}`} key={practice.id} className="block">
+                <div key={practice.id} onClick={() => handlePracticeClick(practice)} className="cursor-pointer">
                   <Card className="h-full hover:shadow-md transition-shadow">
                     <CardHeader>
                       <CardTitle>{practice.title}</CardTitle>
@@ -86,10 +102,53 @@ export default function PracticesPage() {
                       {formatDistanceToNow(new Date(practice.createdAt), { addSuffix: true })}
                     </CardFooter>
                   </Card>
-                </Link>
+                </div>
               ))}
             </div>
           )}
+
+      {/* Information Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{selectedPractice?.title || 'Practice Exercise'}</DialogTitle>
+            <DialogDescription>
+              {selectedPractice?.description || 'No description available'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium">Time Limit</p>
+                <p>
+                  {selectedPractice?.timeLimit}
+                  {' '}
+                  minutes
+                </p>
+              </div>
+
+              <div>
+                <p className="font-medium">Instructions</p>
+                <p>
+                  You will be presented with a series of questions to answer.
+                  Once you start, the timer will begin and you can navigate between questions.
+                  You can submit your answers at any time or wait until the timer expires.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex justify-between sm:justify-between">
+            <Button variant="outline" onClick={() => setShowDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleStartPractice}>
+              Start Practice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

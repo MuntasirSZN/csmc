@@ -30,6 +30,10 @@ export default function NavBar() {
       link: '/contests',
     },
     {
+      name: 'Practices',
+      link: '/practices',
+    },
+    {
       name: 'Contact',
       link: '/contact',
     },

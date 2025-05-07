@@ -99,8 +99,12 @@ export const questions = pgTable('questions', {
     .notNull()
     .references(() => practices.id, { onDelete: 'cascade' }),
   content: text('content').notNull(),
-  options: json('options').$type<string[]>().notNull(),
-  correctAnswer: text('correct_answer').notNull(),
+  options: json('options').$type<string[]>(),
+  correctAnswer: text('correct_answer'),
+  correctAnswers: json('correct_answers').$type<string[]>(),
+  explanation: text('explanation'),
+  questionType: text('question_type').default('option').notNull(), // 'option' or 'text'
+  answerType: text('answer_type').default('single').notNull(), // 'single' or 'multiple'
   order: integer('order').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -118,7 +122,7 @@ export const practiceAttempts = pgTable('practice_attempts', {
   completedAt: timestamp('completed_at'),
   timeSpent: integer('time_spent'),
   score: integer('score'),
-  answers: json('answers').$type<Record<number, string>>(),
+  answers: json('answers').$type<Record<number, string | string[]>>(),
 })
 
 export const practicesRelations = relations(practices, ({ many }) => ({

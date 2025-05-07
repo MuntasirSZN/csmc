@@ -51,6 +51,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({})
   const [attemptId, setAttemptId] = useState<number | null>(null)
   const [showSummary, setShowSummary] = useState(false)
+  const [showSubmitConfirmation, setShowSubmitConfirmation] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -116,11 +117,16 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
     setCurrentQuestionIndex(prev => prev - 1)
   }
 
+  const handleSubmitButtonClick = () => {
+    setShowSubmitConfirmation(true)
+  }
+
   const handleSubmit = async () => {
     if (!practice || !attemptId)
       return
 
     setSubmitting(true)
+    setShowSubmitConfirmation(false)
 
     try {
       const response = await fetch(`/api/practice-attempts/${attemptId}`, {
@@ -226,7 +232,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
             if (newTime <= 0) {
               if (timerRef.current)
                 clearInterval(timerRef.current)
-              handleSubmit()
+              setShowSubmitConfirmation(true)
               return 0
             }
 
@@ -265,6 +271,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   const currentQuestion = practice.questions[currentQuestionIndex]
   const totalQuestions = practice.questions.length
   const progress = (currentQuestionIndex + 1) / totalQuestions * 100
+  const answeredCount = Object.keys(userAnswers).length
 
   return (
     <div className="container py-6 pt-15 text-center mx-auto">
@@ -284,7 +291,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
             </div>
             <Button
               variant="destructive"
-              onClick={handleSubmit}
+              onClick={handleSubmitButtonClick}
               disabled={submitting}
             >
               {submitting
@@ -314,7 +321,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
               {totalQuestions}
             </span>
             <span>
-              {Object.keys(userAnswers).length}
+              {answeredCount}
               {' '}
               of
               {totalQuestions}
@@ -379,6 +386,65 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
           </Button>
         </div>
       </div>
+
+      {/* Submit Confirmation Dialog */}
+      <Dialog open={showSubmitConfirmation} onOpenChange={setShowSubmitConfirmation}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Submit Practice Attempt</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to submit your answers? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 py-4">
+            {practice.questions.map((question, index) => (
+              <div
+                key={question.id}
+                className="flex flex-col items-center"
+              >
+                <div
+                  className={`size-10 rounded-full flex items-center justify-center font-medium ${
+                    userAnswers[question.id]
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-destructive/20 text-destructive'
+                  }`}
+                >
+                  {index + 1}
+                </div>
+                <Checkbox
+                  checked={!!userAnswers[question.id]}
+                  className="mt-1"
+                  disabled
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="py-2 text-center">
+            <p className="text-sm text-muted-foreground">
+              You have answered
+              {' '}
+              {answeredCount}
+              {' '}
+              out of
+              {' '}
+              {totalQuestions}
+              {' '}
+              questions.
+            </p>
+          </div>
+
+          <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <Button variant="outline" onClick={() => setShowSubmitConfirmation(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit}>
+              Confirm Submission
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Summary Dialog */}
       <Dialog open={showSummary} onOpenChange={setShowSummary}>
