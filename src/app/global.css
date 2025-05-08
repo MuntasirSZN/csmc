@@ -6,7 +6,8 @@
 @import 'tailwindcss';
 @source "../../node_modules/@daveyplate/better-auth-ui";
 @import 'rehype-callouts/theme/obsidian';
-@import 'katex/dist/katex.css' @import 'tw-animate-css';
+@import 'katex/dist/katex.css';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
