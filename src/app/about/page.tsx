@@ -33,7 +33,7 @@ export default function AboutPage() {
       id: 1,
       name: 'Mohammad Anis Faruque',
       designation: 'Coordinator',
-      image: '/png-logos/android/mipmap-hdpi/logos.png',
+      image: '/members/Anis-Sir.png',
     },
     {
       id: 2,
@@ -51,7 +51,7 @@ export default function AboutPage() {
       id: 4,
       name: 'Muntasir Mahmud',
       designation: 'Founding IT Director',
-      image: '/png-logos/android/mipmap-hdpi/logos.png',
+      image: '/members/Muntasir.png',
     },
     {
       id: 5,
@@ -75,7 +75,7 @@ export default function AboutPage() {
       id: 8,
       name: 'Syed Ahnaf Ahmad',
       designation: 'Founding Executive Member',
-      image: '/png-logos/android/mipmap-hdpi/logos.png',
+      image: '/members/Ahnaf.png',
     },
     {
       id: 9,

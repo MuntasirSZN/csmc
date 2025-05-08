@@ -355,37 +355,45 @@ export default function ManagePracticesPage() {
     setQuestions(updatedQuestions)
   }
 
+  // FIXED: Improved toggleCorrectAnswer function to properly handle multiple selections
   const toggleCorrectAnswer = (questionIndex: number, option: string) => {
+    // Create a new questions array
     const updatedQuestions = [...questions]
-    const question = updatedQuestions[questionIndex]
+
+    // Get the specific question
+    const question = { ...updatedQuestions[questionIndex] }
 
     if (question.answerType === 'multiple') {
-    // For multiple answers questions
+      // For multiple answers questions, create a fresh copy of the array
       const correctAnswers = [...(question.correctAnswers || [])]
+
+      // Check if this option is already selected
       const index = correctAnswers.indexOf(option)
 
       if (index >= 0) {
-      // Remove from correctAnswers
+        // Remove from correctAnswers if already present
         correctAnswers.splice(index, 1)
       }
       else {
-      // Add to correctAnswers
+        // Add to correctAnswers if not present
         correctAnswers.push(option)
       }
 
+      // Update the question with the new correctAnswers array
       updatedQuestions[questionIndex] = {
         ...question,
         correctAnswers,
       }
     }
     else {
-    // For single answer questions
+      // For single answer questions
       updatedQuestions[questionIndex] = {
         ...question,
         correctAnswer: option,
       }
     }
 
+    // Update the questions state
     setQuestions(updatedQuestions)
   }
 
@@ -619,6 +627,12 @@ export default function ManagePracticesPage() {
     }
   }
 
+  const renderLoadingState = () => (
+    <div className="flex justify-center my-8">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    </div>
+  )
+
   return (
     <div className="container py-8 pt-15 mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">Manage Practices</h1>
@@ -637,9 +651,7 @@ export default function ManagePracticesPage() {
 
           {fetchingPractices
             ? (
-                <div className="flex justify-center my-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
+                renderLoadingState()
               )
             : practices.length === 0
               ? (
@@ -1029,35 +1041,60 @@ export default function ManagePracticesPage() {
                                 onChange={e => updateOption(questionIndex, optionIndex, e.target.value)}
                                 placeholder={`Option ${optionIndex + 1}`}
                               />
-                              {question.answerType === 'single'
-                                ? (
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => toggleCorrectAnswer(questionIndex, option)}
-                                      className={
-                                        question.correctAnswer === option
-                                          ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
-                                          : ''
+                              {/* eslint-disable-next-line style/multiline-ternary */}
+                              {question.answerType === 'single' ? (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => toggleCorrectAnswer(questionIndex, option)}
+                                  className={
+                                    question.correctAnswer === option
+                                      ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
+                                      : ''
+                                  }
+                                >
+                                  {question.correctAnswer === option ? 'Correct ✓' : 'Set as correct'}
+                                </Button>
+                              ) : (
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
+                                    checked={(question.correctAnswers || []).includes(option)}
+                                    onCheckedChange={(checked) => {
+                                      // Create a fresh copy of all lists
+                                      const updatedQuestions = [...questions]
+                                      const updatedQuestion = { ...updatedQuestions[questionIndex] }
+                                      const correctAnswers = [...(updatedQuestion.correctAnswers || [])]
+
+                                      if (checked) {
+                                        // Add if not already included
+                                        if (!correctAnswers.includes(option)) {
+                                          correctAnswers.push(option)
+                                        }
                                       }
-                                    >
-                                      {question.correctAnswer === option ? 'Correct ✓' : 'Set as correct'}
-                                    </Button>
-                                  )
-                                : (
-                                    <div className="flex items-center space-x-2">
-                                      <Checkbox
-                                        id={`correct-${questionIndex}-${optionIndex}`}
-                                        checked={question.correctAnswers?.includes(option) || false}
-                                        onCheckedChange={() => toggleCorrectAnswer(questionIndex, option)}
-                                        disabled={!option.trim()}
-                                      />
-                                      <Label htmlFor={`correct-${questionIndex}-${optionIndex}`}>
-                                        Correct Answer
-                                      </Label>
-                                    </div>
-                                  )}
+                                      else {
+                                        // Remove if present
+                                        const index = correctAnswers.indexOf(option)
+                                        if (index !== -1) {
+                                          correctAnswers.splice(index, 1)
+                                        }
+                                      }
+
+                                      // Update the question with new array
+                                      updatedQuestion.correctAnswers = correctAnswers
+                                      updatedQuestions[questionIndex] = updatedQuestion
+
+                                      // Update state
+                                      setQuestions(updatedQuestions)
+                                    }}
+                                    disabled={!option.trim()}
+                                  />
+                                  <Label htmlFor={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}>
+                                    Correct Answer
+                                  </Label>
+                                </div>
+                              )}
                             </div>
                           ))}
                           <Button
