@@ -15,19 +15,22 @@ import {
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Textarea } from '@/components/ui/textarea'
 import { convertSecondsToTime } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
-
 import { toast } from 'sonner'
 
 interface Question {
   id: number
   content: string
-  options: string[]
+  options?: string[]
   order: number
+  explanation?: string
+  questionType: 'option' | 'text'
+  answerType: 'single' | 'multiple'
 }
 
 interface Practice {
@@ -48,7 +51,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   const [loading, setLoading] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({})
+  const [userAnswers, setUserAnswers] = useState<Record<number, string | string[]>>({})
   const [attemptId, setAttemptId] = useState<number | null>(null)
   const [showSummary, setShowSummary] = useState(false)
   const [showSubmitConfirmation, setShowSubmitConfirmation] = useState(false)
@@ -95,9 +98,18 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
     }
   }
 
-  const handleAnswerSelect = (questionId: number, answer: string) => {
+  const handleAnswerChange = (questionId: number, answer: string | string[]) => {
     setUserAnswers((prev) => {
-      const updated = { ...prev, [questionId]: answer }
+      // Ensure we're properly handling array values by creating a new object reference
+      const updated = { ...prev }
+
+      // If answer is an array, make a new copy to ensure React detects the change
+      if (Array.isArray(answer)) {
+        updated[questionId] = [...answer]
+      }
+      else {
+        updated[questionId] = answer
+      }
 
       setTimeout(() => saveAttemptToLocalStorage(), 0)
 
@@ -273,6 +285,20 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   const progress = (currentQuestionIndex + 1) / totalQuestions * 100
   const answeredCount = Object.keys(userAnswers).length
 
+  // Helper function for rendering submit button content
+  const renderSubmitButton = () => {
+    if (submitting) {
+      return (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          {' '}
+          Submitting
+        </>
+      )
+    }
+    return 'Submit'
+  }
+
   return (
     <div className="container py-6 pt-15 text-center mx-auto">
       <div className="flex flex-col space-y-6">
@@ -294,17 +320,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
               onClick={handleSubmitButtonClick}
               disabled={submitting}
             >
-              {submitting
-                ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {' '}
-                      Submitting
-                    </>
-                  )
-                : (
-                    'Submit'
-                  )}
+              {renderSubmitButton()}
             </Button>
           </div>
         </div>
@@ -315,15 +331,18 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
           <div className="flex justify-between mt-1 text-xs text-muted-foreground">
             <span>
               Question
+              {' '}
               {currentQuestionIndex + 1}
               {' '}
               of
+              {' '}
               {totalQuestions}
             </span>
             <span>
               {answeredCount}
               {' '}
               of
+              {' '}
               {totalQuestions}
               {' '}
               answered
@@ -351,20 +370,8 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
               </Markdown>
             </div>
 
-            <RadioGroup
-              value={userAnswers[currentQuestion.id] || ''}
-              onValueChange={value => handleAnswerSelect(currentQuestion.id, value)}
-              className="space-y-4 mt-6"
-            >
-              {currentQuestion.options.map((option, i) => (
-                <div key={i} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-muted/50">
-                  <RadioGroupItem value={option} id={`option-${i}`} />
-                  <Label htmlFor={`option-${i}`} className="flex-1 cursor-pointer">
-                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+            {/* Question content based on type */}
+            {renderQuestionContent()}
           </CardContent>
         </Card>
 
@@ -489,4 +496,93 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
       </Dialog>
     </div>
   )
+
+  // Helper function to render the appropriate question content based on type
+  function renderQuestionContent() {
+    if (currentQuestion.questionType === 'option') {
+      if (currentQuestion.answerType === 'single') {
+        return renderSingleChoiceQuestion()
+      }
+      else {
+        return renderMultipleChoiceQuestion()
+      }
+    }
+    else {
+      return renderTextInputQuestion()
+    }
+  }
+
+  function renderSingleChoiceQuestion() {
+    return (
+      <RadioGroup
+        value={userAnswers[currentQuestion.id] as string || ''}
+        onValueChange={value => handleAnswerChange(currentQuestion.id, value)}
+        className="space-y-4 mt-6"
+      >
+        {currentQuestion.options?.map((option, i) => (
+          <div key={i} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-muted/50">
+            <RadioGroupItem value={option} id={`option-${i}`} />
+            <Label htmlFor={`option-${i}`} className="flex-1 cursor-pointer">
+              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    )
+  }
+
+  function renderMultipleChoiceQuestion() {
+    return (
+      <div className="space-y-4 mt-6">
+        {currentQuestion.options?.map((option, i) => {
+          const currentAnswers = Array.isArray(userAnswers[currentQuestion.id])
+            ? userAnswers[currentQuestion.id] as string[]
+            : []
+          const isChecked = currentAnswers.includes(option)
+
+          return (
+            <div key={i} className="flex items-start space-x-2 border p-3 rounded-md hover:bg-muted/50">
+              <Checkbox
+                id={`option-${i}`}
+                checked={isChecked}
+                onCheckedChange={(checked) => {
+                  let newAnswers: string[] = [...currentAnswers]
+
+                  if (checked) {
+                    // Add this option if not already in the array
+                    if (!newAnswers.includes(option)) {
+                      newAnswers.push(option)
+                    }
+                  }
+                  else {
+                    // Remove this option
+                    newAnswers = newAnswers.filter(ans => ans !== option)
+                  }
+
+                  handleAnswerChange(currentQuestion.id, newAnswers)
+                }}
+                className="mt-1"
+              />
+              <Label htmlFor={`option-${i}`} className="flex-1 cursor-pointer">
+                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
+              </Label>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  function renderTextInputQuestion() {
+    return (
+      <div className="mt-6">
+        <Textarea
+          value={userAnswers[currentQuestion.id] as string || ''}
+          onChange={e => handleAnswerChange(currentQuestion.id, e.target.value)}
+          placeholder="Type your answer here..."
+          className="min-h-[150px] w-full"
+        />
+      </div>
+    )
+  }
 }

@@ -1,41 +1,43 @@
 'use client'
 
-import Loading from '@/app/loading'
+import { ExplanationCallout } from '@/components/explanation-callout'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { formatDuration } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
+import { formatDistanceToNow } from 'date-fns'
+import { BarChart2, CheckCircle2, Clock, Home, XCircle } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
-
 import { toast } from 'sonner'
 
 interface Question {
   id: number
   content: string
-  options: string[]
-  correctAnswer: string
-  order: number
+  options?: string[]
+  correctAnswer?: string
+  correctAnswers?: string[]
+  explanation?: string
+  questionType: 'option' | 'text'
+  answerType: 'single' | 'multiple'
 }
 
-interface Practice {
+interface PracticeAttempt {
   id: number
-  title: string
-  description: string | null
-  questions: Question[]
-}
-
-interface AttemptResult {
-  id: number
-  practiceId: number
-  startedAt: string
-  completedAt: string
-  timeSpent: number
   score: number
-  answers: Record<number, string>
-  practice: Practice
+  totalQuestions: number
+  timeSpent: number
+  completedAt: string
+  answers: Record<number, string | string[]>
+  practice: {
+    title: string
+    slug: string
+    description: string | null
+  }
+  questions: Question[]
 }
 
 export default function ResultsPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -44,28 +46,35 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
   const searchParams = useSearchParams()
   const attemptId = searchParams.get('attemptId')
 
-  const [result, setResult] = useState<AttemptResult | null>(null)
+  const [attemptResult, setAttemptResult] = useState<PracticeAttempt | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
 
   useEffect(() => {
     if (!attemptId) {
-      toast.error('Missing attempt ID')
-      router.push(`/practices/${slug}`)
+      toast.error('No attempt ID provided', {
+        description: 'Unable to load results without an attempt ID',
+      })
+      router.push('/practices')
       return
     }
 
     const fetchResults = async () => {
       try {
-        const response = await fetch(`/api/practice-attempts/${attemptId}/result`)
+        const response = await fetch(`/api/practice-attempts/${attemptId}/results`)
+
         if (!response.ok) {
           throw new Error('Failed to fetch results')
         }
+
         const data = await response.json()
-        setResult(data)
+        setAttemptResult(data)
       }
-      catch (error) {
-        console.error('Error fetching results:', error)
-        toast.error('Failed to load practice results')
+      catch (error: any) {
+        toast.error('Failed to load results', {
+          description: error.message || 'An unexpected error occurred',
+        })
+        router.push('/practices')
       }
       finally {
         setLoading(false)
@@ -73,162 +82,310 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
     }
 
     fetchResults()
-  }, [attemptId, slug, router])
+  }, [attemptId, router])
 
   if (loading) {
     return (
-      <Loading />
-    )
-  }
-
-  if (!result) {
-    return (
-      <div className="container py-8 text-center">
-        <h1 className="text-2xl font-bold mb-4">Results not found</h1>
-        <p>We couldn't find the results for this attempt.</p>
-        <Button className="mt-4" onClick={() => router.push('/practices')}>
-          Return to Practice List
-        </Button>
+      <div className="container py-8 pt-15 mx-auto max-w-3xl">
+        <div className="space-y-8">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-32 w-full" />
+          <div className="grid grid-cols-3 gap-4">
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+          <Skeleton className="h-64 w-full" />
+        </div>
       </div>
     )
   }
 
-  const totalQuestions = result.practice.questions.length
-  const correctAnswers = result.score || 0
-  const scorePercentage = (correctAnswers / totalQuestions) * 100
+  if (!attemptResult) {
+    return (
+      <div className="container py-8 pt-15 mx-auto max-w-3xl">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Results not found</h1>
+          <p className="mb-6">We couldn't find the results for this attempt.</p>
+          <Button asChild>
+            <Link href="/practices">Return to Practices</Link>
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const { score, totalQuestions, timeSpent, completedAt, practice, questions, answers } = attemptResult
+  const percentageScore = (score / totalQuestions) * 100
+  const currentQuestion = questions[activeQuestionIndex]
+  const userAnswer = answers[currentQuestion.id]
+
+  // Check if the user's answer is correct
+  const isCorrect = (() => {
+    if (currentQuestion.questionType === 'option') {
+      if (currentQuestion.answerType === 'single') {
+        return userAnswer === currentQuestion.correctAnswer
+      }
+      else {
+        const userAnswerArray = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
+        return (
+          currentQuestion.correctAnswers
+          && userAnswerArray.length === currentQuestion.correctAnswers.length
+          && userAnswerArray.every(answer => currentQuestion.correctAnswers?.includes(answer))
+        )
+      }
+    }
+    else {
+      // For text questions
+      if (!userAnswer)
+        return false
+      return currentQuestion.correctAnswers?.includes(userAnswer.toString())
+    }
+  })()
+
+  // Format time spent
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}m ${remainingSeconds}s`
+  }
+
+  // Navigate between questions
+  const goToNextQuestion = () => {
+    if (activeQuestionIndex < questions.length - 1) {
+      setActiveQuestionIndex(prev => prev + 1)
+    }
+  }
+
+  const goToPrevQuestion = () => {
+    if (activeQuestionIndex > 0) {
+      setActiveQuestionIndex(prev => prev - 1)
+    }
+  }
 
   return (
-    <div className="container py-6 pt-15 text-center mx-auto">
-      <div className="flex flex-col space-y-6">
-        <div>
+    <div className="container py-8 pt-15 mx-auto max-w-3xl">
+      <div className="space-y-8">
+        <div className="text-center">
           <h1 className="text-2xl font-bold">
-            {result.practice.title}
+            {practice.title}
             {' '}
             - Results
           </h1>
-          {result.practice.description && (
-            <p className="text-muted-foreground mt-1">{result.practice.description}</p>
+          {practice.description && (
+            <p className="text-muted-foreground mt-1">{practice.description}</p>
           )}
+          <p className="text-sm text-muted-foreground mt-2">
+            Completed
+            {' '}
+            {formatDistanceToNow(new Date(completedAt), { addSuffix: true })}
+          </p>
         </div>
 
+        {/* Score Summary */}
         <Card>
-          <CardHeader>
-            <CardTitle>Practice Summary</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-center">Your Score</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-muted p-4 rounded-lg">
-                <div className="text-muted-foreground text-sm">Score</div>
-                <div className="text-2xl font-bold">
-                  {correctAnswers}
-                  {' '}
-                  /
-                  {' '}
-                  {totalQuestions}
-                </div>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <div className="text-muted-foreground text-sm">Time Spent</div>
-                <div className="text-2xl font-bold">{formatDuration(result.timeSpent)}</div>
-              </div>
-              <div className="bg-muted p-4 rounded-lg">
-                <div className="text-muted-foreground text-sm">Completed</div>
-                <div className="text-2xl font-bold">
-                  {new Date(result.completedAt).toLocaleDateString()}
-                </div>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-center">
+              <div className="text-4xl font-bold text-primary">
+                {score}
+                {' '}
+                /
+                {totalQuestions}
+                {' '}
+                (
+                {percentageScore.toFixed(0)}
+                %)
               </div>
             </div>
-
-            <div className="mb-8">
-              <div className="flex justify-between mb-2">
-                <span>
-                  Score:
-                  {scorePercentage.toFixed(1)}
-                  %
-                </span>
-                <span>
-                  {correctAnswers}
+            <Progress value={percentageScore} className="h-3" />
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
+                <div className="flex items-center text-xl font-semibold">
+                  <BarChart2 className="mr-2 h-5 w-5 text-primary" />
+                  {score}
                   {' '}
-                  of
-                  {' '}
+                  /
                   {totalQuestions}
-                  {' '}
-                  correct
-                </span>
+                </div>
+                <p className="text-sm text-muted-foreground">Score</p>
               </div>
-              <Progress
-                value={scorePercentage}
-                className={`h-3 ${
-                  scorePercentage >= 70
-                    ? 'bg-green-500'
-                    : scorePercentage >= 40 ? 'bg-yellow-500' : 'bg-red-500'
-                }`}
-              />
+              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
+                <div className="flex items-center text-xl font-semibold">
+                  <Clock className="mr-2 h-5 w-5 text-primary" />
+                  {formatTime(timeSpent)}
+                </div>
+                <p className="text-sm text-muted-foreground">Time Spent</p>
+              </div>
+              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
+                <div className="flex items-center text-xl font-semibold">
+                  {percentageScore >= 70
+                    ? (
+                        <CheckCircle2 className="mr-2 h-5 w-5 text-green-600" />
+                      )
+                    : (
+                        <XCircle className="mr-2 h-5 w-5 text-red-500" />
+                      )}
+                  {percentageScore >= 70 ? 'Passed' : 'Try Again'}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {percentageScore >= 70 ? 'Well done!' : 'Keep practicing'}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <h2 className="text-xl font-bold mt-6">Question Review</h2>
+        {/* Question Review */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              <span>Question Review</span>
+              <span className="text-sm font-medium">
+                {activeQuestionIndex + 1}
+                {' '}
+                of
+                {questions.length}
+              </span>
+            </CardTitle>
+            <Progress
+              value={((activeQuestionIndex + 1) / questions.length) * 100}
+              className="h-2"
+            />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Question content */}
+            <div className="space-y-4">
+              <div className="text-left">
+                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                  {currentQuestion.content}
+                </Markdown>
+              </div>
 
-        {result.practice.questions
-          .sort((a, b) => a.order - b.order)
-          .map((question) => {
-            const userAnswer = result.answers[question.id] || 'Not answered'
-            const isCorrect = userAnswer === question.correctAnswer
+              {/* Multiple choice answers */}
+              {currentQuestion.questionType === 'option' && currentQuestion.options && (
+                <div className="space-y-3 mt-4">
+                  {currentQuestion.options.map((option, i) => {
+                    const isUserSelected = currentQuestion.answerType === 'single'
+                      ? userAnswer === option
+                      : Array.isArray(userAnswer) && userAnswer.includes(option)
 
-            return (
-              <Card
-                key={question.id}
-                className={`mb-4 border-l-4 ${
-                  isCorrect ? 'border-l-green-500' : 'border-l-red-500'
-                }`}
-              >
-                <CardContent className="pt-6">
-                  <div className="mb-4">
-                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                      {question.content}
-                    </Markdown>
-                  </div>
+                    const isCorrectOption = currentQuestion.answerType === 'single'
+                      ? currentQuestion.correctAnswer === option
+                      : currentQuestion.correctAnswers?.includes(option)
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <div>
-                      <p className="text-sm font-medium mb-2">Your Answer:</p>
-                      <div className={`p-3 rounded-md ${
-                        userAnswer === 'Not answered'
-                          ? 'bg-muted'
-                          : isCorrect
-                            ? 'bg-green-500/10 border border-green-500'
-                            : 'bg-red-500/10 border border-red-500'
-                      }`}
-                      >
-                        {userAnswer === 'Not answered'
-                          ? (
-                              <span className="text-muted-foreground">Not answered</span>
-                            )
-                          : (
-                              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{userAnswer}</Markdown>
+                    let optionClass = 'border p-3 rounded-md'
+
+                    if (isUserSelected && isCorrectOption) {
+                      optionClass += ' border-green-500 bg-green-50 dark:bg-green-900/20'
+                    }
+                    else if (isUserSelected && !isCorrectOption) {
+                      optionClass += ' border-red-500 bg-red-50 dark:bg-red-900/20'
+                    }
+                    else if (!isUserSelected && isCorrectOption) {
+                      optionClass += ' border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+                    }
+
+                    return (
+                      <div key={i} className={optionClass}>
+                        <div className="flex items-start">
+                          <div className="mr-3 text-sm font-medium text-muted-foreground">
+                            {String.fromCharCode(65 + i)}
+                            .
+                          </div>
+                          <div className="flex-1">
+                            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                              {option}
+                            </Markdown>
+                          </div>
+                          <div className="flex-shrink-0 ml-2">
+                            {isUserSelected && isCorrectOption && (
+                              <CheckCircle2 className="h-5 w-5 text-green-600" />
                             )}
+                            {isUserSelected && !isCorrectOption && (
+                              <XCircle className="h-5 w-5 text-red-500" />
+                            )}
+                            {!isUserSelected && isCorrectOption && (
+                              <CheckCircle2 className="h-5 w-5 text-yellow-600" />
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )
+                  })}
+                </div>
+              )}
 
-                    <div>
-                      <p className="text-sm font-medium mb-2">Correct Answer:</p>
-                      <div className="p-3 bg-green-500/10 border border-green-500 rounded-md">
-                        <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{question.correctAnswer}</Markdown>
-                      </div>
+              {/* Text input answers */}
+              {currentQuestion.questionType === 'text' && (
+                <div className="space-y-4 mt-4">
+                  <div className="border p-4 rounded-md">
+                    <div className="text-sm font-medium mb-2">Your Answer:</div>
+                    <div className={`p-2 rounded-md ${isCorrect ? 'bg-green-50 border-green-200 dark:bg-green-900/20' : 'bg-red-50 border-red-200 dark:bg-red-900/20'}`}>
+                      {userAnswer ? userAnswer.toString() : 'No answer provided'}
                     </div>
+                    {!isCorrect && (
+                      <div className="mt-4">
+                        <div className="text-sm font-medium mb-2">Acceptable Answers:</div>
+                        <div className="p-2 bg-yellow-50 border-yellow-200 rounded-md dark:bg-yellow-900/20">
+                          <ul className="list-disc pl-4 space-y-1">
+                            {currentQuestion.correctAnswers?.map((answer, idx) => (
+                              <li key={idx}>{answer}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            )
-          })}
+                </div>
+              )}
 
-        <div className="flex justify-between mt-8">
-          <Button variant="outline" onClick={() => router.push('/practices')}>
-            Return to Practice List
+              {/* Explanation */}
+              {currentQuestion.explanation && (
+                <div className="mt-6">
+                  <ExplanationCallout explanation={currentQuestion.explanation} />
+                </div>
+              )}
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between border-t p-4">
+            <Button
+              variant="outline"
+              onClick={goToPrevQuestion}
+              disabled={activeQuestionIndex === 0}
+            >
+              Previous Question
+            </Button>
+
+            {activeQuestionIndex < questions.length - 1
+              ? (
+                  <Button onClick={goToNextQuestion}>
+                    Next Question
+                  </Button>
+                )
+              : (
+                  <Button asChild>
+                    <Link href="/practices">
+                      <Home className="mr-2 h-4 w-4" />
+                      Return to Practices
+                    </Link>
+                  </Button>
+                )}
+          </CardFooter>
+        </Card>
+
+        <div className="flex justify-center gap-4">
+          <Button asChild variant="outline">
+            <Link href={`/practices/${slug}`}>
+              Try Again
+            </Link>
           </Button>
-          <Button onClick={() => router.push(`/practices/${slug}`)}>
-            Try Again
+          <Button asChild>
+            <Link href="/practices">
+              All Practices
+            </Link>
           </Button>
         </div>
       </div>

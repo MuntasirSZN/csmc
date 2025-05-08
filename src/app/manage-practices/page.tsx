@@ -1,5 +1,6 @@
 'use client'
 
+import { ExplanationCallout } from '@/components/explanation-callout'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import {
   AlertDialog,
@@ -13,8 +14,10 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Table,
   TableBody,
@@ -32,8 +35,12 @@ import { toast } from 'sonner'
 
 interface Question {
   content: string
-  options: string[]
-  correctAnswer: string
+  options?: string[]
+  correctAnswer?: string
+  correctAnswers?: string[]
+  explanation?: string
+  questionType: 'option' | 'text'
+  answerType: 'single' | 'multiple'
   order: number
 }
 
@@ -69,7 +76,15 @@ export default function ManagePracticesPage() {
 
   // Questions
   const [questions, setQuestions] = useState<Question[]>([
-    { content: '', options: ['', '', '', ''], correctAnswer: '', order: 0 },
+    {
+      content: '',
+      options: ['', '', '', ''],
+      correctAnswer: '',
+      explanation: '',
+      questionType: 'option',
+      answerType: 'single',
+      order: 0,
+    },
   ])
 
   // Preview
@@ -87,7 +102,9 @@ export default function ManagePracticesPage() {
       setPractices(data)
     }
     catch (error: any) {
-      toast.error(error.message || 'Failed to fetch practices')
+      toast.error('Failed to fetch practices', {
+        description: error.message || 'An unexpected error occurred',
+      })
     }
     finally {
       setFetchingPractices(false)
@@ -111,7 +128,9 @@ export default function ManagePracticesPage() {
       return data
     }
     catch (error: any) {
-      toast.error(error.message || 'Failed to fetch practice')
+      toast.error('Failed to fetch practice', {
+        description: error.message || 'An unexpected error occurred',
+      })
       return null
     }
     finally {
@@ -126,7 +145,15 @@ export default function ManagePracticesPage() {
     setContent('')
     setTimeLimit(30)
     setQuestions([
-      { content: '', options: ['', '', '', ''], correctAnswer: '', order: 0 },
+      {
+        content: '',
+        options: ['', '', '', ''],
+        correctAnswer: '',
+        explanation: '',
+        questionType: 'option',
+        answerType: 'single',
+        order: 0,
+      },
     ])
     setActiveTab('details')
   }
@@ -137,9 +164,33 @@ export default function ManagePracticesPage() {
     setDescription(practice.description || '')
     setContent(practice.content)
     setTimeLimit(practice.timeLimit)
-    setQuestions(practice.questions || [
-      { content: '', options: ['', '', '', ''], correctAnswer: '', order: 0 },
-    ])
+
+    // If questions exist, use them; otherwise create a default question
+    if (practice.questions && practice.questions.length > 0) {
+      // Make sure all questions have the new fields
+      const updatedQuestions = practice.questions.map(q => ({
+        ...q,
+        questionType: q.questionType || 'option',
+        answerType: q.answerType || 'single',
+        explanation: q.explanation || '',
+        correctAnswers: q.correctAnswers || [],
+        options: q.options || ['', '', '', ''],
+      }))
+      setQuestions(updatedQuestions)
+    }
+    else {
+      setQuestions([
+        {
+          content: '',
+          options: ['', '', '', ''],
+          correctAnswer: '',
+          explanation: '',
+          questionType: 'option',
+          answerType: 'single',
+          order: 0,
+        },
+      ])
+    }
     setActiveTab('details')
   }
 
@@ -188,6 +239,9 @@ export default function ManagePracticesPage() {
         content: '',
         options: ['', '', '', ''],
         correctAnswer: '',
+        explanation: '',
+        questionType: 'option',
+        answerType: 'single',
         order: questions.length,
       },
     ])
@@ -206,22 +260,140 @@ export default function ManagePracticesPage() {
     )
   }
 
-  const updateQuestion = (index: number, field: keyof Question, value: string | string[]) => {
+  const updateQuestion = (index: number, field: keyof Question, value: any) => {
     const updatedQuestions = [...questions]
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      [field]: value,
+
+    // If changing questionType, reset correctAnswer or correctAnswers based on new type
+    if (field === 'questionType') {
+      if (value === 'text') {
+        // Text questions use correctAnswers array
+        updatedQuestions[index] = {
+          ...updatedQuestions[index],
+          questionType: value,
+          correctAnswer: undefined,
+          correctAnswers: updatedQuestions[index].correctAnswers || [],
+          options: undefined,
+        }
+      }
+      else {
+        // Option questions use different fields based on answerType
+        if (updatedQuestions[index].answerType === 'single') {
+          updatedQuestions[index] = {
+            ...updatedQuestions[index],
+            questionType: value,
+            correctAnswer: '',
+            correctAnswers: undefined,
+            options: ['', '', '', ''],
+          }
+        }
+        else {
+          updatedQuestions[index] = {
+            ...updatedQuestions[index],
+            questionType: value,
+            correctAnswer: undefined,
+            correctAnswers: [],
+            options: ['', '', '', ''],
+          }
+        }
+      }
     }
+    // If changing answerType, adjust correctAnswer or correctAnswers
+    else if (field === 'answerType') {
+      if (value === 'single') {
+        updatedQuestions[index] = {
+          ...updatedQuestions[index],
+          answerType: value,
+          correctAnswer: '',
+          correctAnswers: undefined,
+        }
+      }
+      else {
+        updatedQuestions[index] = {
+          ...updatedQuestions[index],
+          answerType: value,
+          correctAnswer: undefined,
+          correctAnswers: [],
+        }
+      }
+    }
+    // For all other fields, update normally
+    else {
+      updatedQuestions[index] = {
+        ...updatedQuestions[index],
+        [field]: value,
+      }
+    }
+
     setQuestions(updatedQuestions)
   }
 
   const updateOption = (questionIndex: number, optionIndex: number, value: string) => {
     const updatedQuestions = [...questions]
-    const options = [...updatedQuestions[questionIndex].options]
+    const options = [...(updatedQuestions[questionIndex].options || [])]
     options[optionIndex] = value
     updatedQuestions[questionIndex] = {
       ...updatedQuestions[questionIndex],
       options,
+    }
+
+    // Update correctAnswer if this was the selected option
+    const question = updatedQuestions[questionIndex]
+    if (question.answerType === 'single' && question.correctAnswer === options[optionIndex]) {
+      question.correctAnswer = value
+    }
+
+    // Update correctAnswers if this was one of the selected options
+    if (question.answerType === 'multiple' && question.correctAnswers) {
+      const oldValue = options[optionIndex]
+      if (question.correctAnswers.includes(oldValue)) {
+        question.correctAnswers = question.correctAnswers.map(a =>
+          a === oldValue ? value : a,
+        )
+      }
+    }
+
+    setQuestions(updatedQuestions)
+  }
+
+  const toggleCorrectAnswer = (questionIndex: number, option: string) => {
+    const updatedQuestions = [...questions]
+    const question = updatedQuestions[questionIndex]
+
+    if (question.answerType === 'multiple') {
+    // For multiple answers questions
+      const correctAnswers = [...(question.correctAnswers || [])]
+      const index = correctAnswers.indexOf(option)
+
+      if (index >= 0) {
+      // Remove from correctAnswers
+        correctAnswers.splice(index, 1)
+      }
+      else {
+      // Add to correctAnswers
+        correctAnswers.push(option)
+      }
+
+      updatedQuestions[questionIndex] = {
+        ...question,
+        correctAnswers,
+      }
+    }
+    else {
+    // For single answer questions
+      updatedQuestions[questionIndex] = {
+        ...question,
+        correctAnswer: option,
+      }
+    }
+
+    setQuestions(updatedQuestions)
+  }
+
+  const updateCorrectAnswers = (questionIndex: number, answers: string[]) => {
+    const updatedQuestions = [...questions]
+    updatedQuestions[questionIndex] = {
+      ...updatedQuestions[questionIndex],
+      correctAnswers: answers,
     }
     setQuestions(updatedQuestions)
   }
@@ -250,27 +422,57 @@ export default function ManagePracticesPage() {
         return
       }
 
-      // Check options
-      const emptyOptions = question.options.filter(option => !option.trim()).length
-      if (emptyOptions > 0) {
-        toast.error(`Question ${index + 1} has empty options`)
-        setActiveTab('questions')
-        isValid = false
-        return
-      }
+      if (question.questionType === 'option') {
+        // Validate option-based questions
+        if (!question.options || question.options.filter(option => option.trim()).length < 2) {
+          toast.error(`Question ${index + 1} must have at least 2 options`)
+          setActiveTab('questions')
+          isValid = false
+          return
+        }
 
-      // Check if the correct answer is one of the options
-      if (!question.correctAnswer.trim()) {
-        toast.error(`Question ${index + 1} needs a correct answer`)
-        setActiveTab('questions')
-        isValid = false
-        return
-      }
+        if (question.answerType === 'single') {
+          // Validate single answer questions
+          if (!question.correctAnswer || !question.correctAnswer.trim()) {
+            toast.error(`Question ${index + 1} needs a correct answer`)
+            setActiveTab('questions')
+            isValid = false
+            return
+          }
 
-      if (!question.options.includes(question.correctAnswer)) {
-        toast.error(`Question ${index + 1}'s correct answer must be one of the options`)
-        setActiveTab('questions')
-        isValid = false
+          if (!question.options.includes(question.correctAnswer)) {
+            toast.error(`Question ${index + 1}'s correct answer must be one of the options`)
+            setActiveTab('questions')
+            isValid = false
+          }
+        }
+        else {
+          // Validate multiple answer questions
+          if (!question.correctAnswers || question.correctAnswers.length === 0) {
+            toast.error(`Question ${index + 1} needs at least one correct answer`)
+            setActiveTab('questions')
+            isValid = false
+            return
+          }
+
+          // Check if all correctAnswers are in the options
+          const allInOptions = question.correctAnswers.every(answer =>
+            question.options?.includes(answer),
+          )
+          if (!allInOptions) {
+            toast.error(`Question ${index + 1}'s correct answers must all be in the options list`)
+            setActiveTab('questions')
+            isValid = false
+          }
+        }
+      }
+      else {
+        // Validate text-input questions
+        if (!question.correctAnswers || question.correctAnswers.length === 0) {
+          toast.error(`Question ${index + 1} needs at least one acceptable answer`)
+          setActiveTab('questions')
+          isValid = false
+        }
       }
     })
 
@@ -291,8 +493,12 @@ export default function ManagePracticesPage() {
       timeLimit,
       questions: questions.map(q => ({
         content: q.content,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
+        options: q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
+        correctAnswer: q.questionType === 'option' && q.answerType === 'single' ? q.correctAnswer : undefined,
+        correctAnswers: q.questionType === 'text' || q.answerType === 'multiple' ? q.correctAnswers : undefined,
+        explanation: q.explanation,
+        questionType: q.questionType,
+        answerType: q.answerType,
         order: q.order,
       })),
     }
@@ -316,7 +522,9 @@ export default function ManagePracticesPage() {
       setMode('list')
     }
     catch (error: any) {
-      toast.error(error.message || 'Failed to create practice')
+      toast.error('Failed to create practice', {
+        description: error.message || 'An unexpected error occurred',
+      })
     }
     finally {
       setLoading(false)
@@ -338,8 +546,12 @@ export default function ManagePracticesPage() {
       timeLimit,
       questions: questions.map(q => ({
         content: q.content,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
+        options: q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
+        correctAnswer: q.questionType === 'option' && q.answerType === 'single' ? q.correctAnswer : undefined,
+        correctAnswers: q.questionType === 'text' || q.answerType === 'multiple' ? q.correctAnswers : undefined,
+        explanation: q.explanation,
+        questionType: q.questionType,
+        answerType: q.answerType,
         order: q.order,
       })),
     }
@@ -363,7 +575,9 @@ export default function ManagePracticesPage() {
       setMode('list')
     }
     catch (error: any) {
-      toast.error(error.message || 'Failed to update practice')
+      toast.error('Failed to update practice', {
+        description: error.message || 'An unexpected error occurred',
+      })
     }
     finally {
       setLoading(false)
@@ -396,7 +610,9 @@ export default function ManagePracticesPage() {
       fetchPractices()
     }
     catch (error: any) {
-      toast.error(error.message || 'Failed to delete practice')
+      toast.error('Failed to delete practice', {
+        description: error.message || 'An unexpected error occurred',
+      })
     }
     finally {
       setLoading(false)
@@ -548,39 +764,85 @@ export default function ManagePracticesPage() {
                           <div key={index} className="border rounded-md p-4 bg-muted/20">
                             <h4 className="font-medium mb-2">
                               Question
+                              {' '}
                               {index + 1}
+                              {' '}
+                              <span className="text-sm font-normal text-muted-foreground">
+                                (
+                                {question.questionType === 'option'
+                                  ? `Multiple Choice (${question.answerType === 'single' ? 'Single Answer' : 'Multiple Answers'})`
+                                  : 'Text Input'}
+                                )
+                              </span>
                             </h4>
+
                             <div className="mb-4">
                               <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
                                 {question.content}
                               </Markdown>
                             </div>
 
-                            <div className="space-y-2">
-                              {question.options.map((option, optIndex) => (
-                                <div
-                                  key={optIndex}
-                                  className={`flex items-center p-2 border rounded-md ${
-                                    option === question.correctAnswer ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : ''
-                                  }`}
-                                >
-                                  <div className="mr-2 text-sm font-medium text-muted-foreground">
-                                    {String.fromCharCode(65 + optIndex)}
-                                    .
-                                  </div>
-                                  <div className="flex-1">
-                                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                                      {option}
-                                    </Markdown>
-                                  </div>
-                                  {option === question.correctAnswer && (
-                                    <div className="text-xs font-semibold text-green-600 dark:text-green-400">
-                                      Correct Answer
+                            {/* Show options for multiple choice questions */}
+                            {question.questionType === 'option' && question.options && (
+                              <div className="space-y-2 mb-4">
+                                <h5 className="text-sm font-medium">Options:</h5>
+                                {question.options.map((option, optIndex) => (
+                                  <div
+                                    key={optIndex}
+                                    className={`flex items-center p-2 border rounded-md ${
+                                      (question.answerType === 'single' && option === question.correctAnswer)
+                                      || (question.answerType === 'multiple' && question.correctAnswers?.includes(option))
+                                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                        : ''
+                                    }`}
+                                  >
+                                    <div className="mr-2 text-sm font-medium text-muted-foreground">
+                                      {String.fromCharCode(65 + optIndex)}
+                                      .
                                     </div>
-                                  )}
+                                    <div className="flex-1">
+                                      <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                                        {option}
+                                      </Markdown>
+                                    </div>
+                                    {(question.answerType === 'single' && option === question.correctAnswer) && (
+                                      <div className="text-xs font-semibold text-green-600 dark:text-green-400">
+                                        Correct Answer
+                                      </div>
+                                    )}
+                                    {(question.answerType === 'multiple' && question.correctAnswers?.includes(option)) && (
+                                      <div className="text-xs font-semibold text-green-600 dark:text-green-400">
+                                        Correct Answer
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Show acceptable answers for text input questions */}
+                            {question.questionType === 'text' && question.correctAnswers && (
+                              <div className="mb-4">
+                                <h5 className="text-sm font-medium mb-2">Acceptable Answers:</h5>
+                                <div className="p-2 border rounded-md bg-green-50 dark:bg-green-900/20">
+                                  <ul className="list-disc pl-5 space-y-1">
+                                    {question.correctAnswers.map((answer, idx) => (
+                                      <li key={idx}>{answer}</li>
+                                    ))}
+                                  </ul>
                                 </div>
-                              ))}
-                            </div>
+                              </div>
+                            )}
+
+                            {/* Explanation if available */}
+                            {question.explanation && (
+                              <div className="mt-4">
+                                <h5 className="text-sm font-medium mb-2">Explanation:</h5>
+                                <div className="text-sm">
+                                  <ExplanationCallout explanation={question.explanation} />
+                                </div>
+                              </div>
+                            )}
                           </div>
                         ))
                       )
@@ -688,6 +950,7 @@ export default function ManagePracticesPage() {
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle>
                         Question
+                        {' '}
                         {questionIndex + 1}
                       </CardTitle>
                       <Button
@@ -700,6 +963,46 @@ export default function ManagePracticesPage() {
                     </CardHeader>
 
                     <CardContent className="space-y-4">
+                      {/* Question Type Selection */}
+                      <div className="space-y-2">
+                        <Label>Question Type</Label>
+                        <RadioGroup
+                          value={question.questionType}
+                          onValueChange={value => updateQuestion(questionIndex, 'questionType', value)}
+                          className="flex flex-row space-x-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="option" id={`question-type-option-${questionIndex}`} />
+                            <Label htmlFor={`question-type-option-${questionIndex}`}>Multiple Choice</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="text" id={`question-type-text-${questionIndex}`} />
+                            <Label htmlFor={`question-type-text-${questionIndex}`}>Text Input</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      {/* Answer Type Selection (only for option questions) */}
+                      {question.questionType === 'option' && (
+                        <div className="space-y-2">
+                          <Label>Answer Type</Label>
+                          <RadioGroup
+                            value={question.answerType}
+                            onValueChange={value => updateQuestion(questionIndex, 'answerType', value)}
+                            className="flex flex-row space-x-4"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="single" id={`answer-type-single-${questionIndex}`} />
+                              <Label htmlFor={`answer-type-single-${questionIndex}`}>Single Answer</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="multiple" id={`answer-type-multiple-${questionIndex}`} />
+                              <Label htmlFor={`answer-type-multiple-${questionIndex}`}>Multiple Answers</Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
+                      )}
+
                       <div className="space-y-2">
                         <Label>
                           Question Content (supports Markdown with LaTex math)
@@ -715,31 +1018,102 @@ export default function ManagePracticesPage() {
                         />
                       </div>
 
-                      <div className="space-y-3">
-                        <Label>Options</Label>
-                        {question.options.map((option, optionIndex) => (
-                          <div key={optionIndex} className="flex items-center space-x-2">
-                            <Input
-                              value={option}
-                              onChange={e => updateOption(questionIndex, optionIndex, e.target.value)}
-                              placeholder={`Option ${optionIndex + 1}`}
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => updateQuestion(questionIndex, 'correctAnswer', option)}
-                              className={
-                                question.correctAnswer === option
-                                  ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
-                                  : ''
-                              }
-                            >
-                              {question.correctAnswer === option ? 'Correct ✓' : 'Set as correct'}
-                            </Button>
-                          </div>
-                        ))}
+                      {/* Options for Multiple Choice Questions */}
+                      {question.questionType === 'option' && (
+                        <div className="space-y-3">
+                          <Label>Options</Label>
+                          {question.options?.map((option, optionIndex) => (
+                            <div key={optionIndex} className="flex items-center space-x-2">
+                              <Input
+                                value={option}
+                                onChange={e => updateOption(questionIndex, optionIndex, e.target.value)}
+                                placeholder={`Option ${optionIndex + 1}`}
+                              />
+                              {question.answerType === 'single'
+                                ? (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => toggleCorrectAnswer(questionIndex, option)}
+                                      className={
+                                        question.correctAnswer === option
+                                          ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
+                                          : ''
+                                      }
+                                    >
+                                      {question.correctAnswer === option ? 'Correct ✓' : 'Set as correct'}
+                                    </Button>
+                                  )
+                                : (
+                                    <div className="flex items-center space-x-2">
+                                      <Checkbox
+                                        id={`correct-${questionIndex}-${optionIndex}`}
+                                        checked={question.correctAnswers?.includes(option) || false}
+                                        onCheckedChange={() => toggleCorrectAnswer(questionIndex, option)}
+                                        disabled={!option.trim()}
+                                      />
+                                      <Label htmlFor={`correct-${questionIndex}-${optionIndex}`}>
+                                        Correct Answer
+                                      </Label>
+                                    </div>
+                                  )}
+                            </div>
+                          ))}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const updatedQuestions = [...questions]
+                              updatedQuestions[questionIndex].options = [...(updatedQuestions[questionIndex].options || []), '']
+                              setQuestions(updatedQuestions)
+                            }}
+                          >
+                            Add Option
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Text Input Question - Acceptable Answers */}
+                      {question.questionType === 'text' && (
+                        <div className="space-y-2">
+                          <Label>Acceptable Answers (one per line)</Label>
+                          <Textarea
+                            value={(question.correctAnswers || []).join('\n')}
+                            onChange={(e) => {
+                              const answers = e.target.value
+                                .split('\n')
+                                .filter(Boolean)
+                                .map(answer => answer.trim())
+                              updateCorrectAnswers(questionIndex, answers)
+                            }}
+                            placeholder="Enter acceptable answers, one per line"
+                            rows={4}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Enter all possible correct answers. The system will match exact answers.
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Explanation Field */}
+                      <div className="space-y-2">
+                        <Label>Explanation (optional)</Label>
+                        <Textarea
+                          value={question.explanation || ''}
+                          onChange={e => updateQuestion(questionIndex, 'explanation', e.target.value)}
+                          placeholder="Explain the correct answer or solution approach"
+                          rows={4}
+                        />
                       </div>
+
+                      {/* Explanation Preview */}
+                      {question.explanation && (
+                        <div className="mt-2 border p-3 rounded-md">
+                          <p className="text-sm font-medium mb-2">Explanation Preview:</p>
+                          <ExplanationCallout explanation={question.explanation} />
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -808,35 +1182,87 @@ export default function ManagePracticesPage() {
                             <div key={index} className="space-y-4">
                               <h3 className="text-lg font-medium">
                                 Question
+                                {' '}
                                 {index + 1}
+                                {' '}
+                                <span className="text-sm font-normal text-muted-foreground">
+                                  (
+                                  {question.questionType === 'option'
+                                    ? `Multiple Choice (${question.answerType === 'single' ? 'Single Answer' : 'Multiple Answers'})`
+                                    : 'Text Input'}
+                                  )
+                                </span>
                               </h3>
                               <div className="mb-4">
-                                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{question.content || 'No question content'}</Markdown>
+                                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                                  {question.content || 'No question content'}
+                                </Markdown>
                               </div>
 
-                              <div className="space-y-3">
-                                {question.options.map((option, optIndex) => (
-                                  <div
-                                    key={optIndex}
-                                    className={`flex items-center p-3 border rounded-md ${
-                                      option === question.correctAnswer ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : ''
-                                    }`}
-                                  >
-                                    <div className="mr-3 text-sm font-medium text-muted-foreground">
-                                      {String.fromCharCode(65 + optIndex)}
-                                      .
-                                    </div>
-                                    <div className="flex-1">
-                                      <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option || `Option ${optIndex + 1} (empty)`}</Markdown>
-                                    </div>
-                                    {option === question.correctAnswer && (
-                                      <div className="text-xs font-semibold text-green-600 dark:text-green-400">
-                                        Correct Answer
+                              {/* Preview for multiple choice questions */}
+                              {question.questionType === 'option' && question.options && (
+                                <div className="space-y-3">
+                                  {question.options.map((option, optIndex) => (
+                                    <div
+                                      key={optIndex}
+                                      className={`flex items-center p-3 border rounded-md ${
+                                        (question.answerType === 'single' && option === question.correctAnswer)
+                                        || (question.answerType === 'multiple' && question.correctAnswers?.includes(option))
+                                          ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                          : ''
+                                      }`}
+                                    >
+                                      <div className="mr-3 text-sm font-medium text-muted-foreground">
+                                        {String.fromCharCode(65 + optIndex)}
+                                        .
                                       </div>
-                                    )}
+                                      <div className="flex-1">
+                                        <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                                          {option || `Option ${optIndex + 1} (empty)`}
+                                        </Markdown>
+                                      </div>
+                                      {(question.answerType === 'single' && option === question.correctAnswer) && (
+                                        <div className="text-xs font-semibold text-green-600 dark:text-green-400">
+                                          Correct Answer
+                                        </div>
+                                      )}
+                                      {(question.answerType === 'multiple' && question.correctAnswers?.includes(option)) && (
+                                        <div className="text-xs font-semibold text-green-600 dark:text-green-400">
+                                          Correct Answer
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Preview for text input questions */}
+                              {question.questionType === 'text' && (
+                                <div className="space-y-4">
+                                  <div className="border p-3 rounded-md bg-muted/20">
+                                    <p className="text-sm text-muted-foreground mb-2">Text Input Field:</p>
+                                    <div className="border rounded-md p-3 min-h-[100px] bg-white dark:bg-muted"></div>
                                   </div>
-                                ))}
-                              </div>
+
+                                  {question.correctAnswers && question.correctAnswers.length > 0 && (
+                                    <div className="border p-3 rounded-md bg-green-50 dark:bg-green-900/20">
+                                      <p className="text-sm font-medium mb-2">Acceptable Answers:</p>
+                                      <ul className="list-disc pl-5 space-y-1">
+                                        {question.correctAnswers.map((answer, idx) => (
+                                          <li key={idx}>{answer}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Preview explanation if available */}
+                              {question.explanation && (
+                                <div className="mt-4">
+                                  <ExplanationCallout explanation={question.explanation} />
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
