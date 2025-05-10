@@ -121,7 +121,7 @@ export default function AboutPage() {
       </div>
 
       <Tabs defaultValue="mission" className="w-full max-w-4xl mx-auto mb-16">
-        <TabsList className="grid grid-cols-3 mb-8">
+        <TabsList className="grid grid-cols-3 mb-8 text-center">
           <TabsTrigger value="mission">Our Mission</TabsTrigger>
           <TabsTrigger value="history">Our History</TabsTrigger>
           <TabsTrigger value="founding-team">Founding Team</TabsTrigger>

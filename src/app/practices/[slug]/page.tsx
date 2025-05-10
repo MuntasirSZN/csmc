@@ -501,95 +501,95 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                 </Markdown>
               </div>
 
-              {/* Question content based on type */}
-              {question.questionType === 'option'
-                ? (
-                    question.answerType === 'single'
-                      ? (
-                    // Single choice question
-                          <div className="mt-6">
-                            <RadioGroup
-                              value={userAnswers[question.id] as string || ''}
-                              onValueChange={value => handleAnswerChange(question.id, value)}
-                              className="space-y-4"
-                            >
-                              {question.options?.map((option, i) => (
-                                <div key={`${question.id}-${i}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
-                                  <RadioGroupItem value={option} id={`question-${question.id}-option-${i}`} />
-                                  <Label
-                                    htmlFor={`question-${question.id}-option-${i}`}
-                                    className="flex-1 cursor-pointer"
-                                  >
-                                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
-                                  </Label>
-                                </div>
-                              ))}
-                            </RadioGroup>
-                          </div>
-                        )
-                      : (
-                    // Multiple choice question
-                          <div className="space-y-4 mt-6">
-                            {question.options?.map((option, i) => {
-                              // FIXED: Multiple choice selection bug
-                              const currentAnswers = Array.isArray(userAnswers[question.id])
-                                ? [...userAnswers[question.id] as string[]]
-                                : []
+              {/* Option-type questions */}
+              {question.questionType === 'option' && (
+                /* eslint-disable-next-line style/multiline-ternary */
+                question.answerType === 'single' ? (
+                  // Single choice question
+                  <div className="mt-6">
+                    <RadioGroup
+                      value={userAnswers[question.id] as string || ''}
+                      onValueChange={value => handleAnswerChange(question.id, value)}
+                      className="space-y-4"
+                    >
+                      {question.options?.map((option, i) => (
+                        <div key={`${question.id}-${i}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                          <RadioGroupItem value={option} id={`question-${question.id}-option-${i}`} />
+                          <Label
+                            htmlFor={`question-${question.id}-option-${i}`}
+                            className="flex-1 cursor-pointer"
+                          >
+                            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                ) : (
+                  // Multiple choice question
+                  <div className="space-y-4 mt-6">
+                    {question.options?.map((option, i) => {
+                      // FIXED: Multiple choice selection bug
+                      const currentAnswers = Array.isArray(userAnswers[question.id])
+                        ? [...userAnswers[question.id] as string[]]
+                        : []
 
-                              // Create a unique ID for each checkbox to prevent selection issues
-                              const optionId = `question-${question.id}-option-${i}-${option.substring(0, 5)}`
+                      // Create a unique ID for each checkbox to prevent selection issues
+                      const optionId = `question-${question.id}-option-${i}-${option.substring(0, 5)}`
 
-                              return (
-                                <div key={`${question.id}-${i}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
-                                  <Checkbox
-                                    id={optionId}
-                                    checked={currentAnswers.includes(option)}
-                                    onCheckedChange={(checked) => {
-                                      // Create a new copy of the current answers
-                                      const newAnswers = [...currentAnswers]
+                      return (
+                        <div key={`${question.id}-${i}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                          <Checkbox
+                            id={optionId}
+                            checked={currentAnswers.includes(option)}
+                            onCheckedChange={(checked) => {
+                              // Create a new copy of the current answers
+                              const newAnswers = [...currentAnswers]
 
-                                      if (checked) {
-                                        // Add option if not already in array
-                                        if (!newAnswers.includes(option)) {
-                                          newAnswers.push(option)
-                                        }
-                                      }
-                                      else {
-                                        // Remove option if in array
-                                        const index = newAnswers.indexOf(option)
-                                        if (index !== -1) {
-                                          newAnswers.splice(index, 1)
-                                        }
-                                      }
+                              if (checked) {
+                                // Add option if not already in array
+                                if (!newAnswers.includes(option)) {
+                                  newAnswers.push(option)
+                                }
+                              }
+                              else {
+                                // Remove option if in array
+                                const index = newAnswers.indexOf(option)
+                                if (index !== -1) {
+                                  newAnswers.splice(index, 1)
+                                }
+                              }
 
-                                      // Update state with new array
-                                      handleAnswerChange(question.id, newAnswers)
-                                    }}
-                                    className="mt-1"
-                                  />
-                                  <Label
-                                    htmlFor={optionId}
-                                    className="flex-1 cursor-pointer"
-                                  >
-                                    <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
-                                  </Label>
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )
-                  )
-                : (
-                  // Text input question
-                    <div className="mt-6">
-                      <Textarea
-                        value={(userAnswers[question.id] as string) || ''}
-                        onChange={e => handleAnswerChange(question.id, e.target.value)}
-                        placeholder="Type your answer here..."
-                        className="min-h-[150px] w-full"
-                      />
-                    </div>
-                  )}
+                              // Update state with new array
+                              handleAnswerChange(question.id, newAnswers)
+                            }}
+                            className="mt-1"
+                          />
+                          <Label
+                            htmlFor={optionId}
+                            className="flex-1 cursor-pointer"
+                          >
+                            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
+                          </Label>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              )}
+
+              {/* Text input question - FIXED RENDERING LOGIC */}
+              {question.questionType === 'text' && (
+                <div className="mt-6">
+                  <Textarea
+                    key={`text-${question.id}`} // Key helps with rendering
+                    value={(userAnswers[question.id] as string) || ''}
+                    onChange={e => handleAnswerChange(question.id, e.target.value)}
+                    placeholder="Type your answer here..."
+                    className="min-h-[150px] w-full"
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { HoverBorderGradient } from '@/components/ui/hover-border-gradient'
 import {
   ArrowRight,
   Award,
@@ -97,10 +98,10 @@ export default function Home() {
           <p className="text-xl text-muted-foreground max-w-2xl">
             Meet a new range of thinking with mathematics
           </p>
-          <Badge className="mt-8 bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 text-lg font-medium">
+          <HoverBorderGradient className="text-white py-2 px-4 text-lg font-medium" as="button">
             <Trophy className="mr-2" size={20} />
-            Our latest contest: CSMC Math Hunt
-          </Badge>
+            <span>Our latest contest: CSMC Math Hunt</span>
+          </HoverBorderGradient>
         </div>
       </section>
 

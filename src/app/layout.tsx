@@ -11,15 +11,15 @@ import NavBar from '@/components/navbar'
 import { Footer } from '@/components/ui/footer-section'
 import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from 'next-themes'
-import { Inter, Noto_Sans_Bengali } from 'next/font/google'
+import { Geist, Noto_Sans_Bengali } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Suspense } from 'react'
 import Loading from './loading'
 import { Providers } from './providers'
 import './global.css'
 
-const inter = Inter({
-  variable: '--font-inter',
+const geist = Geist({
+  variable: '--font-geist',
   subsets: ['latin'],
 })
 
@@ -88,7 +88,7 @@ export const viewport: Viewport = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
         <Suspense fallback={<Loading />}>
           <NuqsAdapter>
@@ -102,7 +102,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Toaster />
                 <NavBar />
                 <CookieConsent />
-                {children}
+                <main className="pt-15">
+                  {children}
+                </main>
                 <Footer />
               </Providers>
             </ThemeProvider>
