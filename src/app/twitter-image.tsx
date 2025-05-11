@@ -16,17 +16,14 @@ export const size = {
 export const alt = 'Collegiate School Math Club'
 
 export default async function OGImage() {
-  // Load the font
-  const interMedium = await readFile(
-    join(process.cwd(), 'src/app/fonts/Inter-Medium.ttf'),
+  const geistMedium = await readFile(
+    join(process.cwd(), 'src/app/fonts/Geist-Medium.ttf'),
   )
 
-  // Load the logo
   const logoData = await readFile(
     join(process.cwd(), 'public/png-logos/CSMC.png'),
   )
 
-  // Convert the logo to base64 for use in an <img> tag
   const logoBase64 = `data:image/png;base64,${logoData.toString('base64')}`
 
   return new ImageResponse(
@@ -39,9 +36,9 @@ export default async function OGImage() {
           justifyContent: 'center',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #120d23 0%, #312244 50%, #654b6b 100%)',
+          background: 'linear-gradient(135deg, #0d1a29 0%, #1a365d 50%, #2b6cb0 100%)',
           padding: '40px',
-          fontFamily: '"Inter", sans-serif',
+          fontFamily: '"Geist", sans-serif',
         }}
       >
         <div
@@ -150,7 +147,7 @@ export default async function OGImage() {
               width: '300px',
               height: '300px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)',
+              background: 'radial-gradient(circle, rgba(144,205,244,0.15) 0%, rgba(255,255,255,0) 70%)',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
@@ -192,7 +189,7 @@ export default async function OGImage() {
             style={{
               width: '120px',
               height: '4px',
-              background: 'linear-gradient(to right, #9d81bc, #ffffff)',
+              background: 'linear-gradient(to right, #3b82f6, #ffffff)',
               margin: '30px 0',
               borderRadius: '2px',
             }}
@@ -202,7 +199,7 @@ export default async function OGImage() {
           <p
             style={{
               fontSize: '26px',
-              color: '#9d81bc',
+              color: '#90cdf4',
               textAlign: 'center',
               maxWidth: '80%',
               fontWeight: '500',
@@ -217,8 +214,8 @@ export default async function OGImage() {
       ...size,
       fonts: [
         {
-          name: 'Inter',
-          data: interMedium,
+          name: 'Geist',
+          data: geistMedium,
           style: 'normal',
           weight: 500,
         },

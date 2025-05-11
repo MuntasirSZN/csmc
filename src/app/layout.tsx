@@ -4,10 +4,14 @@
  * the main content.
  */
 
+/* eslint-disable perfectionist/sort-imports */
+
+import { ReactScan } from '@/components/react-scan'
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import CookieConsent from '@/components/CookieConsent'
 import NavBar from '@/components/navbar'
+import ClickSpark from '@/components/ui/click-spark'
 import { Footer } from '@/components/ui/footer-section'
 import { Toaster } from '@/components/ui/sonner'
 import { ThemeProvider } from 'next-themes'
@@ -90,6 +94,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${geist.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
+        <ReactScan />
         <Suspense fallback={<Loading />}>
           <NuqsAdapter>
             <ThemeProvider
@@ -98,15 +103,23 @@ export default function Layout({ children }: { children: ReactNode }) {
               enableSystem
               disableTransitionOnChange
             >
-              <Providers>
-                <Toaster />
-                <NavBar />
-                <CookieConsent />
-                <main className="pt-15">
-                  {children}
-                </main>
-                <Footer />
-              </Providers>
+              <ClickSpark
+                sparkColor="#fff"
+                sparkSize={10}
+                sparkRadius={15}
+                sparkCount={8}
+                duration={400}
+              >
+                <Providers>
+                  <Toaster />
+                  <NavBar />
+                  <CookieConsent />
+                  <main className="pt-15">
+                    {children}
+                  </main>
+                  <Footer />
+                </Providers>
+              </ClickSpark>
             </ThemeProvider>
           </NuqsAdapter>
         </Suspense>
