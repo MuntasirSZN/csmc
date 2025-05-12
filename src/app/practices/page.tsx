@@ -95,7 +95,7 @@ export default function PracticesPage() {
   }
 
   return (
-    <div className="container py-8 pt-15 mx-auto text-center">
+    <div className="container py-8 mx-auto text-center">
       <h1 className="text-3xl font-bold mb-6">Practice Exercises</h1>
 
       {practices.length === 0

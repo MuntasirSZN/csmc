@@ -65,7 +65,7 @@ export default function NavBar() {
         ? 'top-0'
         : '-top-full'
       } ${isScrolled && visible
-        ? 'bg-background/70 dark:bg-background/80 backdrop-blur-lg shadow-md'
+        ? 'bg-background/70 backdrop-blur-lg shadow-md'
         : 'bg-background'
       }`}
     >

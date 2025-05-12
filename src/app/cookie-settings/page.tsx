@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function CookiePolicy() {
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl pt-15">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Card>
         <CardHeader>
           <div className="flex items-center space-x-2">

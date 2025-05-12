@@ -408,7 +408,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   }
 
   return (
-    <div className="container py-6 pt-15 mx-auto">
+    <div className="container py-6 mx-auto">
       <div className="flex flex-col space-y-6 max-w-4xl mx-auto">
         {/* Sticky header with timer and progress */}
         <div className="sticky top-0 z-50 p-4 bg-background/95 backdrop-blur-sm border-b">

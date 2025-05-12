@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient'
+import { TextHoverEffect } from '@/components/ui/text-hover-effect'
 import {
   ArrowRight,
   Award,
@@ -92,14 +93,16 @@ export default function Home() {
               unoptimized={true}
             />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent">
-            Collegiate School Math Club
-          </h1>
+          <div className="text-4xl md:text-5xl font-bold bg-clip-text w-full">
+            <div className="w-full h-20">
+              <TextHoverEffect text="Collegiate School Math Club" />
+            </div>
+          </div>
           <p className="text-xl text-muted-foreground max-w-2xl">
             Meet a new range of thinking with mathematics
           </p>
-          <HoverBorderGradient className="text-white py-2 px-4 text-lg font-medium" as="button">
-            <Trophy className="mr-2" size={20} />
+          <HoverBorderGradient className="text-white py-2 px-4 font-medium flex" as="button">
+            <Trophy className="mr-2" />
             <span>Our latest contest: CSMC Math Hunt</span>
           </HoverBorderGradient>
         </div>
@@ -315,7 +318,6 @@ export default function Home() {
               <AccordionItem key={faq.id} value={faq.id} className="border-b border-muted last:border-0">
                 <AccordionTrigger className="text-left hover:text-primary transition-colors duration-300 py-4">
                   <div className="flex items-center">
-                    <CircleHelp className="mr-2 text-primary" size={20} />
                     {faq.question}
                   </div>
                 </AccordionTrigger>

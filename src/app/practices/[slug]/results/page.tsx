@@ -86,7 +86,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
 
   if (loading) {
     return (
-      <div className="container py-8 pt-15 mx-auto max-w-3xl">
+      <div className="container py-8 mx-auto max-w-3xl">
         <div className="space-y-8">
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-32 w-full" />
@@ -103,7 +103,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
 
   if (!attemptResult) {
     return (
-      <div className="container py-8 pt-15 mx-auto max-w-3xl">
+      <div className="container py-8 mx-auto max-w-3xl">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Results not found</h1>
           <p className="mb-6">We couldn't find the results for this attempt.</p>
@@ -164,7 +164,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
   }
 
   return (
-    <div className="container py-8 pt-15 mx-auto max-w-3xl">
+    <div className="container py-8 mx-auto max-w-3xl">
       <div className="space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold">
