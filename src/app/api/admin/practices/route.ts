@@ -56,6 +56,10 @@ export async function POST(request: NextRequest) {
         content: q.content,
         options: q.options,
         correctAnswer: q.correctAnswer,
+        correctAnswers: q.correctAnswers,
+        explanation: q.explanation,
+        questionType: q.questionType,
+        answerType: q.answerType,
         order: q.order,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -89,7 +93,6 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url)
     const slug = url.searchParams.get('slug')
 
-    // Get a single practice with its questions
     if (slug) {
       const practice = await db.query.practices.findFirst({
         where: (practice, { eq }) => eq(practice.slug, slug),
@@ -113,7 +116,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Get all practices
     const allPractices = await db.query.practices.findMany({
       orderBy: (practice, { desc }) => desc(practice.updatedAt),
     })
@@ -178,7 +180,6 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Update practice
     const [updatedPractice] = await db.update(practices)
       .set({
         title,
@@ -191,16 +192,18 @@ export async function PUT(request: NextRequest) {
       .where(eq(practices.id, id))
       .returning()
 
-    // Delete existing questions
     await db.delete(questions).where(eq(questions.practiceId, id))
 
-    // Insert new questions
     for (const q of questionList) {
       await db.insert(questions).values({
         practiceId: id,
         content: q.content,
         options: q.options,
         correctAnswer: q.correctAnswer,
+        correctAnswers: q.correctAnswers,
+        explanation: q.explanation,
+        questionType: q.questionType,
+        answerType: q.answerType,
         order: q.order,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -241,7 +244,6 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Check if practice exists
     const existingPractice = await db.query.practices.findFirst({
       where: (practice, { eq }) => eq(practice.id, Number.parseInt(id)),
     })
@@ -253,7 +255,6 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Delete practice (questions will be deleted via cascade)
     await db.delete(practices).where(eq(practices.id, Number.parseInt(id)))
 
     return NextResponse.json({ success: true })
