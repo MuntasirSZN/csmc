@@ -22,7 +22,6 @@ import {
   Trophy,
   Users,
 } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -84,14 +83,15 @@ export default function Home() {
       <section className="w-full py-16">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
           <div className="w-32 h-32 relative animate-pulse">
-            <Image
-              src="/CSMC.webm"
-              alt="Collegiate School Math Club Logo"
-              fill
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
               className="object-contain"
-              priority
-              unoptimized={true}
-            />
+            >
+              <source src="/CSMC.webm" type="video/webm" />
+            </video>
           </div>
           <div className="text-4xl md:text-5xl font-bold bg-clip-text w-full">
             <div className="w-full h-20">
