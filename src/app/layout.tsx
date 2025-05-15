@@ -4,9 +4,6 @@
  * the main content.
  */
 
-/* eslint-disable perfectionist/sort-imports */
-
-import { ReactScan } from '@/components/react-scan'
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import CookieConsent from '@/components/CookieConsent'
@@ -94,7 +91,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${geist.className} ${noto_sans_bengali.className}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen scroll-smooth">
-        <ReactScan />
         <Suspense fallback={<Loading />}>
           <NuqsAdapter>
             <ThemeProvider
