@@ -7,31 +7,31 @@ import type { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://csmc.vercel.app/',
+      url: 'https://collegiateschoolmathclub.netlify.app/',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://csmc.vercel.app/about',
+      url: 'https://collegiateschoolmathclub.netlify.app/about',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://csmc.vercel.app/practices',
+      url: 'https://collegiateschoolmathclub.netlify.app/practices',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: 'https://csmc.vercel.app/contests',
+      url: 'https://collegiateschoolmathclub.netlify.app/contests',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: 'https://csmc.vercel.app/contact',
+      url: 'https://collegiateschoolmathclub.netlify.app/contact',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,

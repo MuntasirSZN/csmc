@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://csmc.vercel.app/sitemap.xml',
+    sitemap: 'https://collegiateschoolmathclub.netlify.app/sitemap.xml',
   }
 }

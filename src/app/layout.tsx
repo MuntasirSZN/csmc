@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     address: true,
     telephone: true,
   },
-  metadataBase: new URL('https://csmc.vercel.app'),
+  metadataBase: new URL('https://collegiateschoolmathclub.netlify.app'),
   robots: {
     index: true,
     follow: true,
@@ -70,12 +70,12 @@ export const metadata: Metadata = {
     title: 'Collegiate School Math Club',
     description:
       'Meet a new range of thinking with mathematics',
-    url: 'https://csmc.vercel.app',
+    url: 'https://collegiateschoolmathclub.netlify.app',
     type: 'website',
     siteName: 'CSMC',
   },
   twitter: {
-    site: 'https://csmc.vercel.app',
+    site: 'https://collegiateschoolmathclub.netlify.app',
     creator: 'Muntasir Mahmud And Nowazish Nur Kayef',
     title: 'Collegiate School Math Club',
     description:

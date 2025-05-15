@@ -45,9 +45,9 @@ export const auth = betterAuth({
           )}
           heading="Reset Your Password"
           siteName="CSMC"
-          baseUrl="https://csmc.vercel.app"
+          baseUrl="https://collegiateschoolmathclub.netlify.app"
           url={url}
-          imageUrl="https://csmc.vercel.app/png-logos/CSMC.png"
+          imageUrl="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png"
         />,
       )
       transporter.sendMail({
@@ -77,9 +77,9 @@ export const auth = betterAuth({
           )}
           heading="Verify Email"
           siteName="CSMC"
-          baseUrl="https://csmc.vercel.app"
+          baseUrl="https://collegiateschoolmathclub.netlify.app"
           url={url}
-          imageUrl="https://csmc.vercel.app/png-logos/CSMC.png"
+          imageUrl="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png"
         />,
       )
       transporter.sendMail({
@@ -152,8 +152,8 @@ export const auth = betterAuth({
               )}
               heading="Confirm Sign In"
               siteName="CSMC"
-              baseUrl="https://csmc.vercel.app"
-              imageUrl="https://csmc.vercel.app/png-logos/CSMC.png"
+              baseUrl="https://collegiateschoolmathclub.netlify.app"
+              imageUrl="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png"
             />,
           )
           transporter.sendMail({
