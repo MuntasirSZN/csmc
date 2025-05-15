@@ -84,9 +84,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
           <div className="w-32 h-32 relative animate-pulse">
             <video 
-              autoPlay 
-              loop 
-              muted 
+              autoPlay
+              loop
+              muted
               playsInline
               className="object-contain"
             >
