@@ -85,7 +85,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
           <div className="w-32 h-32 relative animate-pulse">
             <Image
-              src="/CSMC.gif"
+              src="/CSMC.webm"
               alt="Collegiate School Math Club Logo"
               fill
               className="object-contain"
@@ -293,7 +293,7 @@ export default function Home() {
               <CardFooter className="pt-0">
                 <Button variant="link" asChild className="px-0 group-hover:text-primary transition-colors duration-300">
                   <Link href={announcement.link} className="flex items-center">
-                    Learn More
+                    Click To Learn More
                     <ArrowRight className="ml-1 group-hover:translate-x-1 transition-transform duration-300" size={16} />
                   </Link>
                 </Button>

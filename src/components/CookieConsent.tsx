@@ -105,6 +105,7 @@ export default function CookieConsent() {
                     size="icon"
                     onClick={() => setIsVisible(false)}
                     className="h-8 w-8"
+                    aria-label="Close"
                   >
                     <X size={16} />
                   </Button>
