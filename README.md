@@ -1,5 +1,7 @@
 # next-csmc
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status)](https://app.netlify.com/projects/collegiateschoolmathclub/deploys)
+
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
@@ -23,4 +25,5 @@ resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
   features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.vercel.app) - learn about Fumadocs
+
+Site is at https://collegiateschoolmathclub.netlify.app
