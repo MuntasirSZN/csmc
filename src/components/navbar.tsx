@@ -80,7 +80,6 @@ export default function NavBar() {
             </SignedIn>
             <SignedOut>
               <NavbarButton variant="primary" href="/auth/sign-in">Sign In</NavbarButton>
-              <NavbarButton variant="gradient" href="/auth/sign-up">Sign Up</NavbarButton>
             </SignedOut>
           </div>
         </NavBody>
@@ -121,14 +120,6 @@ export default function NavBar() {
                   href="/auth/sign-in"
                 >
                   Sign In
-                </NavbarButton>
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="gradient"
-                  className="w-full"
-                  href="/auth/sign-up"
-                >
-                  Sign Up
                 </NavbarButton>
               </SignedOut>
             </div>
