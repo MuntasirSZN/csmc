@@ -1,5 +1,5 @@
 <h6 align="center">
- <img src="https://collegiateschoolmathclub.netlify.app/CSMC.gif" width="20%">
+ <img src="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png" width="20%">
 </h6>
 
 <h4 align="center">Collegiate School Math Club</h4>
