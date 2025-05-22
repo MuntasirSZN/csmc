@@ -1,0 +1,43 @@
+name: Assertions and static report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+           node-version: latest
+
+      - name: Install Dependencies
+        run: bun add @unlighthouse/cli puppeteer
+
+      - name: Unlighthouse assertions and client
+        run: bun unlighthouse-ci --site https://collegiateschoolmathclub.netlify.app --budget 75 --build-static
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .lighthouse/client/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
