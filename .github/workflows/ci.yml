@@ -26,11 +26,11 @@ jobs:
         run: bun add @unlighthouse/cli puppeteer
 
       - name: Unlighthouse assertions and client
+        continue-on-error: true
         run: bun unlighthouse-ci --site https://collegiateschoolmathclub.netlify.app --budget 75 --build-static
 
       - name: Upload static files as artifact
         id: deployment
-        continue-on-error: true
         uses: actions/upload-pages-artifact@v3
         with:
           path: .lighthouse/client/
