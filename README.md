@@ -1,4 +1,13 @@
-<h1 align="center">Collegiate School Math Club</h1>
+<h6 align="center">
+ <img src="https://collegiateschoolmathclub.netlify.app/CSMC.gif" width="20%">
+</h6>
+
+<h4 align="center">Collegiate School Math Club</h4>
+
+<p align="center">
+    <b>Meet a new range of thinking with mathematics</b><br>
+    The one and only official math club of Chattogram Collegiate School.
+</p>
 
 <h4 align="center">
   <img src="https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status?style=for-the-badge" href="https://app.netlify.com/projects/collegiateschoolmathclub/deploys">
@@ -13,22 +22,22 @@ This is the official website of Collegiate School Math Club, developed and maint
 
 ## Tech Stack
 
-- Next.js
-- Turso (libSQL Database)
-- Drizzle ORM
-- Tailwind CSS
-- React 19
-- Shadcn UI
-- Eslint
-- Typescript
-- Netlify
-- Better Auth
-- Upstash Redis
-- Bun
+- [Next.js](https://nextjs.org)
+- [Turso](https://turso.tech) ([libSQL](https://github.com/tursodatabase/libsql) Database)
+- [Drizzle ORM](https://github.com/drizzle-team/drizzle-orm)
+- [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
+- [React](https://github.com/facebook/react)
+- [Shadcn UI](https://github.com/shadcn-ui/ui)
+- [Eslint](https://github.com/eslint/eslint)
+- [Typescript](https://github.com/microsoft/typescript)
+- [Netlify](https://netlify.com)
+- [Better Auth](https://github.com/better-auth/better-auth)
+- [Upstash Redis](https://upstash.com)
+- [Bun](https://github.com/oven-sh/bun)
 
 ## Developing
 
-It uses app router of next.js, with [src](./src) directory.
+It uses app router of Next.js, with [src](./src) directory.
 
 1. Clone this repo.
 
