@@ -1,29 +1,18 @@
-# next-csmc
+<h1 align="center">Collegiate School Math Club</h1>
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status)](https://app.netlify.com/projects/collegiateschoolmathclub/deploys)
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+This is the official website of Collegiate School Math Club, developed and maintained by [Nowazish Nur Kayef](https://github.com/Nowazish-Nur-Kayef) and [Muntasir Mahmud](https://github.com/MuntasirSZN)
 
-Run development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
-```
+- Next.js
+- Turso (libSQL Database)
+- Drizzle ORM
+- Tailwind CSS
+- React 19
+- Shadcn UI
+- Eslint
+- Typescript 
+- Netlify
 
-Open http://localhost:3000 with your browser to see the result.
-
-## Learn More
-
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-Site is at https://collegiateschoolmathclub.netlify.app
