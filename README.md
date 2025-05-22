@@ -1,6 +1,5 @@
 <h1 align="center">Collegiate School Math Club</h1>
 
-
 <h4 align="center">
   <img src="https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status?style=for-the-badge" href="https://app.netlify.com/projects/collegiateschoolmathclub/deploys">
   <img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=homepage&labelColor=1E1E2E" alt="License">
@@ -21,7 +20,7 @@ This is the official website of Collegiate School Math Club, developed and maint
 - React 19
 - Shadcn UI
 - Eslint
-- Typescript 
+- Typescript
 - Netlify
 - Better Auth
 - Upstash Redis
