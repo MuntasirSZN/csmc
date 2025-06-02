@@ -36,7 +36,7 @@
     "@react-email/render": "^1.1.2",
     "@tabler/icons-react": "^3.33.0",
     "@types/nodemailer": "^6.4.17",
-    "babel-plugin-react-compiler": "^19.1.0-rc.1-rc-af1b7da-20250421",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "better-auth": "^1.2.8",
     "better-auth-harmony": "^1.2.5",
     "class-variance-authority": "^0.7.1",
@@ -68,7 +68,7 @@
     "remark-rehype": "^11.1.2",
     "sonner": "^2.0.4",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.46"
+    "zod": "^3.25.47"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.2",
