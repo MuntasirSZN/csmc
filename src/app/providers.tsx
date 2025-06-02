@@ -6,10 +6,10 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { authClient } from '@/lib/auth-client'
 import { AuthUIProvider } from '@daveyplate/better-auth-ui'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
 
 export function Providers({ children }: { children: ReactNode }) {
   const router = useRouter()

@@ -1,12 +1,12 @@
 'use client'
 
 import type { HTMLAttributes } from 'react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { cva } from 'class-variance-authority'
 import { Airplay, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useLayoutEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const itemVariants = cva(
   'size-6.5 rounded-full p-1.5 text-muted-foreground',

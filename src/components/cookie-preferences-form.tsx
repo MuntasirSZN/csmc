@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 
 export default function CookiePreferencesForm() {
   const [cookiePreferences, setCookiePreferences] = useState({

@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next'
+import { CookieIcon } from 'lucide-react'
 import CookiePreferencesForm from '@/components/cookie-preferences-form'
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { CookieIcon } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Cookie Settings',

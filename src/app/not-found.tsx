@@ -3,9 +3,9 @@
  */
 
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import NotFoundButton from '@/components/not-found-button'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: '404 Page Not Found',

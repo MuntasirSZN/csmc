@@ -3,6 +3,8 @@
  */
 
 import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,8 +21,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs'
-import Image from 'next/image'
-import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'About',

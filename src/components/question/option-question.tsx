@@ -1,11 +1,11 @@
 'use client'
 
+import Markdown from 'react-markdown'
 import { ExplanationCallout } from '@/components/explanation-callout'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import Markdown from 'react-markdown'
 
 interface OptionQuestionProps {
   question: {

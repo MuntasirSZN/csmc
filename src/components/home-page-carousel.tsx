@@ -1,9 +1,9 @@
 'use client'
 
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import Autoplay from 'embla-carousel-autoplay'
 import Fade from 'embla-carousel-fade'
 import Image from 'next/image'
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 
 export default function HomePageCarousel() {
   const carouselImages = [

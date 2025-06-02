@@ -3,10 +3,10 @@
  */
 
 import type { NextRequest } from 'next/server'
-import { db } from '@/lib/db'
-import { practices } from '@/lib/schema'
 import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { practices } from '@/lib/schema'
 
 export async function GET(
   request: NextRequest,

@@ -3,12 +3,12 @@
  */
 
 import type { Metadata } from 'next'
+import { Mail, MapPinIcon, PhoneIcon } from 'lucide-react'
 import ContactForm from '@/components/contact-form'
 import {
   Card,
   CardContent,
 } from '@/components/ui/card'
-import { Mail, MapPinIcon, PhoneIcon } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Contact',

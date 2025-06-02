@@ -1,5 +1,8 @@
 'use client'
 
+import { CircleCheck, CircleSlash, CookieIcon, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,9 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { CircleCheck, CircleSlash, CookieIcon, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
 
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false)

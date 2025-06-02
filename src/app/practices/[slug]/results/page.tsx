@@ -1,11 +1,5 @@
 'use client'
 
-import { ExplanationCallout } from '@/components/explanation-callout'
-import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Skeleton } from '@/components/ui/skeleton'
 import { formatDistanceToNow } from 'date-fns'
 import { BarChart2, CheckCircle2, Clock, Home, XCircle } from 'lucide-react'
 import Link from 'next/link'
@@ -13,6 +7,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
 import { toast } from 'sonner'
+import { ExplanationCallout } from '@/components/explanation-callout'
+import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Question {
   id: number

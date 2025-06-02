@@ -1,10 +1,10 @@
 import type { NextRequest } from 'next/server'
-import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { practices, questions } from '@/lib/schema'
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { practices, questions } from '@/lib/schema'
 
 // Create a new practice
 export async function POST(request: NextRequest) {

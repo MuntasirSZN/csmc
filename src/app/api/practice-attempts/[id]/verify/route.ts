@@ -1,8 +1,8 @@
 import type { NextRequest } from 'next/server'
-import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
 
 export async function GET(
   request: NextRequest,

@@ -1,9 +1,9 @@
 'use client'
 
+import Markdown from 'react-markdown'
 import { ExplanationCallout } from '@/components/explanation-callout'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Textarea } from '@/components/ui/textarea'
-import Markdown from 'react-markdown'
 
 interface TextQuestionProps {
   question: {

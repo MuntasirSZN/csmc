@@ -3,11 +3,11 @@
  */
 
 import type { NextRequest } from 'next/server'
-import { db } from '@/lib/db'
-import { NewsletterSubscriptions } from '@/lib/schema'
 import arcjet, { tokenBucket, validateEmail } from '@arcjet/next'
 import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { NewsletterSubscriptions } from '@/lib/schema'
 
 const aj = arcjet({
   key: process.env.ARCJET_KEY!,

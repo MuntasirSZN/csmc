@@ -1,11 +1,11 @@
 import type { NextRequest } from 'next/server'
-import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { practiceAttempts } from '@/lib/schema'
 import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { unauthorized } from 'next/navigation'
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { practiceAttempts } from '@/lib/schema'
 
 export async function PUT(
   request: NextRequest,

@@ -1,5 +1,8 @@
 'use client'
 
+import { SignedIn, SignedOut, UserButton } from '@daveyplate/better-auth-ui'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import {
   MobileNav,
   MobileNavHeader,
@@ -11,9 +14,6 @@ import {
   NavBody,
   NavItems,
 } from '@/components/ui/resizable-navbar'
-import { SignedIn, SignedOut, UserButton } from '@daveyplate/better-auth-ui'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 export default function NavBar() {
   const navItems = [

@@ -3,13 +3,6 @@
  */
 
 import type { Metadata } from 'next'
-import HomePageCarousel from '@/components/home-page-carousel'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { HoverBorderGradient } from '@/components/ui/hover-border-gradient'
-import { TextHoverEffect } from '@/components/ui/text-hover-effect'
 import {
   ArrowRight,
   Award,
@@ -23,6 +16,13 @@ import {
   Users,
 } from 'lucide-react'
 import Link from 'next/link'
+import HomePageCarousel from '@/components/home-page-carousel'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { HoverBorderGradient } from '@/components/ui/hover-border-gradient'
+import { TextHoverEffect } from '@/components/ui/text-hover-effect'
 
 export const metadata: Metadata = {
   title: 'Home',

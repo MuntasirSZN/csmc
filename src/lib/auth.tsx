@@ -3,7 +3,6 @@
  * and pass header().
  */
 
-import { db } from '@/lib/db'
 import { EmailTemplate } from '@daveyplate/better-auth-ui/server'
 import { Section } from '@react-email/components'
 import { render } from '@react-email/render'
@@ -12,6 +11,7 @@ import { emailHarmony } from 'better-auth-harmony'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
 import { passkey } from 'better-auth/plugins/passkey'
+import { db } from '@/lib/db'
 import { transporter } from './email'
 import { redis } from './redis'
 import { authSchema } from './schema'
