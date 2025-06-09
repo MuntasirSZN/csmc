@@ -116,7 +116,7 @@ function Footer() {
             <address className="space-y-2 text-sm not-italic">
               <p>Ice Factory Road, Sadarghat</p>
               <p>Chattogram, Bangladesh</p>
-              <p>Phone: 031-2863055</p>
+              <p>Phone: +880 1819-647574</p>
               <p>Email: csmc24.24@gmail.com</p>
             </address>
           </div>

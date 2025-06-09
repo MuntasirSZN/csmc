@@ -43,7 +43,7 @@ export default function ContactPage() {
                 <PhoneIcon className="h-6 w-6 text-primary" />
               </div>
               <h3 className="mb-2 font-medium">Phone</h3>
-              <p className="text-sm text-muted-foreground">031-2863055</p>
+              <p className="text-sm text-muted-foreground">+880 1819-647574</p>
             </CardContent>
           </Card>
 

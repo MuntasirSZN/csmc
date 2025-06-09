@@ -14,8 +14,10 @@ import {
   NavBody,
   NavItems,
 } from '@/components/ui/resizable-navbar'
+import { authClient } from '@/lib/auth-client'
 
 export default function NavBar() {
+  const { data: session } = authClient.useSession()
   const navItems = [
     {
       name: 'Home',
@@ -38,6 +40,9 @@ export default function NavBar() {
       link: '/contact',
     },
   ]
+  if (session && session.user.role === 'admin') {
+    navItems.push({ name: 'Manage Practices', link: '/manage-practices' })
+  }
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [prevScrollPos, setPrevScrollPos] = useState(0)
