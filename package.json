@@ -18,7 +18,7 @@
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.8",
     "@arcjet/next": "^1.0.0-beta.8",
-    "@daveyplate/better-auth-ui": "^1.7.4",
+    "@daveyplate/better-auth-ui": "^2.0.3",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
