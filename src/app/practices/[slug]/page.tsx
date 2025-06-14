@@ -436,6 +436,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                 of
                 {totalQuestions}
                 {' '}
+                {' '}
                 questions answered
               </span>
               <Button
