@@ -81,7 +81,7 @@ export default function NavBar() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <SignedIn>
-              <UserButton />
+              <UserButton size="icon" />
             </SignedIn>
             <SignedOut>
               <NavbarButton variant="primary" href="/auth/sign-in">Sign In</NavbarButton>
@@ -115,7 +115,7 @@ export default function NavBar() {
             ))}
             <div className="flex w-full flex-col gap-4">
               <SignedIn>
-                <UserButton size="full" />
+                <UserButton />
               </SignedIn>
               <SignedOut>
                 <NavbarButton

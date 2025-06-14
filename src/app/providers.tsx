@@ -24,14 +24,20 @@ export function Providers({ children }: { children: ReactNode }) {
         router.refresh()
       }}
       Link={Link}
-      colorIcons
+      colorIcons={true}
       passkey
-      rememberMe
+      credentials={{
+        rememberMe: true,
+        confirmPassword: true,
+      }}
+      deleteUser={{
+        verification: true,
+      }}
       avatar
-      confirmPassword
-      deleteAccountVerification
       emailVerification
-      providers={['github', 'google', 'facebook']}
+      social={{
+        providers: ['github', 'google', 'facebook'],
+      }}
       twoFactor={['otp', 'totp']}
     >
       {children}
