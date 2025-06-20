@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
+import { isAnswerCorrect } from '@/lib/answer-utils'
 
 interface Question {
   id: number
@@ -121,7 +122,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
   const userAnswer = answers[currentQuestion.id]
 
   // Check if the user's answer is correct
-  const isCorrect = (() => {
+  const isCorrectAnswer = (() => {
     if (currentQuestion.questionType === 'option') {
       if (currentQuestion.answerType === 'single') {
         return userAnswer === currentQuestion.correctAnswer
@@ -136,10 +137,8 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
       }
     }
     else {
-      // For text questions
-      if (!userAnswer)
-        return false
-      return currentQuestion.correctAnswers?.includes(userAnswer.toString())
+      // For text questions, use normalized comparison
+      return isAnswerCorrect(userAnswer as string, currentQuestion.correctAnswers)
     }
   })()
 
@@ -323,10 +322,10 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                 <div className="space-y-4 mt-4">
                   <div className="border p-4 rounded-md">
                     <div className="text-sm font-medium mb-2">Your Answer:</div>
-                    <div className={`p-2 rounded-md ${isCorrect ? 'bg-green-50 border-green-200 dark:bg-green-900/20' : 'bg-red-50 border-red-200 dark:bg-red-900/20'}`}>
+                    <div className={`p-2 rounded-md ${isCorrectAnswer ? 'bg-green-50 border-green-200 dark:bg-green-900/20' : 'bg-red-50 border-red-200 dark:bg-red-900/20'}`}>
                       {userAnswer ? userAnswer.toString() : 'No answer provided'}
                     </div>
-                    {!isCorrect && (
+                    {!isCorrectAnswer && (
                       <div className="mt-4">
                         <div className="text-sm font-medium mb-2">Acceptable Answers:</div>
                         <div className="p-2 bg-yellow-50 border-yellow-200 rounded-md dark:bg-yellow-900/20">

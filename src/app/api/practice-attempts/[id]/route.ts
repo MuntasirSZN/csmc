@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { unauthorized } from 'next/navigation'
 import { NextResponse } from 'next/server'
+import { isAnswerCorrect } from '@/lib/answer-utils'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { practiceAttempts } from '@/lib/schema'
@@ -56,8 +57,10 @@ export async function PUT(
         continue
 
       if (question.questionType === 'text') {
-        // For text questions, we'll need manual grading, so skip scoring
-        continue
+        // For text questions, use normalized comparison
+        if (isAnswerCorrect(userAnswer as string, question.correctAnswers)) {
+          score += 1
+        }
       }
       else {
         // For option questions
