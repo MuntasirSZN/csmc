@@ -24,7 +24,6 @@ export function Providers({ children }: { children: ReactNode }) {
         router.refresh()
       }}
       Link={Link}
-      colorIcons={true}
       passkey
       credentials={{
         rememberMe: true,

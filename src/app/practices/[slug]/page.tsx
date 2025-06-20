@@ -432,12 +432,9 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
             <div className="flex justify-between mb-2">
               <span className="text-sm font-medium">
                 {answeredCount}
-                {' '}
-                of
+&nbsp;of&nbsp;
                 {totalQuestions}
-                {' '}
-                {' '}
-                questions answered
+&nbsp;questions answered
               </span>
               <Button
                 variant="default"
