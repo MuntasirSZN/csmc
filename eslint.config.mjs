@@ -3,7 +3,7 @@ import pluginNext from '@next/eslint-plugin-next'
 import reactYouMightNotNeedAnEffect from 'eslint-plugin-react-you-might-not-need-an-effect'
 
 export default antfu({
-  reactYouMightNotNeedAnEffect.configs.recommended,
+  ...reactYouMightNotNeedAnEffect.configs.recommended,
   formatters: true,
   react: true,
   plugins: {
