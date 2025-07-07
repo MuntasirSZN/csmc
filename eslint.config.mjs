@@ -7,6 +7,7 @@ export default antfu({
   react: true,
   plugins: {
     '@next/next': pluginNext,
+    'react-you-might-not-need-an-effect': reactYouMightNotNeedAnEffect,
   },
   rules: {
     ...reactYouMightNotNeedAnEffect.configs.recommended.rules,
