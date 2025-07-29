@@ -51,7 +51,7 @@
     "ioredis": "^5.6.1",
     "katex": "^0.16.22",
     "ldrs": "^1.1.7",
-    "lucide-react": "^0.526.0",
+    "lucide-react": "^0.532.0",
     "motion": "^12.18.1",
     "next": "^15.3.4",
     "next-themes": "^0.4.6",
