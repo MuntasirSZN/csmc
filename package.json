@@ -16,7 +16,7 @@
     "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
-    "@arcjet/inspect": "^1.0.0-beta.8",
+    "@arcjet/inspect": "^1.0.0-beta.10",
     "@arcjet/next": "^1.0.0-beta.8",
     "@daveyplate/better-auth-ui": "^2.1.11",
     "@ducanh2912/next-pwa": "^10.2.9",
