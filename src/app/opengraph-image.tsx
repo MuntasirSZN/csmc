@@ -6,14 +6,8 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 
-export const contentType = 'image/png'
-
-export const size = {
-  width: 1200,
-  height: 630,
-}
-
-export const alt = 'Collegiate School Math Club'
+// These constants are imported from a shared helper to satisfy react-refresh rule.
+import { size } from './shared-image-constants'
 
 export default async function OGImage() {
   const geistMedium = await readFile(
@@ -36,7 +30,8 @@ export default async function OGImage() {
           justifyContent: 'center',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #0d1a29 0%, #1a365d 50%, #2b6cb0 100%)',
+          background:
+            'linear-gradient(135deg, #0d1a29 0%, #1a365d 50%, #2b6cb0 100%)',
           padding: '40px',
           fontFamily: '"Geist", sans-serif',
         }}
@@ -147,7 +142,8 @@ export default async function OGImage() {
               width: '300px',
               height: '300px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(144,205,244,0.15) 0%, rgba(255,255,255,0) 70%)',
+              background:
+                'radial-gradient(circle, rgba(144,205,244,0.15) 0%, rgba(255,255,255,0) 70%)',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',

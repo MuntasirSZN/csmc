@@ -1,7 +1,7 @@
 'use client'
 
 import { Eye, Loader2, Pencil, Plus, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Markdown from 'react-markdown'
 import { toast } from 'sonner'
 import { ExplanationCallout } from '@/components/explanation-callout'
@@ -17,7 +17,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -66,7 +73,9 @@ export default function ManagePracticesPage() {
 
   // Dialog state
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [practiceToDelete, setPracticeToDelete] = useState<Practice | null>(null)
+  const [practiceToDelete, setPracticeToDelete] = useState<Practice | null>(
+    null,
+  )
 
   // Practice details
   const [title, setTitle] = useState('')
@@ -88,10 +97,48 @@ export default function ManagePracticesPage() {
   ])
 
   // Preview
-  const [previewMode, setPreviewMode] = useState<'details' | 'questions'>('details')
+  const [previewMode, setPreviewMode] = useState<'details' | 'questions'>(
+    'details',
+  )
+
+  // Utility function to generate slug
+  const generateSlug = useCallback((text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }, [])
+
+  // Memoized practice data for create/update operations
+  const practiceData = useMemo(() => ({
+    title,
+    slug: generateSlug(title),
+    description: description || null,
+    content,
+    timeLimit,
+    questions: questions.map(q => ({
+      content: q.content,
+      options:
+        q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
+      correctAnswer:
+        q.questionType === 'option' && q.answerType === 'single'
+          ? q.correctAnswer
+          : undefined,
+      correctAnswers:
+        q.questionType === 'text' || q.answerType === 'multiple'
+          ? q.correctAnswers
+          : undefined,
+      explanation: q.explanation,
+      questionType: q.questionType,
+      answerType: q.answerType,
+      order: q.order,
+    })),
+  }), [title, description, content, timeLimit, questions, generateSlug])
 
   // Function to fetch all practices
-  const fetchPractices = async () => {
+  const fetchPractices = useCallback(async () => {
     setFetchingPractices(true)
     try {
       const response = await fetch('/api/admin/practices')
@@ -109,15 +156,15 @@ export default function ManagePracticesPage() {
     finally {
       setFetchingPractices(false)
     }
-  }
+  }, [])
 
   // Fetch all practices on load
   useEffect(() => {
     fetchPractices()
-  }, [])
+  }, [fetchPractices])
 
   // Function to fetch a single practice
-  const fetchPractice = async (slug: string) => {
+  const fetchPractice = useCallback(async (slug: string) => {
     setLoading(true)
     try {
       const response = await fetch(`/api/admin/practices?slug=${slug}`)
@@ -136,7 +183,7 @@ export default function ManagePracticesPage() {
     finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   // Reset form for create mode
   const resetForm = () => {
@@ -195,7 +242,10 @@ export default function ManagePracticesPage() {
   }
 
   // Handle mode switching
-  const switchMode = async (newMode: 'list' | 'create' | 'edit' | 'view', practice?: Practice) => {
+  const switchMode = async (
+    newMode: 'list' | 'create' | 'edit' | 'view',
+    practice?: Practice,
+  ) => {
     if (newMode === 'create') {
       resetForm()
     }
@@ -223,16 +273,7 @@ export default function ManagePracticesPage() {
     setMode(newMode)
   }
 
-  const generateSlug = (text: string) => {
-    return text
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim()
-  }
-
-  const addQuestion = () => {
+  const addQuestion = useCallback(() => {
     setQuestions([
       ...questions,
       {
@@ -245,9 +286,9 @@ export default function ManagePracticesPage() {
         order: questions.length,
       },
     ])
-  }
+  }, [questions])
 
-  const removeQuestion = (indexToRemove: number) => {
+  const removeQuestion = useCallback((indexToRemove: number) => {
     if (questions.length <= 1) {
       toast.error('At least one question is required')
       return
@@ -258,7 +299,7 @@ export default function ManagePracticesPage() {
         .filter((_, index) => index !== indexToRemove)
         .map((question, index) => ({ ...question, order: index })),
     )
-  }
+  }, [questions])
 
   const updateQuestion = (index: number, field: keyof Question, value: any) => {
     const updatedQuestions = [...questions]
@@ -327,7 +368,11 @@ export default function ManagePracticesPage() {
     setQuestions(updatedQuestions)
   }
 
-  const updateOption = (questionIndex: number, optionIndex: number, value: string) => {
+  const updateOption = (
+    questionIndex: number,
+    optionIndex: number,
+    value: string,
+  ) => {
     const updatedQuestions = [...questions]
     const options = [...(updatedQuestions[questionIndex].options || [])]
     options[optionIndex] = value
@@ -338,7 +383,10 @@ export default function ManagePracticesPage() {
 
     // Update correctAnswer if this was the selected option
     const question = updatedQuestions[questionIndex]
-    if (question.answerType === 'single' && question.correctAnswer === options[optionIndex]) {
+    if (
+      question.answerType === 'single'
+      && question.correctAnswer === options[optionIndex]
+    ) {
       question.correctAnswer = value
     }
 
@@ -432,7 +480,10 @@ export default function ManagePracticesPage() {
 
       if (question.questionType === 'option') {
         // Validate option-based questions
-        if (!question.options || question.options.filter(option => option.trim()).length < 2) {
+        if (
+          !question.options
+          || question.options.filter(option => option.trim()).length < 2
+        ) {
           toast.error(`Question ${index + 1} must have at least 2 options`)
           setActiveTab('questions')
           isValid = false
@@ -449,15 +500,22 @@ export default function ManagePracticesPage() {
           }
 
           if (!question.options.includes(question.correctAnswer)) {
-            toast.error(`Question ${index + 1}'s correct answer must be one of the options`)
+            toast.error(
+              `Question ${index + 1}'s correct answer must be one of the options`,
+            )
             setActiveTab('questions')
             isValid = false
           }
         }
         else {
           // Validate multiple answer questions
-          if (!question.correctAnswers || question.correctAnswers.length === 0) {
-            toast.error(`Question ${index + 1} needs at least one correct answer`)
+          if (
+            !question.correctAnswers
+            || question.correctAnswers.length === 0
+          ) {
+            toast.error(
+              `Question ${index + 1} needs at least one correct answer`,
+            )
             setActiveTab('questions')
             isValid = false
             return
@@ -468,7 +526,9 @@ export default function ManagePracticesPage() {
             question.options?.includes(answer),
           )
           if (!allInOptions) {
-            toast.error(`Question ${index + 1}'s correct answers must all be in the options list`)
+            toast.error(
+              `Question ${index + 1}'s correct answers must all be in the options list`,
+            )
             setActiveTab('questions')
             isValid = false
           }
@@ -477,7 +537,9 @@ export default function ManagePracticesPage() {
       else {
         // Validate text-input questions
         if (!question.correctAnswers || question.correctAnswers.length === 0) {
-          toast.error(`Question ${index + 1} needs at least one acceptable answer`)
+          toast.error(
+            `Question ${index + 1} needs at least one acceptable answer`,
+          )
           setActiveTab('questions')
           isValid = false
         }
@@ -492,24 +554,6 @@ export default function ManagePracticesPage() {
       return
 
     setLoading(true)
-
-    const practiceData = {
-      title,
-      slug: generateSlug(title),
-      description: description || null,
-      content,
-      timeLimit,
-      questions: questions.map(q => ({
-        content: q.content,
-        options: q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
-        correctAnswer: q.questionType === 'option' && q.answerType === 'single' ? q.correctAnswer : undefined,
-        correctAnswers: q.questionType === 'text' || q.answerType === 'multiple' ? q.correctAnswers : undefined,
-        explanation: q.explanation,
-        questionType: q.questionType,
-        answerType: q.answerType,
-        order: q.order,
-      })),
-    }
 
     try {
       const response = await fetch('/api/admin/practices', {
@@ -545,23 +589,9 @@ export default function ManagePracticesPage() {
 
     setLoading(true)
 
-    const practiceData = {
+    const updateData = {
       id: currentPractice.id,
-      title,
-      slug: generateSlug(title),
-      description: description || null,
-      content,
-      timeLimit,
-      questions: questions.map(q => ({
-        content: q.content,
-        options: q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
-        correctAnswer: q.questionType === 'option' && q.answerType === 'single' ? q.correctAnswer : undefined,
-        correctAnswers: q.questionType === 'text' || q.answerType === 'multiple' ? q.correctAnswers : undefined,
-        explanation: q.explanation,
-        questionType: q.questionType,
-        answerType: q.answerType,
-        order: q.order,
-      })),
+      ...practiceData,
     }
 
     try {
@@ -570,7 +600,7 @@ export default function ManagePracticesPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(practiceData),
+        body: JSON.stringify(updateData),
       })
 
       if (!response.ok) {
@@ -603,9 +633,12 @@ export default function ManagePracticesPage() {
 
     setLoading(true)
     try {
-      const response = await fetch(`/api/admin/practices?id=${practiceToDelete.id}`, {
-        method: 'DELETE',
-      })
+      const response = await fetch(
+        `/api/admin/practices?id=${practiceToDelete.id}`,
+        {
+          method: 'DELETE',
+        },
+      )
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -656,7 +689,9 @@ export default function ManagePracticesPage() {
             : practices.length === 0
               ? (
                   <div className="text-center p-8 border rounded-md bg-muted/50">
-                    <p className="text-muted-foreground">No practices found. Create your first practice!</p>
+                    <p className="text-muted-foreground">
+                      No practices found. Create your first practice!
+                    </p>
                   </div>
                 )
               : (
@@ -674,13 +709,17 @@ export default function ManagePracticesPage() {
                         <TableBody>
                           {practices.map(practice => (
                             <TableRow key={practice.id}>
-                              <TableCell className="font-medium">{practice.title}</TableCell>
+                              <TableCell className="font-medium">
+                                {practice.title}
+                              </TableCell>
                               <TableCell>
                                 {practice.timeLimit}
                                 {' '}
                                 minutes
                               </TableCell>
-                              <TableCell>{new Date(practice.updatedAt).toLocaleDateString()}</TableCell>
+                              <TableCell>
+                                {new Date(practice.updatedAt).toLocaleDateString()}
+                              </TableCell>
                               <TableCell className="flex gap-2">
                                 <Button
                                   variant="outline"
@@ -761,7 +800,10 @@ export default function ManagePracticesPage() {
               <div>
                 <h3 className="text-lg font-medium mb-2">Practice Content</h3>
                 <div className="prose dark:prose-invert max-w-none border p-4 rounded-md bg-muted/20">
-                  <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                  <Markdown
+                    remarkPlugins={remarkPlugins}
+                    rehypePlugins={rehypePlugins}
+                  >
                     {currentPractice.content || 'No content'}
                   </Markdown>
                 </div>
@@ -770,10 +812,14 @@ export default function ManagePracticesPage() {
               <div>
                 <h3 className="text-lg font-medium mb-2">Questions</h3>
                 <div className="space-y-6">
-                  {currentPractice.questions && currentPractice.questions.length > 0
+                  {currentPractice.questions
+                    && currentPractice.questions.length > 0
                     ? (
                         currentPractice.questions.map((question, index) => (
-                          <div key={index} className="border rounded-md p-4 bg-muted/20">
+                          <div
+                            key={`question-${question.content.slice(0, 20)}-${index}`}
+                            className="border rounded-md p-4 bg-muted/20"
+                          >
                             <h4 className="font-medium mb-2">
                               Question
                               {' '}
@@ -789,21 +835,27 @@ export default function ManagePracticesPage() {
                             </h4>
 
                             <div className="mb-4">
-                              <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                              <Markdown
+                                remarkPlugins={remarkPlugins}
+                                rehypePlugins={rehypePlugins}
+                              >
                                 {question.content}
                               </Markdown>
                             </div>
 
                             {/* Show options for multiple choice questions */}
-                            {question.questionType === 'option' && question.options && (
+                            {question.questionType === 'option'
+                              && question.options && (
                               <div className="space-y-2 mb-4">
                                 <h5 className="text-sm font-medium">Options:</h5>
                                 {question.options.map((option, optIndex) => (
                                   <div
-                                    key={optIndex}
+                                    key={`${question.content.slice(0, 10)}-option-${optIndex}`}
                                     className={`flex items-center p-2 border rounded-md ${
-                                      (question.answerType === 'single' && option === question.correctAnswer)
-                                      || (question.answerType === 'multiple' && question.correctAnswers?.includes(option))
+                                      (question.answerType === 'single'
+                                        && option === question.correctAnswer)
+                                      || (question.answerType === 'multiple'
+                                        && question.correctAnswers?.includes(option))
                                         ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
                                         : ''
                                     }`}
@@ -813,16 +865,23 @@ export default function ManagePracticesPage() {
                                       .
                                     </div>
                                     <div className="flex-1">
-                                      <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                                      <Markdown
+                                        remarkPlugins={remarkPlugins}
+                                        rehypePlugins={rehypePlugins}
+                                      >
                                         {option}
                                       </Markdown>
                                     </div>
-                                    {(question.answerType === 'single' && option === question.correctAnswer) && (
+                                    {question.answerType === 'single'
+                                      && option === question.correctAnswer && (
                                       <div className="text-xs font-semibold text-green-600 dark:text-green-400">
                                         Correct Answer
                                       </div>
                                     )}
-                                    {(question.answerType === 'multiple' && question.correctAnswers?.includes(option)) && (
+                                    {question.answerType === 'multiple'
+                                      && question.correctAnswers?.includes(
+                                        option,
+                                      ) && (
                                       <div className="text-xs font-semibold text-green-600 dark:text-green-400">
                                         Correct Answer
                                       </div>
@@ -833,14 +892,19 @@ export default function ManagePracticesPage() {
                             )}
 
                             {/* Show acceptable answers for text input questions */}
-                            {question.questionType === 'text' && question.correctAnswers && (
+                            {question.questionType === 'text'
+                              && question.correctAnswers && (
                               <div className="mb-4">
-                                <h5 className="text-sm font-medium mb-2">Acceptable Answers:</h5>
+                                <h5 className="text-sm font-medium mb-2">
+                                  Acceptable Answers:
+                                </h5>
                                 <div className="p-2 border rounded-md bg-green-50 dark:bg-green-900/20">
                                   <ul className="list-disc pl-5 space-y-1">
-                                    {question.correctAnswers.map((answer, idx) => (
-                                      <li key={idx}>{answer}</li>
-                                    ))}
+                                    {question.correctAnswers.map(
+                                      (answer, idx) => (
+                                        <li key={`${question.content.slice(0, 10)}-answer-${idx}`}>{answer}</li>
+                                      ),
+                                    )}
                                   </ul>
                                 </div>
                               </div>
@@ -849,9 +913,13 @@ export default function ManagePracticesPage() {
                             {/* Explanation if available */}
                             {question.explanation && (
                               <div className="mt-4">
-                                <h5 className="text-sm font-medium mb-2">Explanation:</h5>
+                                <h5 className="text-sm font-medium mb-2">
+                                  Explanation:
+                                </h5>
                                 <div className="text-sm">
-                                  <ExplanationCallout explanation={question.explanation} />
+                                  <ExplanationCallout
+                                    explanation={question.explanation}
+                                  />
                                 </div>
                               </div>
                             )}
@@ -894,7 +962,9 @@ export default function ManagePracticesPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Practice Information</CardTitle>
-                  <CardDescription>Enter basic information about this practice exercise.</CardDescription>
+                  <CardDescription>
+                    Enter basic information about this practice exercise.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -941,7 +1011,8 @@ export default function ManagePracticesPage() {
                       type="number"
                       min="1"
                       value={timeLimit}
-                      onChange={e => setTimeLimit(Number.parseInt(e.target.value) || 1)}
+                      onChange={e =>
+                        setTimeLimit(Number.parseInt(e.target.value) || 1)}
                     />
                   </div>
                 </CardContent>
@@ -958,11 +1029,10 @@ export default function ManagePracticesPage() {
             <TabsContent value="questions">
               <div className="space-y-6">
                 {questions.map((question, questionIndex) => (
-                  <Card key={questionIndex}>
+                  <Card key={`question-${questionIndex}`}>
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle>
                         Question
-                        {' '}
                         {questionIndex + 1}
                       </CardTitle>
                       <Button
@@ -980,16 +1050,31 @@ export default function ManagePracticesPage() {
                         <Label>Question Type</Label>
                         <RadioGroup
                           value={question.questionType}
-                          onValueChange={value => updateQuestion(questionIndex, 'questionType', value)}
+                          onValueChange={value =>
+                            updateQuestion(questionIndex, 'questionType', value)}
                           className="flex flex-row space-x-4"
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option" id={`question-type-option-${questionIndex}`} />
-                            <Label htmlFor={`question-type-option-${questionIndex}`}>Multiple Choice</Label>
+                            <RadioGroupItem
+                              value="option"
+                              id={`question-type-option-${questionIndex}`}
+                            />
+                            <Label
+                              htmlFor={`question-type-option-${questionIndex}`}
+                            >
+                              Multiple Choice
+                            </Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="text" id={`question-type-text-${questionIndex}`} />
-                            <Label htmlFor={`question-type-text-${questionIndex}`}>Text Input</Label>
+                            <RadioGroupItem
+                              value="text"
+                              id={`question-type-text-${questionIndex}`}
+                            />
+                            <Label
+                              htmlFor={`question-type-text-${questionIndex}`}
+                            >
+                              Text Input
+                            </Label>
                           </div>
                         </RadioGroup>
                       </div>
@@ -1000,16 +1085,31 @@ export default function ManagePracticesPage() {
                           <Label>Answer Type</Label>
                           <RadioGroup
                             value={question.answerType}
-                            onValueChange={value => updateQuestion(questionIndex, 'answerType', value)}
+                            onValueChange={value =>
+                              updateQuestion(questionIndex, 'answerType', value)}
                             className="flex flex-row space-x-4"
                           >
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="single" id={`answer-type-single-${questionIndex}`} />
-                              <Label htmlFor={`answer-type-single-${questionIndex}`}>Single Answer</Label>
+                              <RadioGroupItem
+                                value="single"
+                                id={`answer-type-single-${questionIndex}`}
+                              />
+                              <Label
+                                htmlFor={`answer-type-single-${questionIndex}`}
+                              >
+                                Single Answer
+                              </Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="multiple" id={`answer-type-multiple-${questionIndex}`} />
-                              <Label htmlFor={`answer-type-multiple-${questionIndex}`}>Multiple Answers</Label>
+                              <RadioGroupItem
+                                value="multiple"
+                                id={`answer-type-multiple-${questionIndex}`}
+                              />
+                              <Label
+                                htmlFor={`answer-type-multiple-${questionIndex}`}
+                              >
+                                Multiple Answers
+                              </Label>
                             </div>
                           </RadioGroup>
                         </div>
@@ -1024,7 +1124,12 @@ export default function ManagePracticesPage() {
                         </Label>
                         <Textarea
                           value={question.content}
-                          onChange={e => updateQuestion(questionIndex, 'content', e.target.value)}
+                          onChange={e =>
+                            updateQuestion(
+                              questionIndex,
+                              'content',
+                              e.target.value,
+                            )}
                           placeholder="Enter the question content"
                           rows={3}
                         />
@@ -1035,10 +1140,18 @@ export default function ManagePracticesPage() {
                         <div className="space-y-3">
                           <Label>Options</Label>
                           {question.options?.map((option, optionIndex) => (
-                            <div key={optionIndex} className="flex items-center space-x-2">
+                            <div
+                              key={`question-${questionIndex}-option-${optionIndex}`}
+                              className="flex items-center space-x-2"
+                            >
                               <Input
                                 value={option}
-                                onChange={e => updateOption(questionIndex, optionIndex, e.target.value)}
+                                onChange={e =>
+                                  updateOption(
+                                    questionIndex,
+                                    optionIndex,
+                                    e.target.value,
+                                  )}
                                 placeholder={`Option ${optionIndex + 1}`}
                               />
                               {/* eslint-disable-next-line style/multiline-ternary */}
@@ -1047,25 +1160,35 @@ export default function ManagePracticesPage() {
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => toggleCorrectAnswer(questionIndex, option)}
+                                  onClick={() =>
+                                    toggleCorrectAnswer(questionIndex, option)}
                                   className={
                                     question.correctAnswer === option
                                       ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
                                       : ''
                                   }
                                 >
-                                  {question.correctAnswer === option ? 'Correct ✓' : 'Set as correct'}
+                                  {question.correctAnswer === option
+                                    ? 'Correct ✓'
+                                    : 'Set as correct'}
                                 </Button>
                               ) : (
                                 <div className="flex items-center space-x-2">
                                   <Checkbox
                                     id={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
-                                    checked={(question.correctAnswers || []).includes(option)}
+                                    checked={(
+                                      question.correctAnswers || []
+                                    ).includes(option)}
                                     onCheckedChange={(checked) => {
                                       // Create a fresh copy of all lists
                                       const updatedQuestions = [...questions]
-                                      const updatedQuestion = { ...updatedQuestions[questionIndex] }
-                                      const correctAnswers = [...(updatedQuestion.correctAnswers || [])]
+                                      const updatedQuestion = {
+                                        ...updatedQuestions[questionIndex],
+                                      }
+                                      const correctAnswers = [
+                                        ...(updatedQuestion.correctAnswers
+                                          || []),
+                                      ]
 
                                       if (checked) {
                                         // Add if not already included
@@ -1075,22 +1198,27 @@ export default function ManagePracticesPage() {
                                       }
                                       else {
                                         // Remove if present
-                                        const index = correctAnswers.indexOf(option)
+                                        const index
+                                          = correctAnswers.indexOf(option)
                                         if (index !== -1) {
                                           correctAnswers.splice(index, 1)
                                         }
                                       }
 
                                       // Update the question with new array
-                                      updatedQuestion.correctAnswers = correctAnswers
-                                      updatedQuestions[questionIndex] = updatedQuestion
+                                      updatedQuestion.correctAnswers
+                                        = correctAnswers
+                                      updatedQuestions[questionIndex]
+                                        = updatedQuestion
 
                                       // Update state
                                       setQuestions(updatedQuestions)
                                     }}
                                     disabled={!option.trim()}
                                   />
-                                  <Label htmlFor={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}>
+                                  <Label
+                                    htmlFor={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
+                                  >
                                     Correct Answer
                                   </Label>
                                 </div>
@@ -1102,7 +1230,11 @@ export default function ManagePracticesPage() {
                             size="sm"
                             onClick={() => {
                               const updatedQuestions = [...questions]
-                              updatedQuestions[questionIndex].options = [...(updatedQuestions[questionIndex].options || []), '']
+                              updatedQuestions[questionIndex].options = [
+                                ...(updatedQuestions[questionIndex].options
+                                  || []),
+                                '',
+                              ]
                               setQuestions(updatedQuestions)
                             }}
                           >
@@ -1128,7 +1260,8 @@ export default function ManagePracticesPage() {
                             rows={4}
                           />
                           <p className="text-xs text-muted-foreground">
-                            Enter all possible correct answers. The system will match exact answers.
+                            Enter all possible correct answers. The system will
+                            match exact answers.
                           </p>
                         </div>
                       )}
@@ -1138,7 +1271,12 @@ export default function ManagePracticesPage() {
                         <Label>Explanation (optional)</Label>
                         <Textarea
                           value={question.explanation || ''}
-                          onChange={e => updateQuestion(questionIndex, 'explanation', e.target.value)}
+                          onChange={e =>
+                            updateQuestion(
+                              questionIndex,
+                              'explanation',
+                              e.target.value,
+                            )}
                           placeholder="Explain the correct answer or solution approach"
                           rows={4}
                         />
@@ -1147,8 +1285,12 @@ export default function ManagePracticesPage() {
                       {/* Explanation Preview */}
                       {question.explanation && (
                         <div className="mt-2 border p-3 rounded-md">
-                          <p className="text-sm font-medium mb-2">Explanation Preview:</p>
-                          <ExplanationCallout explanation={question.explanation} />
+                          <p className="text-sm font-medium mb-2">
+                            Explanation Preview:
+                          </p>
+                          <ExplanationCallout
+                            explanation={question.explanation}
+                          />
                         </div>
                       )}
                     </CardContent>
@@ -1176,7 +1318,9 @@ export default function ManagePracticesPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <CardTitle>{title || 'Untitled Practice'}</CardTitle>
-                      {description && <CardDescription>{description}</CardDescription>}
+                      {description && (
+                        <CardDescription>{description}</CardDescription>
+                      )}
                     </div>
                     <div className="text-sm text-muted-foreground">
                       Time Limit:
@@ -1210,13 +1354,18 @@ export default function ManagePracticesPage() {
                   {previewMode === 'details'
                     ? (
                         <div className="prose dark:prose-invert max-w-none">
-                          <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{content || 'No content added yet'}</Markdown>
+                          <Markdown
+                            remarkPlugins={remarkPlugins}
+                            rehypePlugins={rehypePlugins}
+                          >
+                            {content || 'No content added yet'}
+                          </Markdown>
                         </div>
                       )
                     : (
                         <div className="space-y-8">
                           {questions.map((question, index) => (
-                            <div key={index} className="space-y-4">
+                            <div key={`preview-question-${index}`} className="space-y-4">
                               <h3 className="text-lg font-medium">
                                 Question
                                 {' '}
@@ -1231,20 +1380,28 @@ export default function ManagePracticesPage() {
                                 </span>
                               </h3>
                               <div className="mb-4">
-                                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
+                                <Markdown
+                                  remarkPlugins={remarkPlugins}
+                                  rehypePlugins={rehypePlugins}
+                                >
                                   {question.content || 'No question content'}
                                 </Markdown>
                               </div>
 
                               {/* Preview for multiple choice questions */}
-                              {question.questionType === 'option' && question.options && (
+                              {question.questionType === 'option'
+                                && question.options && (
                                 <div className="space-y-3">
                                   {question.options.map((option, optIndex) => (
                                     <div
-                                      key={optIndex}
+                                      key={`preview-question-${index}-option-${optIndex}`}
                                       className={`flex items-center p-3 border rounded-md ${
-                                        (question.answerType === 'single' && option === question.correctAnswer)
-                                        || (question.answerType === 'multiple' && question.correctAnswers?.includes(option))
+                                        (question.answerType === 'single'
+                                          && option === question.correctAnswer)
+                                        || (question.answerType === 'multiple'
+                                          && question.correctAnswers?.includes(
+                                            option,
+                                          ))
                                           ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
                                           : ''
                                       }`}
@@ -1254,16 +1411,24 @@ export default function ManagePracticesPage() {
                                         .
                                       </div>
                                       <div className="flex-1">
-                                        <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                                          {option || `Option ${optIndex + 1} (empty)`}
+                                        <Markdown
+                                          remarkPlugins={remarkPlugins}
+                                          rehypePlugins={rehypePlugins}
+                                        >
+                                          {option
+                                            || `Option ${optIndex + 1} (empty)`}
                                         </Markdown>
                                       </div>
-                                      {(question.answerType === 'single' && option === question.correctAnswer) && (
+                                      {question.answerType === 'single'
+                                        && option === question.correctAnswer && (
                                         <div className="text-xs font-semibold text-green-600 dark:text-green-400">
                                           Correct Answer
                                         </div>
                                       )}
-                                      {(question.answerType === 'multiple' && question.correctAnswers?.includes(option)) && (
+                                      {question.answerType === 'multiple'
+                                        && question.correctAnswers?.includes(
+                                          option,
+                                        ) && (
                                         <div className="text-xs font-semibold text-green-600 dark:text-green-400">
                                           Correct Answer
                                         </div>
@@ -1277,17 +1442,24 @@ export default function ManagePracticesPage() {
                               {question.questionType === 'text' && (
                                 <div className="space-y-4">
                                   <div className="border p-3 rounded-md bg-muted/20">
-                                    <p className="text-sm text-muted-foreground mb-2">Text Input Field:</p>
+                                    <p className="text-sm text-muted-foreground mb-2">
+                                      Text Input Field:
+                                    </p>
                                     <div className="border rounded-md p-3 min-h-[100px] bg-white dark:bg-muted"></div>
                                   </div>
 
-                                  {question.correctAnswers && question.correctAnswers.length > 0 && (
+                                  {question.correctAnswers
+                                    && question.correctAnswers.length > 0 && (
                                     <div className="border p-3 rounded-md bg-green-50 dark:bg-green-900/20">
-                                      <p className="text-sm font-medium mb-2">Acceptable Answers:</p>
+                                      <p className="text-sm font-medium mb-2">
+                                        Acceptable Answers:
+                                      </p>
                                       <ul className="list-disc pl-5 space-y-1">
-                                        {question.correctAnswers.map((answer, idx) => (
-                                          <li key={idx}>{answer}</li>
-                                        ))}
+                                        {question.correctAnswers.map(
+                                          (answer, idx) => (
+                                            <li key={`preview-question-${index}-answer-${idx}`}>{answer}</li>
+                                          ),
+                                        )}
                                       </ul>
                                     </div>
                                   )}
@@ -1297,7 +1469,9 @@ export default function ManagePracticesPage() {
                               {/* Preview explanation if available */}
                               {question.explanation && (
                                 <div className="mt-4">
-                                  <ExplanationCallout explanation={question.explanation} />
+                                  <ExplanationCallout
+                                    explanation={question.explanation}
+                                  />
                                 </div>
                               )}
                             </div>
@@ -1307,7 +1481,10 @@ export default function ManagePracticesPage() {
                 </CardContent>
 
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => setActiveTab('questions')}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('questions')}
+                  >
                     Back to Questions
                   </Button>
                   <Button
@@ -1322,9 +1499,13 @@ export default function ManagePracticesPage() {
                             {mode === 'create' ? 'Creating...' : 'Updating...'}
                           </>
                         )
-                      : (
-                          mode === 'create' ? 'Create Practice' : 'Update Practice'
-                        )}
+                      : mode === 'create'
+                        ? (
+                            'Create Practice'
+                          )
+                        : (
+                            'Update Practice'
+                          )}
                   </Button>
                 </CardFooter>
               </Card>
@@ -1337,12 +1518,15 @@ export default function ManagePracticesPage() {
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete this practice?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure you want to delete this practice?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the practice
-              "
+              This action cannot be undone. This will permanently delete the
+              practice "
               {practiceToDelete?.title}
-              " and all its associated questions.
+              " and all its associated
+              questions.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

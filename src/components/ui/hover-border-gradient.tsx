@@ -1,39 +1,51 @@
 'use client'
 import { motion } from 'motion/react'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 type Direction = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
 
-export function HoverBorderGradient({
+interface AsProp<E extends React.ElementType> {
+  as?: E
+}
+
+type PropsToOmit<E extends React.ElementType, P> = keyof (AsProp<E> & P)
+
+type PolymorphicComponentProps<
+  E extends React.ElementType,
+  P,
+> = React.PropsWithChildren<P & AsProp<E>>
+  & Omit<React.ComponentPropsWithoutRef<E>, PropsToOmit<E, P>>
+
+interface HoverBorderGradientOwnProps {
+  containerClassName?: string
+  className?: string
+  duration?: number
+  clockwise?: boolean
+}
+
+export function HoverBorderGradient<E extends React.ElementType = 'button'>({
   children,
   containerClassName,
   className,
-  as: Tag = 'button',
+  as,
   duration = 1,
   clockwise = true,
   ...props
-}: React.PropsWithChildren<
-  {
-    as?: React.ElementType
-    containerClassName?: string
-    className?: string
-    duration?: number
-    clockwise?: boolean
-  } & React.HTMLAttributes<HTMLElement>
->) {
+}: PolymorphicComponentProps<E, HoverBorderGradientOwnProps>) {
+  const Tag = (as || 'button') as React.ElementType
   const [hovered, setHovered] = useState<boolean>(false)
   const [direction, setDirection] = useState<Direction>('TOP')
 
-  const rotateDirection = (currentDirection: Direction): Direction => {
+  const rotateDirection = useCallback((currentDirection: Direction): Direction => {
     const directions: Direction[] = ['TOP', 'LEFT', 'BOTTOM', 'RIGHT']
     const currentIndex = directions.indexOf(currentDirection)
     const nextIndex = clockwise
       ? (currentIndex - 1 + directions.length) % directions.length
       : (currentIndex + 1) % directions.length
     return directions[nextIndex]
-  }
+  }, [clockwise])
 
   const movingMap: Record<Direction, string> = {
     TOP: 'radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)',
@@ -54,7 +66,7 @@ export function HoverBorderGradient({
       }, duration * 1000)
       return () => clearInterval(interval)
     }
-  }, [hovered])
+  }, [hovered, duration, rotateDirection])
   return (
     <Tag
       onMouseEnter={() => {

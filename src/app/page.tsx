@@ -17,10 +17,22 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import HomePageCarousel from '@/components/home-page-carousel'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient'
 import { TextHoverEffect } from '@/components/ui/text-hover-effect'
 
@@ -34,7 +46,8 @@ export default function Home() {
     {
       id: 1,
       title: 'CSMC Math Hunt Successfully held!',
-      description: 'The first ever contest organized by Collegiate School Math Club has been successfully conducted.',
+      description:
+        'The first ever contest organized by Collegiate School Math Club has been successfully conducted.',
       link: '/contests',
       icon: 'Trophy',
       date: 'April 20, 2025',
@@ -42,7 +55,8 @@ export default function Home() {
     {
       id: 2,
       title: 'New Practice Sets Available',
-      description: 'We\'ve added new practice sets to help you prepare for upcoming competitions.',
+      description:
+        'We\'ve added new practice sets to help you prepare for upcoming competitions.',
       link: '/practices',
       icon: 'BookOpen',
       date: 'April 15, 2025',
@@ -53,27 +67,32 @@ export default function Home() {
     {
       id: 'item-1',
       question: 'What is the purpose of Collegiate School Math Club?',
-      answer: 'Collegiate School Math Club is a club that is dedicated to serve the students with quality and knowledge for all. The club is open to all students in the school. The club is aimed to help students to enhance their mathematical skills and knowledge. Also, the club helps the students to know about and participate various contests and competitions on mathematics organized Nationally or Internationally.',
+      answer:
+        'Collegiate School Math Club is a club that is dedicated to serve the students with quality and knowledge for all. The club is open to all students in the school. The club is aimed to help students to enhance their mathematical skills and knowledge. Also, the club helps the students to know about and participate various contests and competitions on mathematics organized Nationally or Internationally.',
     },
     {
       id: 'item-2',
       question: 'What is the fee purchased for joining?',
-      answer: 'Collegiate School Math Club club is dedicated to serve the students with quality and knowledge for all. So that, to ensure everyone can join the club without any hesitation. Collegiate School Math Club requires very low registration fee of only ৳50.',
+      answer:
+        'Collegiate School Math Club club is dedicated to serve the students with quality and knowledge for all. So that, to ensure everyone can join the club without any hesitation. Collegiate School Math Club requires very low registration fee of only ৳50.',
     },
     {
       id: 'item-3',
       question: 'Do I need to be good at math to join?',
-      answer: 'Not at all! The Math Club welcomes students of all skill levels. Our goal is to foster a love for mathematics and help everyone improve their skills in a supportive environment.',
+      answer:
+        'Not at all! The Math Club welcomes students of all skill levels. Our goal is to foster a love for mathematics and help everyone improve their skills in a supportive environment.',
     },
     {
       id: 'item-4',
       question: 'How do the practice contests work?',
-      answer: 'Practice contests are available online through our website. You must complete them in sequential order, and each contest has a time limit. Once you start a contest, you must complete it before moving to the next one.',
+      answer:
+        'Practice contests are available online through our website. You must complete them in sequential order, and each contest has a time limit. Once you start a contest, you must complete it before moving to the next one.',
     },
     {
       id: 'item-5',
       question: 'How can I prepare for math competitions?',
-      answer: 'We recommend starting with our practice contests and attending problem-solving sessions.',
+      answer:
+        'We recommend starting with our practice contests and attending problem-solving sessions.',
     },
   ]
 
@@ -83,13 +102,7 @@ export default function Home() {
       <section className="w-full py-16">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
           <div className="w-32 h-32 relative animate-pulse">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="object-contain"
-            >
+            <video autoPlay loop muted playsInline className="object-contain">
               <source src="/CSMC.webm" type="video/webm" />
             </video>
           </div>
@@ -101,7 +114,12 @@ export default function Home() {
           <p className="text-xl text-muted-foreground max-w-2xl">
             Meet a new range of thinking with mathematics
           </p>
-          <HoverBorderGradient className="text-white py-2 px-4 font-medium flex" as="button">
+          <HoverBorderGradient
+            className="text-white py-2 px-4 font-medium flex"
+            as="button"
+            aria-label="Latest contest"
+            type="button"
+          >
             <Trophy className="mr-2" />
             <span>Our latest contest: CSMC Math Hunt</span>
           </HoverBorderGradient>
@@ -116,11 +134,21 @@ export default function Home() {
             Contest Highlights
           </h2>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 cursor-pointer" id="carousel-prev">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full w-8 h-8 p-0 cursor-pointer"
+              id="carousel-prev"
+            >
               <ChevronRight className="rotate-180" size={16} />
               <span className="sr-only">Previous slide</span>
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full w-8 h-8 p-0 cursor-pointer" id="carousel-next">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full w-8 h-8 p-0 cursor-pointer"
+              id="carousel-next"
+            >
               <ChevronRight size={16} />
               <span className="sr-only">Next slide</span>
             </Button>
@@ -136,7 +164,8 @@ export default function Home() {
           Contest Categories
         </h2>
         <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
-          We offer competitions for various age groups and skill levels to ensure everyone can participate and grow.
+          We offer competitions for various age groups and skill levels to
+          ensure everyone can participate and grow.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Primary Category */}
@@ -147,11 +176,14 @@ export default function Home() {
                 <Info className="mr-2 text-blue-500" size={24} />
                 Primary
               </CardTitle>
-              <CardDescription className="text-center">For students in Class 5-6</CardDescription>
+              <CardDescription className="text-center">
+                For students in Class 5-6
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow pt-6">
               <p className="text-center">
-                Introduction to mathematical concepts and problem-solving techniques appropriate for this age group.
+                Introduction to mathematical concepts and problem-solving
+                techniques appropriate for this age group.
               </p>
             </CardContent>
           </Card>
@@ -164,11 +196,14 @@ export default function Home() {
                 <BookOpen className="mr-2 text-green-500" size={24} />
                 Junior
               </CardTitle>
-              <CardDescription className="text-center">For students in Class 7-8</CardDescription>
+              <CardDescription className="text-center">
+                For students in Class 7-8
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow pt-6">
               <p className="text-center">
-                Building on foundational knowledge with pre-algebra, basic geometry, and logical reasoning.
+                Building on foundational knowledge with pre-algebra, basic
+                geometry, and logical reasoning.
               </p>
             </CardContent>
           </Card>
@@ -181,11 +216,14 @@ export default function Home() {
                 <Award className="mr-2 text-purple-500" size={24} />
                 Senior
               </CardTitle>
-              <CardDescription className="text-center">For students in Class 9-10</CardDescription>
+              <CardDescription className="text-center">
+                For students in Class 9-10
+              </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow pt-6">
               <p className="text-center">
-                Advanced topics including algebra, geometry, combinatorics, and number theory.
+                Advanced topics including algebra, geometry, combinatorics, and
+                number theory.
               </p>
             </CardContent>
           </Card>
@@ -200,7 +238,8 @@ export default function Home() {
             What We Offer
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Join our community and unlock your mathematical potential with our comprehensive features.
+            Join our community and unlock your mathematical potential with our
+            comprehensive features.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Competitions Feature */}
@@ -208,12 +247,18 @@ export default function Home() {
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
                 <Trophy className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">Contests</h3>
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
+                Contests
+              </h3>
               <p className="text-muted-foreground">
-                Participate in exciting math contests and challenge yourself against peers from different schools.
+                Participate in exciting math contests and challenge yourself
+                against peers from different schools.
               </p>
               <Link href="/contests">
-                <Button variant="link" className="mt-4 text-primary cursor-pointer">
+                <Button
+                  variant="link"
+                  className="mt-4 text-primary cursor-pointer"
+                >
                   View Contests
                   <ChevronRight className="ml-1" size={16} />
                 </Button>
@@ -225,12 +270,18 @@ export default function Home() {
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
                 <BookOpen className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">Practice</h3>
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
+                Practice
+              </h3>
               <p className="text-muted-foreground">
-                Improve your skills with our structured practice problems and contests designed by experienced educators.
+                Improve your skills with our structured practice problems and
+                contests designed by experienced educators.
               </p>
               <Link href="/practices">
-                <Button variant="link" className="mt-4 text-primary cursor-pointer">
+                <Button
+                  variant="link"
+                  className="mt-4 text-primary cursor-pointer"
+                >
                   Start Practicing
                   <ChevronRight className="ml-1" size={16} />
                 </Button>
@@ -242,12 +293,18 @@ export default function Home() {
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
                 <Users className="text-primary" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">Community</h3>
+              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
+                Community
+              </h3>
               <p className="text-muted-foreground">
-                Join a community of math enthusiasts, learn together, and build lasting friendships with like-minded peers.
+                Join a community of math enthusiasts, learn together, and build
+                lasting friendships with like-minded peers.
               </p>
               <Link href="https://www.facebook.com/collegiateschoolmathclub">
-                <Button variant="link" className="mt-4 text-primary cursor-pointer">
+                <Button
+                  variant="link"
+                  className="mt-4 text-primary cursor-pointer"
+                >
                   Join Community
                   <ChevronRight className="ml-1" size={16} />
                 </Button>
@@ -268,7 +325,10 @@ export default function Home() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {announcements.map(announcement => (
-            <Card key={announcement.id} className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <Card
+              key={announcement.id}
+              className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group"
+            >
               <div className="bg-gradient-to-r from-primary to-purple-600 h-2"></div>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
@@ -288,13 +348,22 @@ export default function Home() {
                 </div>
               </CardHeader>
               <CardContent className="flex-grow pt-2 pb-4">
-                <p className="text-muted-foreground">{announcement.description}</p>
+                <p className="text-muted-foreground">
+                  {announcement.description}
+                </p>
               </CardContent>
               <CardFooter className="pt-0">
-                <Button variant="link" asChild className="px-0 group-hover:text-primary transition-colors duration-300">
+                <Button
+                  variant="link"
+                  asChild
+                  className="px-0 group-hover:text-primary transition-colors duration-300"
+                >
                   <Link href={announcement.link} className="flex items-center">
                     Click To Learn More
-                    <ArrowRight className="ml-1 group-hover:translate-x-1 transition-transform duration-300" size={16} />
+                    <ArrowRight
+                      className="ml-1 group-hover:translate-x-1 transition-transform duration-300"
+                      size={16}
+                    />
                   </Link>
                 </Button>
               </CardFooter>
@@ -315,11 +384,13 @@ export default function Home() {
         <div className="rounded-xl shadow-lg p-6">
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map(faq => (
-              <AccordionItem key={faq.id} value={faq.id} className="border-b border-muted last:border-0">
+              <AccordionItem
+                key={faq.id}
+                value={faq.id}
+                className="border-b border-muted last:border-0"
+              >
                 <AccordionTrigger className="text-left hover:text-primary transition-colors duration-300 py-4">
-                  <div className="flex items-center">
-                    {faq.question}
-                  </div>
+                  <div className="flex items-center">{faq.question}</div>
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground pl-8">
                   {faq.answer}

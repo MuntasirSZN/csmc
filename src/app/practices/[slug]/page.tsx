@@ -2,7 +2,7 @@
 
 import { AlarmClock, AlertCircle, Clock, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { use, useEffect, useRef, useState } from 'react'
+import { use, useCallback, useEffect, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
 import { toast } from 'sonner'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
@@ -64,7 +64,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
   const _questionRefs = useRef<Record<number, HTMLDivElement | null>>({}) // Renamed to avoid lint error
 
   // This function saves the current attempt data to localStorage
-  const saveAttemptToLocalStorage = (newAttemptId?: number) => {
+  const saveAttemptToLocalStorage = useCallback((newAttemptId?: number) => {
     if (!practice)
       return
 
@@ -73,10 +73,10 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
       timeRemaining,
       userAnswers,
     }))
-  }
+  }, [practice, slug, attemptId, timeRemaining, userAnswers])
 
   // This function starts a new attempt
-  const startNewAttempt = async (practiceId: number) => {
+  const startNewAttempt = useCallback(async (practiceId: number) => {
     try {
       const response = await fetch('/api/practice-attempts', {
         method: 'POST',
@@ -100,7 +100,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
     catch (error) {
       console.error('Error starting attempt:', error)
     }
-  }
+  }, [saveAttemptToLocalStorage])
 
   // Handle answer changes
   const handleAnswerChange = (questionId: number, answer: string | string[]) => {
@@ -309,7 +309,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
       if (timerRef.current)
         clearInterval(timerRef.current)
     }
-  }, [slug])
+  }, [slug, startNewAttempt])
 
   // Effect to manage timer
   useEffect(() => {
@@ -340,7 +340,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
       if (timerRef.current)
         clearInterval(timerRef.current)
     }
-  }, [loading, practice, hasExistingAttempt])
+  }, [loading, practice, hasExistingAttempt, saveAttemptToLocalStorage])
 
   if (loading) {
     return (

@@ -31,11 +31,14 @@ export function TextHoverEffect({
     }
 
     // Run once after render
-    setTimeout(calculateDimensions, 100)
+    const timer = setTimeout(calculateDimensions, 100)
 
     // Update on window resize
     window.addEventListener('resize', calculateDimensions)
-    return () => window.removeEventListener('resize', calculateDimensions)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', calculateDimensions)
+    }
   }, [text])
 
   useEffect(() => {
@@ -43,10 +46,11 @@ export function TextHoverEffect({
       const svgRect = svgRef.current.getBoundingClientRect()
       const cxPercentage = ((cursor.x - svgRect.left) / svgRect.width) * 100
       const cyPercentage = ((cursor.y - svgRect.top) / svgRect.height) * 100
-      setMaskPosition({
+      const newMaskPosition = {
         cx: `${cxPercentage}%`,
         cy: `${cyPercentage}%`,
-      })
+      }
+      setMaskPosition(newMaskPosition)
     }
   }, [cursor])
 

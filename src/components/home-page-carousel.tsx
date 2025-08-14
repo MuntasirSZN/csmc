@@ -3,7 +3,11 @@
 import Autoplay from 'embla-carousel-autoplay'
 import Fade from 'embla-carousel-fade'
 import Image from 'next/image'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel'
 
 export default function HomePageCarousel() {
   const carouselImages = [
@@ -44,8 +48,11 @@ export default function HomePageCarousel() {
       className="w-full"
     >
       <CarouselContent>
-        {carouselImages.map((image, index) => (
-          <CarouselItem key={index} className="h-[450px] rounded-xl overflow-hidden">
+        {carouselImages.map(image => (
+          <CarouselItem
+            key={image.src}
+            className="h-[450px] rounded-xl overflow-hidden"
+          >
             <div className="h-full w-full relative rounded-lg overflow-hidden shadow-xl">
               <Image
                 src={image.src}
@@ -54,7 +61,9 @@ export default function HomePageCarousel() {
                 className="object-cover hover:scale-105 transition-all duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-white text-2xl font-bold">Explore the World of Mathematics</h3>
+                <h3 className="text-white text-2xl font-bold">
+                  Explore the World of Mathematics
+                </h3>
               </div>
             </div>
           </CarouselItem>

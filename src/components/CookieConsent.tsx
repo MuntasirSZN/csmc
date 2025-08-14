@@ -2,7 +2,7 @@
 
 import { CircleCheck, CircleSlash, CookieIcon, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,34 +14,44 @@ import {
 } from '@/components/ui/card'
 
 export default function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [consentGiven, setConsentGiven] = useState(false)
-  const [showPreferences, setShowPreferences] = useState(false)
-  const [cookiePreferences, setCookiePreferences] = useState({
-    necessary: true, // Always enabled
-    functional: true,
-    analytics: true,
-    marketing: false,
+  const [consentGiven, setConsentGiven] = useState<boolean>(() => {
+    if (typeof window === 'undefined')
+      return false
+    return localStorage.getItem('cookieConsent') === 'true'
   })
-
-  useEffect(() => {
-    const consent = localStorage.getItem('cookieConsent')
-    const savedPreferences = localStorage.getItem('cookiePreferences')
-
-    if (consent === 'true') {
-      setConsentGiven(true)
-      if (savedPreferences) {
-        setCookiePreferences(JSON.parse(savedPreferences))
+  const [cookiePreferences, setCookiePreferences] = useState(() => {
+    if (typeof window === 'undefined') {
+      return {
+        necessary: true,
+        functional: true,
+        analytics: true,
+        marketing: false,
       }
     }
-    else if (!consent) {
-      setIsVisible(true)
-    }
-  }, [])
+    const savedPreferences = localStorage.getItem('cookiePreferences')
+    return savedPreferences
+      ? JSON.parse(savedPreferences)
+      : {
+          necessary: true,
+          functional: true,
+          analytics: true,
+          marketing: false,
+        }
+  })
+  const [showPreferences, setShowPreferences] = useState(false)
+  const [isVisible, setIsVisible] = useState<boolean>(() => {
+    if (typeof window === 'undefined')
+      return false
+    const consent = localStorage.getItem('cookieConsent')
+    return consent === null
+  })
 
   const handleAccept = () => {
     localStorage.setItem('cookieConsent', 'true')
-    localStorage.setItem('cookiePreferences', JSON.stringify(cookiePreferences))
+    localStorage.setItem(
+      'cookiePreferences',
+      JSON.stringify(cookiePreferences),
+    )
     setConsentGiven(true)
     setIsVisible(false)
   }
@@ -54,7 +64,10 @@ export default function CookieConsent() {
       marketing: false,
     }
     localStorage.setItem('cookieConsent', 'false')
-    localStorage.setItem('cookiePreferences', JSON.stringify(declinedPreferences))
+    localStorage.setItem(
+      'cookiePreferences',
+      JSON.stringify(declinedPreferences),
+    )
     setCookiePreferences(declinedPreferences)
     setConsentGiven(false)
     setIsVisible(false)
@@ -70,13 +83,17 @@ export default function CookieConsent() {
       return // Can't toggle necessary cookies
     setCookiePreferences({
       ...cookiePreferences,
-      [cookieType]: !cookiePreferences[cookieType as keyof typeof cookiePreferences],
+      [cookieType]:
+        !cookiePreferences[cookieType as keyof typeof cookiePreferences],
     })
   }
 
   const handleSavePreferences = () => {
     localStorage.setItem('cookieConsent', 'true')
-    localStorage.setItem('cookiePreferences', JSON.stringify(cookiePreferences))
+    localStorage.setItem(
+      'cookiePreferences',
+      JSON.stringify(cookiePreferences),
+    )
     setConsentGiven(true)
     setIsVisible(false)
     setShowPreferences(false)
@@ -116,8 +133,8 @@ export default function CookieConsent() {
                   We use cookies to enhance your browsing experience, serve
                   personalized ads or content, and analyze our traffic. By
                   clicking &quot;Accept&quot;, you consent to our use of
-                  cookies. Please refer to the links in our footer for our Terms and Conditions,
-                  Privacy Policy, and Cookie Policy.
+                  cookies. Please refer to the links in our footer for our Terms
+                  and Conditions, Privacy Policy, and Cookie Policy.
                 </p>
               </CardContent>
               <CardFooter className="flex justify-between space-x-2">
@@ -180,7 +197,9 @@ export default function CookieConsent() {
               </CardHeader>
               <CardContent className="text-left space-y-4">
                 <p className="text-sm">
-                  Customize your cookie preferences below. Necessary cookies are always enabled as they are essential for the website to function properly.
+                  Customize your cookie preferences below. Necessary cookies are
+                  always enabled as they are essential for the website to
+                  function properly.
                 </p>
 
                 <div className="space-y-3">
@@ -192,14 +211,18 @@ export default function CookieConsent() {
                       </p>
                     </div>
                     <div className="flex items-center h-4">
-                      <span className="text-xs mr-2 text-muted-foreground">Always on</span>
+                      <span className="text-xs mr-2 text-muted-foreground">
+                        Always on
+                      </span>
                       <div className="w-8 h-4 bg-primary rounded-full"></div>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-md">
                     <div>
-                      <h3 className="font-medium text-sm">Functional Cookies</h3>
+                      <h3 className="font-medium text-sm">
+                        Functional Cookies
+                      </h3>
                       <p className="text-xs text-muted-foreground">
                         Enable enhanced functionality and personalization.
                       </p>
@@ -211,7 +234,9 @@ export default function CookieConsent() {
                         className="h-8 px-2"
                         onClick={() => handleToggle('functional')}
                       >
-                        {cookiePreferences.functional === true ? 'Enabled' : 'Disabled'}
+                        {cookiePreferences.functional === true
+                          ? 'Enabled'
+                          : 'Disabled'}
                       </Button>
                       <div
                         className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.functional ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
@@ -271,7 +296,8 @@ export default function CookieConsent() {
                 </div>
 
                 <p className="text-xs text-muted-foreground mt-4">
-                  For more details, please check the Cookie Policy, Privacy Policy, and Terms and Conditions links in our footer.
+                  For more details, please check the Cookie Policy, Privacy
+                  Policy, and Terms and Conditions links in our footer.
                 </p>
               </CardContent>
               <CardFooter className="flex justify-end space-x-2 border-t pt-4">
@@ -295,7 +321,9 @@ export default function CookieConsent() {
           </motion.div>
         )}
       </AnimatePresence>
-      <GoogleAnalytics consentGiven={consentGiven && cookiePreferences.analytics} />
+      <GoogleAnalytics
+        consentGiven={consentGiven && cookiePreferences.analytics}
+      />
     </>
   )
 }

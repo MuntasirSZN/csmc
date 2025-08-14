@@ -26,6 +26,7 @@ export function ExplanationCallout({ explanation }: ExplanationCalloutProps) {
   return (
     <div className="mt-4">
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         aria-expanded={isOpen}
