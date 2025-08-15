@@ -178,6 +178,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
 
   // Track scroll position and update active question
   useEffect(() => {
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
     if (!practice?.questions)
       return
 
@@ -196,6 +197,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
           }
         }
       })
+      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Scroll handler needs to update state based on DOM calculations
       setActiveSections(newActiveSections)
     }
 
@@ -313,6 +315,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
 
   // Effect to manage timer
   useEffect(() => {
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
     if (!loading && practice && !hasExistingAttempt) {
       timerRef.current = setInterval(() => {
         if (visibilityRef.current) {
@@ -511,7 +514,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                       className="space-y-4"
                     >
                       {question.options?.map((option, i) => (
-                        <div key={`${question.id}-${i}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                        <div key={`${question.id}-option-${option.slice(0, 20).replace(/\s+/g, '')}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
                           <RadioGroupItem value={option} id={`question-${question.id}-option-${i}`} />
                           <Label
                             htmlFor={`question-${question.id}-option-${i}`}
@@ -536,7 +539,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                       const optionId = `question-${question.id}-option-${i}-${option.substring(0, 5)}`
 
                       return (
-                        <div key={`${question.id}-${i}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                        <div key={`${question.id}-option-${option.slice(0, 20).replace(/\s+/g, '')}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
                           <Checkbox
                             id={optionId}
                             checked={currentAnswers.includes(option)}

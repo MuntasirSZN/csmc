@@ -67,7 +67,9 @@ function Carousel({
     const canScrollPrev = api.canScrollPrev()
     const canScrollNext = api.canScrollNext()
 
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Carousel state must be updated based on API calculations
     setCanScrollPrev(canScrollPrev)
+    // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Carousel state must be updated based on API calculations
     setCanScrollNext(canScrollNext)
   }, [])
 
@@ -96,6 +98,7 @@ function Carousel({
   React.useEffect(() => {
     if (!api || !setApi)
       return
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-pass-data-to-parent -- Carousel API must be passed to parent for external control
     setApi(api)
   }, [api, setApi])
 

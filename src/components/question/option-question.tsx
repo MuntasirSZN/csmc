@@ -56,7 +56,7 @@ export function OptionQuestion({ question, userAnswer, onAnswerChange }: OptionQ
               className="space-y-4 text-left"
             >
               {options.map((option, i) => (
-                <div key={`${id}-option-${i}`} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-muted/50">
+                <div key={`${id}-option-${option.slice(0, 20).replace(/\s+/g, '')}`} className="flex items-center space-x-2 border p-3 rounded-md hover:bg-muted/50">
                   <RadioGroupItem value={option} id={`option-${id}-${i}`} />
                   <Label htmlFor={`option-${id}-${i}`} className="flex-1 cursor-pointer">
                     <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
@@ -72,7 +72,7 @@ export function OptionQuestion({ question, userAnswer, onAnswerChange }: OptionQ
                 const isChecked = currentAnswers.includes(option)
 
                 return (
-                  <div key={`${id}-checkbox-${i}`} className="flex items-start space-x-2 border p-3 rounded-md hover:bg-muted/50">
+                  <div key={`${id}-checkbox-${option.slice(0, 20).replace(/\s+/g, '')}`} className="flex items-start space-x-2 border p-3 rounded-md hover:bg-muted/50">
                     <Checkbox
                       id={`option-${id}-${i}`}
                       checked={isChecked}
