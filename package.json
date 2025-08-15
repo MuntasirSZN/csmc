@@ -47,7 +47,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
-    "eslint-plugin-react-you-might-not-need-an-effect": "^0.4.1",
+    "eslint-plugin-react-you-might-not-need-an-effect": "^0.4.2",
     "ioredis": "^5.7.0",
     "katex": "^0.16.22",
     "ldrs": "^1.1.7",
