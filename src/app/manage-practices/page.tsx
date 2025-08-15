@@ -817,7 +817,7 @@ export default function ManagePracticesPage() {
                     ? (
                         currentPractice.questions.map((question, index) => (
                           <div
-                            key={`question-${question.order}-${question.content.slice(0, 20)}`}
+                            key={`question-${question.content.slice(0, 20)}-${index}`}
                             className="border rounded-md p-4 bg-muted/20"
                           >
                             <h4 className="font-medium mb-2">
@@ -850,7 +850,7 @@ export default function ManagePracticesPage() {
                                 <h5 className="text-sm font-medium">Options:</h5>
                                 {question.options.map((option, optIndex) => (
                                   <div
-                                    key={`question-${question.order}-option-${option.slice(0, 20).replace(/\s+/g, '')}`}
+                                    key={`${question.content.slice(0, 10)}-option-${optIndex}`}
                                     className={`flex items-center p-2 border rounded-md ${
                                       (question.answerType === 'single'
                                         && option === question.correctAnswer)
@@ -901,8 +901,8 @@ export default function ManagePracticesPage() {
                                 <div className="p-2 border rounded-md bg-green-50 dark:bg-green-900/20">
                                   <ul className="list-disc pl-5 space-y-1">
                                     {question.correctAnswers.map(
-                                      (answer, _idx) => (
-                                        <li key={`question-${question.order}-answer-${answer.slice(0, 20).replace(/\s+/g, '')}`}>{answer}</li>
+                                      (answer, idx) => (
+                                        <li key={`${question.content.slice(0, 10)}-answer-${idx}`}>{answer}</li>
                                       ),
                                     )}
                                   </ul>
@@ -1029,7 +1029,7 @@ export default function ManagePracticesPage() {
             <TabsContent value="questions">
               <div className="space-y-6">
                 {questions.map((question, questionIndex) => (
-                  <Card key={`question-${question.content?.slice(0, 30).replace(/\s+/g, '') || `new-${questionIndex}`}`}>
+                  <Card key={`question-${questionIndex}`}>
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle>
                         Question
@@ -1139,95 +1139,92 @@ export default function ManagePracticesPage() {
                       {question.questionType === 'option' && (
                         <div className="space-y-3">
                           <Label>Options</Label>
-                          {question.options?.map((option, optionIndex) => {
-                            const uniqueKey = `question-${questionIndex}-option-${option.slice(0, 30).replace(/[^a-z0-9]/gi, '')}-pos${optionIndex}`
-                            return (
-                              <div
-                                key={uniqueKey}
-                                className="flex items-center space-x-2"
-                              >
-                                <Input
-                                  value={option}
-                                  onChange={e =>
-                                    updateOption(
-                                      questionIndex,
-                                      optionIndex,
-                                      e.target.value,
-                                    )}
-                                  placeholder={`Option ${optionIndex + 1}`}
-                                />
-                                {/* eslint-disable-next-line style/multiline-ternary */}
-                                {question.answerType === 'single' ? (
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() =>
-                                      toggleCorrectAnswer(questionIndex, option)}
-                                    className={
-                                      question.correctAnswer === option
-                                        ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
-                                        : ''
-                                    }
-                                  >
-                                    {question.correctAnswer === option
-                                      ? 'Correct ✓'
-                                      : 'Set as correct'}
-                                  </Button>
-                                ) : (
-                                  <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                      id={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
-                                      checked={(
-                                        question.correctAnswers || []
-                                      ).includes(option)}
-                                      onCheckedChange={(checked) => {
+                          {question.options?.map((option, optionIndex) => (
+                            <div
+                              key={`question-${questionIndex}-option-${optionIndex}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <Input
+                                value={option}
+                                onChange={e =>
+                                  updateOption(
+                                    questionIndex,
+                                    optionIndex,
+                                    e.target.value,
+                                  )}
+                                placeholder={`Option ${optionIndex + 1}`}
+                              />
+                              {/* eslint-disable-next-line style/multiline-ternary */}
+                              {question.answerType === 'single' ? (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    toggleCorrectAnswer(questionIndex, option)}
+                                  className={
+                                    question.correctAnswer === option
+                                      ? 'bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900/30 dark:hover:bg-green-900/50 dark:text-green-400'
+                                      : ''
+                                  }
+                                >
+                                  {question.correctAnswer === option
+                                    ? 'Correct ✓'
+                                    : 'Set as correct'}
+                                </Button>
+                              ) : (
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox
+                                    id={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
+                                    checked={(
+                                      question.correctAnswers || []
+                                    ).includes(option)}
+                                    onCheckedChange={(checked) => {
                                       // Create a fresh copy of all lists
-                                        const updatedQuestions = [...questions]
-                                        const updatedQuestion = {
-                                          ...updatedQuestions[questionIndex],
-                                        }
-                                        const correctAnswers = [
-                                          ...(updatedQuestion.correctAnswers
-                                            || []),
-                                        ]
+                                      const updatedQuestions = [...questions]
+                                      const updatedQuestion = {
+                                        ...updatedQuestions[questionIndex],
+                                      }
+                                      const correctAnswers = [
+                                        ...(updatedQuestion.correctAnswers
+                                          || []),
+                                      ]
 
-                                        if (checked) {
+                                      if (checked) {
                                         // Add if not already included
-                                          if (!correctAnswers.includes(option)) {
-                                            correctAnswers.push(option)
-                                          }
+                                        if (!correctAnswers.includes(option)) {
+                                          correctAnswers.push(option)
                                         }
-                                        else {
+                                      }
+                                      else {
                                         // Remove if present
-                                          const index
+                                        const index
                                           = correctAnswers.indexOf(option)
-                                          if (index !== -1) {
-                                            correctAnswers.splice(index, 1)
-                                          }
+                                        if (index !== -1) {
+                                          correctAnswers.splice(index, 1)
                                         }
+                                      }
 
-                                        // Update the question with new array
-                                        updatedQuestion.correctAnswers
+                                      // Update the question with new array
+                                      updatedQuestion.correctAnswers
                                         = correctAnswers
-                                        updatedQuestions[questionIndex]
+                                      updatedQuestions[questionIndex]
                                         = updatedQuestion
 
-                                        // Update state
-                                        setQuestions(updatedQuestions)
-                                      }}
-                                      disabled={!option.trim()}
-                                    />
-                                    <Label
-                                      htmlFor={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
-                                    >
-                                      Correct Answer
-                                    </Label>
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          })}
+                                      // Update state
+                                      setQuestions(updatedQuestions)
+                                    }}
+                                    disabled={!option.trim()}
+                                  />
+                                  <Label
+                                    htmlFor={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
+                                  >
+                                    Correct Answer
+                                  </Label>
+                                </div>
+                              )}
+                            </div>
+                          ))}
                           <Button
                             variant="outline"
                             size="sm"
@@ -1368,7 +1365,7 @@ export default function ManagePracticesPage() {
                     : (
                         <div className="space-y-8">
                           {questions.map((question, index) => (
-                            <div key={`preview-question-${question.content?.slice(0, 30) || index}`} className="space-y-4">
+                            <div key={`preview-question-${index}`} className="space-y-4">
                               <h3 className="text-lg font-medium">
                                 Question
                                 {' '}
@@ -1397,7 +1394,7 @@ export default function ManagePracticesPage() {
                                 <div className="space-y-3">
                                   {question.options.map((option, optIndex) => (
                                     <div
-                                      key={`preview-question-${question.content?.slice(0, 20).replace(/\s+/g, '') || index}-option-${option.slice(0, 20).replace(/\s+/g, '')}`}
+                                      key={`preview-question-${index}-option-${optIndex}`}
                                       className={`flex items-center p-3 border rounded-md ${
                                         (question.answerType === 'single'
                                           && option === question.correctAnswer)
@@ -1459,8 +1456,8 @@ export default function ManagePracticesPage() {
                                       </p>
                                       <ul className="list-disc pl-5 space-y-1">
                                         {question.correctAnswers.map(
-                                          (answer, _idx) => (
-                                            <li key={`preview-question-${question.content?.slice(0, 20).replace(/\s+/g, '') || index}-answer-${answer.slice(0, 20).replace(/\s+/g, '')}`}>{answer}</li>
+                                          (answer, idx) => (
+                                            <li key={`preview-question-${index}-answer-${idx}`}>{answer}</li>
                                           ),
                                         )}
                                       </ul>

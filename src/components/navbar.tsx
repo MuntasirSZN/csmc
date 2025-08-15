@@ -103,9 +103,9 @@ export default function NavBar() {
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
           >
-            {navItems.map((item, _idx) => (
+            {navItems.map((item, idx) => (
               <Link
-                key={`mobile-${item.link}`}
+                key={`mobile-${item.link}-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="relative text-neutral-600 dark:text-neutral-300"

@@ -288,7 +288,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                     }
 
                     return (
-                      <div key={`question-${currentQuestion.id}-option-${option.slice(0, 20).replace(/\s+/g, '')}`} className={optionClass}>
+                      <div key={`question-${currentQuestion.id}-option-${i}`} className={optionClass}>
                         <div className="flex items-start">
                           <div className="mr-3 text-sm font-medium text-muted-foreground">
                             {String.fromCharCode(65 + i)}
@@ -330,8 +330,8 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                         <div className="text-sm font-medium mb-2">Acceptable Answers:</div>
                         <div className="p-2 bg-yellow-50 border-yellow-200 rounded-md dark:bg-yellow-900/20">
                           <ul className="list-disc pl-4 space-y-1">
-                            {currentQuestion.correctAnswers?.map(answer => (
-                              <li key={`question-${currentQuestion.id}-correct-${answer.slice(0, 20).replace(/\s+/g, '')}`}>{answer}</li>
+                            {currentQuestion.correctAnswers?.map((answer, idx) => (
+                              <li key={`question-${currentQuestion.id}-correct-${idx}`}>{answer}</li>
                             ))}
                           </ul>
                         </div>

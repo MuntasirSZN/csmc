@@ -60,7 +60,6 @@ export function HoverBorderGradient<E extends React.ElementType = 'button'>({
     = 'radial-gradient(75% 181.15942028985506% at 50% 50%, #3275F8 0%, rgba(255, 255, 255, 0) 100%)'
 
   useEffect(() => {
-    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
     if (!hovered) {
       const interval = setInterval(() => {
         setDirection(prevState => rotateDirection(prevState))

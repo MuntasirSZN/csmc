@@ -50,7 +50,6 @@ export function TextHoverEffect({
         cx: `${cxPercentage}%`,
         cy: `${cyPercentage}%`,
       }
-      // eslint-disable-next-line react-hooks-extra/no-direct-set-state-in-use-effect -- Mouse position tracking requires immediate state update in useEffect
       setMaskPosition(newMaskPosition)
     }
   }, [cursor])
