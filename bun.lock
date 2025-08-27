@@ -35,7 +35,7 @@
         "embla-carousel-autoplay": "^8.6.0",
         "embla-carousel-fade": "^8.6.0",
         "embla-carousel-react": "^8.6.0",
-        "eslint-plugin-react-you-might-not-need-an-effect": "^0.4.3",
+        "eslint-plugin-react-you-might-not-need-an-effect": "^0.4.4",
         "ioredis": "^5.7.0",
         "katex": "^0.16.22",
         "ldrs": "^1.1.7",
@@ -1458,7 +1458,7 @@
 
     "eslint-plugin-react-x": ["eslint-plugin-react-x@1.52.6", "", { "dependencies": { "@eslint-react/ast": "1.52.6", "@eslint-react/core": "1.52.6", "@eslint-react/eff": "1.52.6", "@eslint-react/kit": "1.52.6", "@eslint-react/shared": "1.52.6", "@eslint-react/var": "1.52.6", "@typescript-eslint/scope-manager": "^8.39.1", "@typescript-eslint/type-utils": "^8.39.1", "@typescript-eslint/types": "^8.39.1", "@typescript-eslint/utils": "^8.39.1", "compare-versions": "^6.1.1", "is-immutable-type": "^5.0.1", "string-ts": "^2.2.1", "ts-pattern": "^5.8.0" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0", "ts-api-utils": "^2.1.0", "typescript": "^4.9.5 || ^5.3.3" }, "optionalPeers": ["ts-api-utils", "typescript"] }, "sha512-xLW8UG66c16p9WnROysfYkomflVEry/bxPnB1Ef0YZikpCCMDvvoPT6nAUUy4byVvq3c6CJWENT3O85twwkY8w=="],
 
-    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@0.4.3", "", { "dependencies": { "eslint-utils": "^3.0.0", "globals": "^16.2.0" }, "peerDependencies": { "eslint": ">=7.0.0" } }, "sha512-ZJ0FFeIaLKZVDBM+edbdgUe/ytOJwx9HcWNmECbMhmliP2kn2s623Jiz494DRcHWtpD6Nizyxe1lwLJkU8hVNg=="],
+    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@0.4.4", "", { "dependencies": { "eslint-utils": "^3.0.0", "globals": "^16.2.0" }, "peerDependencies": { "eslint": ">=8.40.0" } }, "sha512-NaD3bnTUSVZ74YmK+V4tI6Ktl8GCeQFeU/5Xqw2R9pfd5NmenmQpatUGrinLavLYJCqyl7BG9WYU1JbpqUhhgg=="],
 
     "eslint-plugin-regexp": ["eslint-plugin-regexp@2.10.0", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.2.0", "@eslint-community/regexpp": "^4.11.0", "comment-parser": "^1.4.0", "jsdoc-type-pratt-parser": "^4.0.0", "refa": "^0.12.1", "regexp-ast-analysis": "^0.7.1", "scslre": "^0.3.0" }, "peerDependencies": { "eslint": ">=8.44.0" } }, "sha512-ovzQT8ESVn5oOe5a7gIDPD5v9bCSjIFJu57sVPDqgPRXicQzOnYfFN21WoQBQF18vrhT5o7UMKFwJQVVjyJ0ng=="],
 
