@@ -8,3 +8,9 @@ updates:
     directory: /
     schedule:
       interval: daily
+    groups:
+      version:
+        applies-to: version-updates
+        update-types:
+          - patch
+          - minor
