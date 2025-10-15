@@ -510,11 +510,11 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                       onValueChange={value => handleAnswerChange(question.id, value)}
                       className="space-y-4"
                     >
-                      {question.options?.map((option, i) => (
-                        <div key={`${question.id}-${i}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
-                          <RadioGroupItem value={option} id={`question-${question.id}-option-${i}`} />
+                      {question.options?.map(option => (
+                        <div key={`${question.id}-${option}`} className="flex items-center space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                          <RadioGroupItem value={option} id={`question-${question.id}-option-${option}`} />
                           <Label
-                            htmlFor={`question-${question.id}-option-${i}`}
+                            htmlFor={`question-${question.id}-option-${option}`}
                             className="flex-1 cursor-pointer"
                           >
                             <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>{option}</Markdown>
@@ -526,17 +526,17 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                 ) : (
                   // Multiple choice question
                   <div className="space-y-4 mt-6">
-                    {question.options?.map((option, i) => {
+                    {question.options?.map((option) => {
                       // FIXED: Multiple choice selection bug
                       const currentAnswers = Array.isArray(userAnswers[question.id])
                         ? [...userAnswers[question.id] as string[]]
                         : []
 
                       // Create a unique ID for each checkbox to prevent selection issues
-                      const optionId = `question-${question.id}-option-${i}-${option.substring(0, 5)}`
+                      const optionId = `question-${question.id}-option-${option}`
 
                       return (
-                        <div key={`${question.id}-${i}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
+                        <div key={`${question.id}-${option}`} className="flex items-start space-x-3 border p-4 rounded-md hover:bg-muted/50 transition-colors">
                           <Checkbox
                             id={optionId}
                             checked={currentAnswers.includes(option)}

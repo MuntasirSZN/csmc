@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'react'
 import { cva } from 'class-variance-authority'
 import { Airplay, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -36,8 +36,9 @@ export function ThemeToggle({
   const { setTheme, theme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  useLayoutEffect(() => {
-    setMounted(true)
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 0)
+    return () => clearTimeout(timer)
   }, [])
 
   const container = cn(

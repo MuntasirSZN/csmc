@@ -817,7 +817,7 @@ export default function ManagePracticesPage() {
                     ? (
                         currentPractice.questions.map((question, index) => (
                           <div
-                            key={`question-${question.content.slice(0, 20)}-${index}`}
+                            key={`question-${index}-${question.content}`}
                             className="border rounded-md p-4 bg-muted/20"
                           >
                             <h4 className="font-medium mb-2">
@@ -850,7 +850,7 @@ export default function ManagePracticesPage() {
                                 <h5 className="text-sm font-medium">Options:</h5>
                                 {question.options.map((option, optIndex) => (
                                   <div
-                                    key={`${question.content.slice(0, 10)}-option-${optIndex}`}
+                                    key={`${question.content}-option-${option}`}
                                     className={`flex items-center p-2 border rounded-md ${
                                       (question.answerType === 'single'
                                         && option === question.correctAnswer)
@@ -901,8 +901,8 @@ export default function ManagePracticesPage() {
                                 <div className="p-2 border rounded-md bg-green-50 dark:bg-green-900/20">
                                   <ul className="list-disc pl-5 space-y-1">
                                     {question.correctAnswers.map(
-                                      (answer, idx) => (
-                                        <li key={`${question.content.slice(0, 10)}-answer-${idx}`}>{answer}</li>
+                                      answer => (
+                                        <li key={`${question.content}-answer-${answer}`}>{answer}</li>
                                       ),
                                     )}
                                   </ul>
@@ -1029,7 +1029,7 @@ export default function ManagePracticesPage() {
             <TabsContent value="questions">
               <div className="space-y-6">
                 {questions.map((question, questionIndex) => (
-                  <Card key={`question-${questionIndex}`}>
+                  <Card key={`question-${questionIndex}-${question.content || 'new'}`}>
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle>
                         Question
@@ -1141,7 +1141,7 @@ export default function ManagePracticesPage() {
                           <Label>Options</Label>
                           {question.options?.map((option, optionIndex) => (
                             <div
-                              key={`question-${questionIndex}-option-${optionIndex}`}
+                              key={`question-${questionIndex}-option-${optionIndex}-${option}`}
                               className="flex items-center space-x-2"
                             >
                               <Input
@@ -1365,7 +1365,7 @@ export default function ManagePracticesPage() {
                     : (
                         <div className="space-y-8">
                           {questions.map((question, index) => (
-                            <div key={`preview-question-${index}`} className="space-y-4">
+                            <div key={`preview-question-${index}-${question.content || 'new'}`} className="space-y-4">
                               <h3 className="text-lg font-medium">
                                 Question
                                 {' '}
@@ -1394,7 +1394,7 @@ export default function ManagePracticesPage() {
                                 <div className="space-y-3">
                                   {question.options.map((option, optIndex) => (
                                     <div
-                                      key={`preview-question-${index}-option-${optIndex}`}
+                                      key={`preview-question-${index}-option-${optIndex}-${option}`}
                                       className={`flex items-center p-3 border rounded-md ${
                                         (question.answerType === 'single'
                                           && option === question.correctAnswer)
@@ -1457,7 +1457,7 @@ export default function ManagePracticesPage() {
                                       <ul className="list-disc pl-5 space-y-1">
                                         {question.correctAnswers.map(
                                           (answer, idx) => (
-                                            <li key={`preview-question-${index}-answer-${idx}`}>{answer}</li>
+                                            <li key={`preview-question-${index}-answer-${idx}-${answer}`}>{answer}</li>
                                           ),
                                         )}
                                       </ul>
