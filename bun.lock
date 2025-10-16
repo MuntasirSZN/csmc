@@ -70,7 +70,7 @@
         "eslint-config-next": "^15.5.5",
         "eslint-plugin-format": "^1.0.2",
         "eslint-plugin-react-hooks": "^7.0.0",
-        "eslint-plugin-react-refresh": "^0.4.23",
+        "eslint-plugin-react-refresh": "^0.4.24",
         "lint-staged": "^16.2.4",
         "minimatch": "^10.0.3",
         "postcss": "^8.5.6",
@@ -1446,7 +1446,7 @@
 
     "eslint-plugin-react-naming-convention": ["eslint-plugin-react-naming-convention@2.2.2", "", { "dependencies": { "@eslint-react/ast": "2.2.2", "@eslint-react/core": "2.2.2", "@eslint-react/eff": "2.2.2", "@eslint-react/shared": "2.2.2", "@eslint-react/var": "2.2.2", "@typescript-eslint/scope-manager": "^8.46.1", "@typescript-eslint/type-utils": "^8.46.1", "@typescript-eslint/types": "^8.46.1", "@typescript-eslint/utils": "^8.46.1", "string-ts": "^2.2.1", "ts-pattern": "^5.8.0" }, "peerDependencies": { "eslint": "^9.37.0", "typescript": "^5.9.3" } }, "sha512-kvQr3gAUBoac/YwivPlR3LPczrMzrNSVDSe9Awl9tGtWLQLj/2eYzYPThCwzRTNcCuuvzQeGCL4lldl8KRePag=="],
 
-    "eslint-plugin-react-refresh": ["eslint-plugin-react-refresh@0.4.23", "", { "peerDependencies": { "eslint": ">=8.40" } }, "sha512-G4j+rv0NmbIR45kni5xJOrYvCtyD3/7LjpVH8MPPcudXDcNu8gv+4ATTDXTtbRR8rTCM5HxECvCSsRmxKnWDsA=="],
+    "eslint-plugin-react-refresh": ["eslint-plugin-react-refresh@0.4.24", "", { "peerDependencies": { "eslint": ">=8.40" } }, "sha512-nLHIW7TEq3aLrEYWpVaJ1dRgFR+wLDPN8e8FpYAql/bMV2oBEfC37K0gLEGgv9fy66juNShSMV8OkTqzltcG/w=="],
 
     "eslint-plugin-react-web-api": ["eslint-plugin-react-web-api@2.2.2", "", { "dependencies": { "@eslint-react/ast": "2.2.2", "@eslint-react/core": "2.2.2", "@eslint-react/eff": "2.2.2", "@eslint-react/shared": "2.2.2", "@eslint-react/var": "2.2.2", "@typescript-eslint/scope-manager": "^8.46.1", "@typescript-eslint/types": "^8.46.1", "@typescript-eslint/utils": "^8.46.1", "string-ts": "^2.2.1", "ts-pattern": "^5.8.0" }, "peerDependencies": { "eslint": "^9.37.0", "typescript": "^5.9.3" } }, "sha512-EruXKY21IbDf8r/yV99WGQ7WgS9oSYy7RPZ9SNaZe5NCfJ2ce8L5nB9rRYzpVqSxvmEyajlgogfB0REdYr6D2Q=="],
 
