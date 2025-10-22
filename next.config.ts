@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
   },
+  turbopack: {},
   reactCompiler: true,
   reactStrictMode: true,
 }
