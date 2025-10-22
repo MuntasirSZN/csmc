@@ -11,8 +11,8 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
-    reactCompiler: true,
   },
+  reactCompiler: true,
   reactStrictMode: true,
 }
 

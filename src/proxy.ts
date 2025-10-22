@@ -41,7 +41,7 @@ export const config = {
   ],
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const decision = await aj.protect(request, { requested: 1 })
 
   if (decision.isDenied()) {
