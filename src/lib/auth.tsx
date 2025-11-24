@@ -6,7 +6,7 @@
 import { EmailTemplate } from '@daveyplate/better-auth-ui/server'
 import { Section } from '@react-email/components'
 import { render } from '@react-email/render'
-import { betterAuth } from 'better-auth'
+import { betterAuth } from 'better-auth/minimal'
 import { emailHarmony } from 'better-auth-harmony'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
