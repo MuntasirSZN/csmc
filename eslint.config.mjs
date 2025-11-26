@@ -13,6 +13,7 @@ export default antfu({
     'node/prefer-global/process': 'off',
   },
   ignores: [
+    'drizzle/**/*',
     'public/**/*',
   ],
 })
