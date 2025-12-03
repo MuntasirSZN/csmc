@@ -18,7 +18,7 @@
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.15",
     "@arcjet/next": "^1.0.0-beta.15",
-    "@better-auth/passkey": "^1.4.4",
+    "@better-auth/passkey": "^1.4.5",
     "@daveyplate/better-auth-ui": "^3.2.13",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -38,7 +38,7 @@
     "@tabler/icons-react": "^3.35.0",
     "@types/nodemailer": "^7.0.4",
     "babel-plugin-react-compiler": "^1.0.0",
-    "better-auth": "^1.4.4",
+    "better-auth": "^1.4.5",
     "better-auth-harmony": "^1.2.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -72,8 +72,8 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
-    "@eslint-react/eslint-plugin": "^2.3.10",
+    "@antfu/eslint-config": "^6.3.0",
+    "@eslint-react/eslint-plugin": "^2.3.11",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^24.10.1",
     "@types/react": "19.2.7",
@@ -87,7 +87,7 @@
     "lint-staged": "^16.2.7",
     "minimatch": "^10.1.1",
     "postcss": "^8.5.6",
-    "prettier": "^3.7.3",
+    "prettier": "^3.7.4",
     "react-scan": "^0.4.3",
     "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.1.17",
