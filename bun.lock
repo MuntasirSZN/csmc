@@ -37,7 +37,7 @@
         "embla-carousel-autoplay": "^8.6.0",
         "embla-carousel-fade": "^8.6.0",
         "embla-carousel-react": "^8.6.0",
-        "eslint-plugin-react-you-might-not-need-an-effect": "^0.8.1",
+        "eslint-plugin-react-you-might-not-need-an-effect": "^0.8.2",
         "ioredis": "^5.8.2",
         "katex": "^0.16.27",
         "ldrs": "^1.1.9",
@@ -1493,7 +1493,7 @@
 
     "eslint-plugin-react-x": ["eslint-plugin-react-x@2.4.0", "", { "dependencies": { "@eslint-react/ast": "2.4.0", "@eslint-react/core": "2.4.0", "@eslint-react/eff": "2.4.0", "@eslint-react/shared": "2.4.0", "@eslint-react/var": "2.4.0", "@typescript-eslint/scope-manager": "^8.50.1", "@typescript-eslint/type-utils": "^8.50.1", "@typescript-eslint/types": "^8.50.1", "@typescript-eslint/utils": "^8.50.1", "compare-versions": "^6.1.1", "is-immutable-type": "^5.0.1", "string-ts": "^2.3.1", "ts-api-utils": "^2.1.0", "ts-pattern": "^5.9.0" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0", "typescript": ">=4.8.4 <6.0.0" } }, "sha512-ufKDXiDoMujcIT97Q6pCQs7j5q6Dtu/0AbXvrbNDLNXWVkCfZ7ayoRKMunvPU+WUHqnnzg9iv0o9QoaWwxG6rw=="],
 
-    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@0.8.1", "", { "dependencies": { "globals": "^16.2.0" }, "peerDependencies": { "eslint": ">=8.40.0" } }, "sha512-BZ0C7WaLNhv9OUJeGmv8SJnxv5tDhE5FzqPoND/IP1hHjHEkGLpI0YboOB+OGCAKT5L/EhCvudsARrIzQ4wW2g=="],
+    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@0.8.2", "", { "dependencies": { "globals": "^16.2.0" }, "peerDependencies": { "eslint": ">=8.40.0" } }, "sha512-I+QQmynVwEc0MyAIDpXzKHQGrEEmB67BJ3L7hQIFODrbWusM1yHWavtVvzFQNEVF2o21aU4SKkpNIadADdQLHA=="],
 
     "eslint-plugin-regexp": ["eslint-plugin-regexp@2.10.0", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.2.0", "@eslint-community/regexpp": "^4.11.0", "comment-parser": "^1.4.0", "jsdoc-type-pratt-parser": "^4.0.0", "refa": "^0.12.1", "regexp-ast-analysis": "^0.7.1", "scslre": "^0.3.0" }, "peerDependencies": { "eslint": ">=8.44.0" } }, "sha512-ovzQT8ESVn5oOe5a7gIDPD5v9bCSjIFJu57sVPDqgPRXicQzOnYfFN21WoQBQF18vrhT5o7UMKFwJQVVjyJ0ng=="],
 
