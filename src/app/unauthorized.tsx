@@ -4,7 +4,7 @@
  */
 
 import type { Metadata } from 'next'
-import type React from 'react'
+import type * as React from 'react'
 import Link from 'next/link'
 import HistoryBackButton from '@/components/history-back-button'
 import { Button } from '@/components/ui/button'
