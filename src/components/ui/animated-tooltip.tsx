@@ -8,7 +8,8 @@ import {
   useTransform,
 } from 'motion/react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import * as React from 'react'
+import { useState } from 'react'
 
 export function AnimatedTooltip({
   items,
