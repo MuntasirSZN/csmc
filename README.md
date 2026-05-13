@@ -59,4 +59,4 @@ The project is licensed under the [MIT](./LICENSE) license.
 
 ## Performance metrics
 
-Unlighthouse is used to generate metrics like LCP, see in https://www.muntasirmahmud.me/csmc. See it and optimize, thanks!
+Unlighthouse is used to generate metrics like LCP, see in https://muntasir.is-a.dev/csmc. See it and optimize, thanks!
