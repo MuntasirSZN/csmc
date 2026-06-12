@@ -1,5 +1,5 @@
 <h6 align="center">
- <img src="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png" width="20%">
+ <img src="https://collegiateschoolmathclub.netlify.app/png-logos/CSMC.png" width="20%" alt="CSMC Logo">
 </h6>
 
 <h4 align="center">Collegiate School Math Club</h4>
@@ -10,7 +10,7 @@
 </p>
 
 <h4 align="center">
-  <img src="https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status?style=for-the-badge" href="https://app.netlify.com/projects/collegiateschoolmathclub/deploys">
+  <img src="https://api.netlify.com/api/v1/badges/75c92159-841f-467e-a5b0-25a172314350/deploy-status?style=for-the-badge" href="https://app.netlify.com/projects/collegiateschoolmathclub/deploys" alt="Netlify Deploy Status">
   <img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=homepage&labelColor=1E1E2E" alt="License">
   <img src="https://img.shields.io/github/issues/MuntasirSZN/csmc?colorA=363a4f&colorB=f5a97f&style=for-the-badge&logo=github&labelColor=1E1E2E" alt="GitHub issues">
   <img src="https://img.shields.io/github/stars/MuntasirSZN/csmc?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=1E1E2E" alt="GitHub stars">

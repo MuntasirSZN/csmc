@@ -8,10 +8,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": ".",
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
+      "*": ["./"],
       "@/*": [
         "./src/*"
       ]

@@ -1,7 +1,13 @@
 'use client'
 
 import type { ChangeEvent, FormEvent } from 'react'
-import { Facebook, Instagram, Linkedin, Send, Twitter } from 'lucide-react'
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandTwitter,
+} from '@tabler/icons-react'
+import { Send } from 'lucide-react'
 import Link from 'next/link'
 import { useQueryState } from 'nuqs'
 import { useState } from 'react'
@@ -128,7 +134,7 @@ function Footer() {
                   <TooltipTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full cursor-pointer">
                       <Link href="https://www.facebook.com/collegiateschoolmathclub">
-                        <Facebook className="h-4 w-4" />
+                        <IconBrandFacebook className="h-4 w-4" />
                         <span className="sr-only">Facebook</span>
                       </Link>
                     </Button>
@@ -142,7 +148,7 @@ function Footer() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full">
-                      <Twitter className="h-4 w-4" />
+                      <IconBrandTwitter className="h-4 w-4" />
                       <span className="sr-only">Twitter</span>
                     </Button>
                   </TooltipTrigger>
@@ -155,7 +161,7 @@ function Footer() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full">
-                      <Instagram className="h-4 w-4" />
+                      <IconBrandInstagram className="h-4 w-4" />
                       <span className="sr-only">Instagram</span>
                     </Button>
                   </TooltipTrigger>
@@ -168,7 +174,7 @@ function Footer() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-full">
-                      <Linkedin className="h-4 w-4" />
+                      <IconBrandLinkedin className="h-4 w-4" />
                       <span className="sr-only">LinkedIn</span>
                     </Button>
                   </TooltipTrigger>

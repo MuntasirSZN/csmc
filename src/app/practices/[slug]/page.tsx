@@ -117,7 +117,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
       }
 
       // Save to localStorage after state update
-      setTimeout(() => saveAttemptToLocalStorage(), 0)
+      setTimeout(saveAttemptToLocalStorage, 0)
 
       return updated
     })
