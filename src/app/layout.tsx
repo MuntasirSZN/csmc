@@ -6,6 +6,7 @@
 
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
+import { SerwistProvider } from '@serwist/turbopack/react'
 import { ThemeProvider } from 'next-themes'
 import { Geist, Noto_Sans_Bengali } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
@@ -106,15 +107,17 @@ export default function Layout({ children }: { children: ReactNode }) {
                 sparkCount={8}
                 duration={400}
               >
-                <Providers>
-                  <Toaster />
-                  <NavBar />
-                  <CookieConsent />
-                  <main className="pt-15">
-                    {children}
-                  </main>
-                  <Footer />
-                </Providers>
+                <SerwistProvider swUrl="/serwist/sw.js">
+                  <Providers>
+                    <Toaster />
+                    <NavBar />
+                    <CookieConsent />
+                    <main className="pt-15">
+                      {children}
+                    </main>
+                    <Footer />
+                  </Providers>
+                </SerwistProvider>
               </ClickSpark>
             </ThemeProvider>
           </NuqsAdapter>
