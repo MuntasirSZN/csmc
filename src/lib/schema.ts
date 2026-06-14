@@ -4,41 +4,57 @@
  * migrate (i.e push to database.)
  */
 
-import { relations } from 'drizzle-orm'
-import { boolean, index, integer, json, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import { relations, sql } from 'drizzle-orm'
+import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export const user = pgTable('user', {
+export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').default(false).notNull(),
+  emailVerified: integer('email_verified', { mode: 'boolean' })
+    .default(false)
+    .notNull(),
   image: text('image'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
+  createdAt: integer('created_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   role: text('role'),
-  banned: boolean('banned').default(false),
+  banned: integer('banned', { mode: 'boolean' }).default(false),
   banReason: text('ban_reason'),
-  banExpires: timestamp('ban_expires'),
+  banExpires: integer('ban_expires', { mode: 'timestamp_ms' }),
   normalizedEmail: text('normalized_email').unique(),
-  twoFactorEnabled: boolean('two_factor_enabled').default(false),
+  twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' }).default(
+    false,
+  ),
 })
 
-export const session = pgTable('session', {
-  id: text('id').primaryKey(),
-  expiresAt: timestamp('expires_at').notNull(),
-  token: text('token').notNull().unique(),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
-  ipAddress: text('ip_address'),
-  userAgent: text('user_agent'),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  impersonatedBy: text('impersonated_by'),
-})
+export const session = sqliteTable(
+  'session',
+  {
+    id: text('id').primaryKey(),
+    expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+    token: text('token').notNull().unique(),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+  },
+  table => [index('session_userId_idx').on(table.userId)],
+)
 
-export const account = pgTable(
+export const account = sqliteTable(
   'account',
   {
     id: text('id').primaryKey(),
@@ -50,35 +66,39 @@ export const account = pgTable(
     accessToken: text('access_token'),
     refreshToken: text('refresh_token'),
     idToken: text('id_token'),
-    accessTokenExpiresAt: timestamp('access_token_expires_at'),
-    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    accessTokenExpiresAt: integer('access_token_expires_at', {
+      mode: 'timestamp_ms',
+    }),
+    refreshTokenExpiresAt: integer('refresh_token_expires_at', {
+      mode: 'timestamp_ms',
+    }),
     scope: text('scope'),
     password: text('password'),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at')
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
   table => [index('account_userId_idx').on(table.userId)],
 )
 
-export const verification = pgTable(
+export const verification = sqliteTable(
   'verification',
   {
     id: text('id').primaryKey(),
     identifier: text('identifier').notNull(),
     value: text('value').notNull(),
-    expiresAt: timestamp('expires_at').notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at')
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
+    expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }),
   },
   table => [index('verification_identifier_idx').on(table.identifier)],
 )
 
-export const passkey = pgTable(
+export const passkey = sqliteTable(
   'passkey',
   {
     id: text('id').primaryKey(),
@@ -90,9 +110,9 @@ export const passkey = pgTable(
     credentialID: text('credential_id').notNull(),
     counter: integer('counter').notNull(),
     deviceType: text('device_type').notNull(),
-    backedUp: boolean('backed_up').notNull(),
+    backedUp: integer('backed_up', { mode: 'boolean' }).notNull(),
     transports: text('transports'),
-    createdAt: timestamp('created_at'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }),
     aaguid: text('aaguid'),
   },
   table => [
@@ -101,7 +121,7 @@ export const passkey = pgTable(
   ],
 )
 
-export const twoFactor = pgTable(
+export const twoFactor = sqliteTable(
   'two_factor',
   {
     id: text('id').primaryKey(),
@@ -110,6 +130,7 @@ export const twoFactor = pgTable(
     userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
+    verified: integer('verified', { mode: 'boolean' }).default(true),
   },
   table => [
     index('twoFactor_secret_idx').on(table.secret),
@@ -117,48 +138,84 @@ export const twoFactor = pgTable(
   ],
 )
 
-export const practices = pgTable('practices', {
-  id: serial('id').primaryKey(),
+export const practices = sqliteTable('practices', {
+  id: integer('id').primaryKey(),
   title: text('title').notNull(),
   slug: text('slug').notNull().unique(),
   description: text('description'),
   content: text('content').notNull(),
   timeLimit: integer('time_limit').default(30).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
 })
 
-export const questions = pgTable('questions', {
-  id: serial('id').primaryKey(),
+export const questions = sqliteTable('questions', {
+  id: integer('id').primaryKey(),
   practiceId: integer('practice_id')
     .notNull()
     .references(() => practices.id, { onDelete: 'cascade' }),
   content: text('content').notNull(),
-  options: json('options').$type<string[]>(),
+  options: text('options', { mode: 'json' }).$type<string[]>(),
   correctAnswer: text('correct_answer'),
-  correctAnswers: json('correct_answers').$type<string[]>(),
+  correctAnswers: text('correct_answers', { mode: 'json' }).$type<string[]>(),
   explanation: text('explanation'),
-  questionType: text('question_type').default('option').notNull(), // 'option' or 'text'
-  answerType: text('answer_type').default('single').notNull(), // 'single' or 'multiple'
+  questionType: text('question_type').default('option').notNull(),
+  answerType: text('answer_type').default('single').notNull(),
   order: integer('order').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
 })
 
-export const practiceAttempts = pgTable('practice_attempts', {
-  id: serial('id').primaryKey(),
+export const practiceAttempts = sqliteTable('practice_attempts', {
+  id: integer('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
   practiceId: integer('practice_id')
     .notNull()
     .references(() => practices.id, { onDelete: 'cascade' }),
-  startedAt: timestamp('started_at').defaultNow().notNull(),
-  completedAt: timestamp('completed_at'),
+  startedAt: integer('started_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  completedAt: integer('completed_at', { mode: 'timestamp_ms' }),
   timeSpent: integer('time_spent'),
   score: integer('score'),
-  answers: json('answers').$type<Record<number, string | string[]>>(),
+  answers: text('answers', { mode: 'json' }).$type<Record<number, string | string[]>>(),
 })
+
+export const ContactSubmissions = sqliteTable('ContactSubmissions', {
+  id: integer('id').primaryKey(),
+  firstName: text('firstName'),
+  lastName: text('lastName'),
+  email: text('email').notNull(),
+  message: text('message'),
+  createdAt: integer('createdAt', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+})
+
+export const NewsletterSubscriptions = sqliteTable('NewsletterSubscriptions', {
+  id: integer('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  createdAt: integer('createdAt', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`),
+})
+
+export const authSchema = {
+  user,
+  session,
+  account,
+  verification,
+  passkey,
+  twoFactor,
+}
 
 export const practicesRelations = relations(practices, ({ many }) => ({
   questions: many(questions),
@@ -186,30 +243,6 @@ export const practiceAttemptsRelations = relations(practiceAttempts, ({ one }) =
     references: [practices.id],
   }),
 }))
-
-export const ContactSubmissions = pgTable('ContactSubmissions', {
-  id: serial('id').primaryKey(),
-  firstName: text('firstName'),
-  lastName: text('lastName'),
-  email: text('email').notNull(),
-  message: text('message'),
-  createdAt: timestamp('createdAt').defaultNow(),
-})
-
-export const NewsletterSubscriptions = pgTable('NewsletterSubscriptions', {
-  id: serial('id').primaryKey(),
-  email: text('email').notNull().unique(),
-  createdAt: timestamp('createdAt').defaultNow(),
-})
-
-export const authSchema = {
-  user,
-  session,
-  account,
-  verification,
-  passkey,
-  twoFactor,
-}
 
 export const userRelations = relations(user, ({ many }) => ({
   accounts: many(account),

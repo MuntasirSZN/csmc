@@ -22,7 +22,7 @@ export const auth = betterAuth({
   },
   appName: 'Collegiate School Math Club',
   database: drizzleAdapter(db, {
-    provider: 'pg',
+    provider: 'sqlite',
     schema: {
       ...authSchema,
     },

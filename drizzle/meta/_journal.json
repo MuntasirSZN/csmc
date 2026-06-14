@@ -1,61 +1,12 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialect": "turso",
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1745225800846,
-      "tag": "0000_nostalgic_lady_vermin",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1745227710367,
-      "tag": "0001_yellow_microchip",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1745657915041,
-      "tag": "0002_chunky_thor_girl",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1745935576692,
-      "tag": "0003_natural_the_phantom",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1746198605351,
-      "tag": "0004_lying_demogoblin",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1746282990454,
-      "tag": "0005_dear_newton_destine",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1746617983434,
-      "tag": "0006_steep_kylun",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1764153890033,
-      "tag": "0007_redundant_ser_duncan",
+      "version": "6",
+      "when": 1781452102282,
+      "tag": "0000_slippery_blade",
       "breakpoints": true
     }
   ]
