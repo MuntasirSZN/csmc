@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, UserButton } from '@daveyplate/better-auth-ui'
 import { LogIn } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   MobileNav,
@@ -16,6 +16,27 @@ import {
   NavItems,
 } from '@/components/ui/resizable-navbar'
 import { authClient } from '@/lib/auth-client'
+
+interface ScrollState {
+  prevScrollPos: number
+  visible: boolean
+  isScrolled: boolean
+}
+
+interface ScrollAction { type: 'SCROLL', currentScrollPos: number }
+
+function scrollReducer(state: ScrollState, action: ScrollAction): ScrollState {
+  switch (action.type) {
+    case 'SCROLL':
+      return {
+        prevScrollPos: action.currentScrollPos,
+        visible: state.prevScrollPos > action.currentScrollPos || action.currentScrollPos < 10,
+        isScrolled: action.currentScrollPos > 10,
+      }
+    default:
+      return state
+  }
+}
 
 export default function NavBar() {
   const { data: session } = authClient.useSession()
@@ -46,22 +67,17 @@ export default function NavBar() {
   }
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [prevScrollPos, setPrevScrollPos] = useState(0)
-  const [visible, setVisible] = useState(true)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollState, dispatchScroll] = useReducer(scrollReducer, { prevScrollPos: 0, visible: true, isScrolled: false })
+  const { prevScrollPos, visible, isScrolled } = scrollState
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY
 
-      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10)
-
-      setIsScrolled(currentScrollPos > 10)
-
-      setPrevScrollPos(currentScrollPos)
+      dispatchScroll({ type: 'SCROLL', currentScrollPos })
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [prevScrollPos])
 

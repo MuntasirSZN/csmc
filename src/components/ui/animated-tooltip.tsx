@@ -2,7 +2,9 @@
 
 import {
   AnimatePresence,
-  motion,
+  LazyMotion,
+  m,
+  domAnimation,
   useMotionValue,
   useSpring,
   useTransform,
@@ -40,7 +42,7 @@ export function AnimatedTooltip({
   }
 
   return (
-    <>
+    <LazyMotion features={domAnimation}>
       {items.map(item => (
         <div
           className="group relative -mr-4"
@@ -50,7 +52,7 @@ export function AnimatedTooltip({
         >
           <AnimatePresence mode="popLayout">
             {hoveredIndex === item.id && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20, scale: 0.6 }}
                 animate={{
                   opacity: 1,
@@ -76,7 +78,7 @@ export function AnimatedTooltip({
                   {item.name}
                 </div>
                 <div className="text-xs text-white">{item.designation}</div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
           <Image
@@ -89,6 +91,6 @@ export function AnimatedTooltip({
           />
         </div>
       ))}
-    </>
+    </LazyMotion>
   )
 }

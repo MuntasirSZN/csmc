@@ -13,10 +13,10 @@
     "db": "bunx drizzle-kit",
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "bunx drizzle-kit migrate",
-    "db:studio": "bunx drizzle-kit studio"
+    "db:studio": "bunx drizzle-kit studio",
+    "doctor": "npx react-doctor@latest"
   },
   "dependencies": {
-    "@arcjet/inspect": "^1.5.0",
     "@arcjet/next": "^1.5.0",
     "@base-ui/react": "^1.5.0",
     "@better-auth/passkey": "^1.6.19",
@@ -75,10 +75,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "lint-staged": "^17.0.7",
-    "minimatch": "^10.2.5",
     "postcss": "^8.5.15",
     "prettier": "^3.8.4",
-    "react-scan": "^0.5.7",
     "serwist": "^9.5.11",
     "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.3.1",

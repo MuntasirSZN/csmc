@@ -9,44 +9,71 @@ import { ImageResponse } from 'next/og'
 // These constants are imported from a shared helper to satisfy react-refresh rule.
 import { size } from './shared-image-constants'
 
-export default async function OGImage() {
-  const geistMedium = await readFile(
-    join(process.cwd(), 'src/app/fonts/Geist-Medium.ttf'),
-  )
+const wrapperStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+  background:
+    'linear-gradient(135deg, #0d1a29 0%, #1a365d 50%, #2b6cb0 100%)',
+  padding: '40px',
+  fontFamily: '"Geist", sans-serif',
+} as const
 
-  const logoData = await readFile(
-    join(process.cwd(), 'public/png-logos/CSMC.png'),
-  )
+const symbolsContainerStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  zIndex: 1,
+  opacity: 0.4,
+} as const
+
+const contentContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 10,
+  width: '100%',
+  height: '100%',
+  padding: '60px',
+  position: 'relative',
+} as const
+
+const glowEffectStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: '300px',
+  height: '300px',
+  borderRadius: '50%',
+  background:
+    'radial-gradient(circle, rgba(144,205,244,0.15) 0%, rgba(255,255,255,0) 70%)',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  filter: 'blur(8px)',
+  zIndex: -1,
+} as const
+
+export default async function OGImage() {
+  const [geistMedium, logoData] = await Promise.all([
+    readFile(join(process.cwd(), 'src/app/fonts/Geist-Medium.ttf')),
+    readFile(join(process.cwd(), 'public/png-logos/CSMC.png')),
+  ])
 
   const logoBase64 = `data:image/png;base64,${logoData.toString('base64')}`
 
   return new ImageResponse(
     (
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: '100%',
-          background:
-            'linear-gradient(135deg, #0d1a29 0%, #1a365d 50%, #2b6cb0 100%)',
-          padding: '40px',
-          fontFamily: '"Geist", sans-serif',
-        }}
+        style={wrapperStyle}
       >
         <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            zIndex: 1,
-            opacity: 0.4,
-          }}
+          style={symbolsContainerStyle}
         >
           {/* Mathematical symbols background */}
           <div
@@ -123,33 +150,11 @@ export default async function OGImage() {
         </div>
 
         <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-            width: '100%',
-            height: '100%',
-            padding: '60px',
-            position: 'relative',
-          }}
+          style={contentContainerStyle}
         >
           {/* Glow effect sphere */}
           <div
-            style={{
-              position: 'absolute',
-              width: '300px',
-              height: '300px',
-              borderRadius: '50%',
-              background:
-                'radial-gradient(circle, rgba(144,205,244,0.15) 0%, rgba(255,255,255,0) 70%)',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              filter: 'blur(30px)',
-              zIndex: -1,
-            }}
+            style={glowEffectStyle}
           />
 
           {/* Logo */}

@@ -159,33 +159,33 @@ interface ContestCardProps {
   contest: Contest
 }
 
+function getBadgeStyles(status: string) {
+  switch (status) {
+    case 'upcoming':
+      return 'bg-blue-100 text-blue-800 hover:bg-blue-100'
+    case 'running':
+      return 'bg-green-100 text-green-800 hover:bg-green-100'
+    case 'completed':
+      return 'bg-amber-100 text-amber-800 hover:bg-amber-100'
+    default:
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-100'
+  }
+}
+
+function getStatusText(status: string) {
+  switch (status) {
+    case 'upcoming':
+      return 'Upcoming'
+    case 'running':
+      return 'Running'
+    case 'completed':
+      return 'Completed'
+    default:
+      return status
+  }
+}
+
 function ContestCard({ contest }: ContestCardProps) {
-  const getBadgeStyles = (status: string) => {
-    switch (status) {
-      case 'upcoming':
-        return 'bg-blue-100 text-blue-800 hover:bg-blue-100'
-      case 'running':
-        return 'bg-green-100 text-green-800 hover:bg-green-100'
-      case 'completed':
-        return 'bg-amber-100 text-amber-800 hover:bg-amber-100'
-      default:
-        return 'bg-gray-100 text-gray-800 hover:bg-gray-100'
-    }
-  }
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'upcoming':
-        return 'Upcoming'
-      case 'running':
-        return 'Running'
-      case 'completed':
-        return 'Completed'
-      default:
-        return status
-    }
-  }
-
   return (
     <Card className="h-full flex flex-col shadow-sm hover:shadow-md transition-shadow duration-200">
       <CardHeader className="relative">

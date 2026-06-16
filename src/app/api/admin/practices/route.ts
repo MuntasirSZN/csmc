@@ -50,21 +50,23 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     }).returning()
 
-    for (const q of questionList) {
-      await db.insert(questions).values({
-        practiceId: practice.id,
-        content: q.content,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        correctAnswers: q.correctAnswers,
-        explanation: q.explanation,
-        questionType: q.questionType,
-        answerType: q.answerType,
-        order: q.order,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-    }
+    await Promise.all(
+      questionList.map(q =>
+        db.insert(questions).values({
+          practiceId: practice.id,
+          content: q.content,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          correctAnswers: q.correctAnswers,
+          explanation: q.explanation,
+          questionType: q.questionType,
+          answerType: q.answerType,
+          order: q.order,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
+      ),
+    )
 
     return NextResponse.json(practice)
   }
@@ -180,35 +182,41 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    const [updatedPractice] = await db.update(practices)
-      .set({
-        title,
-        slug,
-        description,
-        content,
-        timeLimit,
-        updatedAt: new Date(),
-      })
-      .where(eq(practices.id, id))
-      .returning()
-
-    await db.delete(questions).where(eq(questions.practiceId, id))
-
-    for (const q of questionList) {
-      await db.insert(questions).values({
-        practiceId: id,
-        content: q.content,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        correctAnswers: q.correctAnswers,
-        explanation: q.explanation,
-        questionType: q.questionType,
-        answerType: q.answerType,
-        order: q.order,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-    }
+    const [updatedPractice] = await Promise.all([
+      db.update(practices)
+        .set({
+          title,
+          slug,
+          description,
+          content,
+          timeLimit,
+          updatedAt: new Date(),
+        })
+        .where(eq(practices.id, id))
+        .returning(),
+      db.delete(questions).where(eq(questions.practiceId, id)),
+      ...(questionList.length > 0
+        ? [
+            Promise.all(
+              questionList.map(q =>
+                db.insert(questions).values({
+                  practiceId: id,
+                  content: q.content,
+                  options: q.options,
+                  correctAnswer: q.correctAnswer,
+                  correctAnswers: q.correctAnswers,
+                  explanation: q.explanation,
+                  questionType: q.questionType,
+                  answerType: q.answerType,
+                  order: q.order,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                }),
+              ),
+            ),
+          ]
+        : []),
+    ])
 
     return NextResponse.json(updatedPractice)
   }

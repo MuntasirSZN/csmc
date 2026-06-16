@@ -2,7 +2,9 @@
 import { Menu, X } from 'lucide-react'
 import {
   AnimatePresence,
-  motion,
+  LazyMotion,
+  domAnimation,
+  m,
   useMotionValueEvent,
   useScroll,
 } from 'motion/react'
@@ -69,8 +71,9 @@ export function Navbar({ children, className }: NavbarProps) {
   })
 
   return (
-    <motion.div
-      ref={ref}
+    <LazyMotion features={domAnimation}>
+      <m.div
+        ref={ref}
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
       className={cn('sticky inset-x-0 top-20 z-40 w-full', className)}
     >
@@ -81,14 +84,16 @@ export function Navbar({ children, className }: NavbarProps) {
               { visible },
             )
           : child)}
-    </motion.div>
+    </m.div>
+    </LazyMotion>
   )
 }
 
 export function NavBody({ children, className, visible }: NavBodyProps) {
   return (
-    <motion.div
-      animate={{
+    <LazyMotion features={domAnimation}>
+      <m.div
+        animate={{
         backdropFilter: visible ? 'blur(10px)' : 'none',
         boxShadow: visible
           ? '0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset'
@@ -111,7 +116,8 @@ export function NavBody({ children, className, visible }: NavBodyProps) {
       )}
     >
       {children}
-    </motion.div>
+    </m.div>
+    </LazyMotion>
   )
 }
 
@@ -119,8 +125,9 @@ export function NavItems({ items, className, onItemClick }: NavItemsProps) {
   const [hovered, setHovered] = useState<number | null>(null)
 
   return (
-    <motion.div
-      onMouseLeave={() => setHovered(null)}
+    <LazyMotion features={domAnimation}>
+      <m.div
+        onMouseLeave={() => setHovered(null)}
       className={cn(
         'absolute inset-0 z-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-600 transition duration-200 hover:text-zinc-800 lg:flex lg:space-x-2',
         className,
@@ -135,7 +142,7 @@ export function NavItems({ items, className, onItemClick }: NavItemsProps) {
           href={item.link}
         >
           {hovered === idx && (
-            <motion.div
+            <m.div
               layoutId="hovered"
               className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
             />
@@ -143,14 +150,16 @@ export function NavItems({ items, className, onItemClick }: NavItemsProps) {
           <span className="relative z-20">{item.name}</span>
         </Link>
       ))}
-    </motion.div>
+    </m.div>
+    </LazyMotion>
   )
 }
 
 export function MobileNav({ children, className, visible }: MobileNavProps) {
   return (
-    <motion.div
-      animate={{
+    <LazyMotion features={domAnimation}>
+      <m.div
+        animate={{
         backdropFilter: visible ? 'blur(10px)' : 'none',
         boxShadow: visible
           ? '0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset'
@@ -173,7 +182,8 @@ export function MobileNav({ children, className, visible }: MobileNavProps) {
       )}
     >
       {children}
-    </motion.div>
+    </m.div>
+    </LazyMotion>
   )
 }
 
@@ -199,9 +209,10 @@ export function MobileNavMenu({
   isOpen,
 }: MobileNavMenuProps) {
   return (
-    <AnimatePresence>
+    <LazyMotion features={domAnimation}>
+      <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -211,9 +222,10 @@ export function MobileNavMenu({
           )}
         >
           {children}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
+    </LazyMotion>
   )
 }
 
@@ -250,7 +262,7 @@ export function NavbarLogo() {
   )
 }
 
-export function NavbarButton({
+function NavbarButton({
   href,
   as: Tag = 'a',
   children,

@@ -1,7 +1,7 @@
 'use client'
 
 import { CircleCheck, CircleSlash, CookieIcon, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, domAnimation, LazyMotion, m } from 'motion/react'
 import { useState } from 'react'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Button } from '@/components/ui/button'
@@ -13,12 +13,208 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
+const consentItem = typeof window !== 'undefined'
+  ? (localStorage.getItem('cookieConsent:v1') ?? localStorage.getItem('cookieConsent'))
+  : null
+
+function getInitialConsent() {
+  return consentItem === 'true'
+}
+
+function CookiePreferencesPanel({
+  cookiePreferences,
+  onToggle,
+  onSave,
+  onClose,
+}: {
+  cookiePreferences: {
+    necessary: boolean
+    functional: boolean
+    analytics: boolean
+    marketing: boolean
+  }
+  onToggle: (cookieType: string) => void
+  onSave: () => void
+  onClose: () => void
+}) {
+  return (
+    <m.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+    >
+      <Card className="shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <CookieIcon size={20} />
+              <span>Cookie Preferences</span>
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="h-8 w-8 cursor-pointer"
+            >
+              <X size={16} />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="text-left space-y-4">
+          <p className="text-sm">
+            Customize your cookie preferences below. Necessary cookies are
+            always enabled as they are essential for the website to
+            function properly.
+          </p>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 border rounded-md">
+              <div>
+                <h3 className="font-medium text-sm">Necessary Cookies</h3>
+                <p className="text-xs text-muted-foreground">
+                  Essential for the website to function properly.
+                </p>
+              </div>
+              <div className="flex items-center h-4">
+                <span className="text-xs mr-2 text-muted-foreground">
+                  Always on
+                </span>
+                <div className="w-8 h-4 bg-primary rounded-full"></div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 border rounded-md">
+              <div>
+                <h3 className="font-medium text-sm">
+                  Functional Cookies
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Enable enhanced functionality and personalization.
+                </p>
+              </div>
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2"
+                  onClick={() => onToggle('functional')}
+                >
+                  {cookiePreferences.functional === true
+                    ? 'Enabled'
+                    : 'Disabled'}
+                </Button>
+                <button
+                  type="button"
+                  aria-label="Toggle functional cookies"
+                  className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.functional ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
+                  onClick={() => onToggle('functional')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onToggle('functional')
+                    }
+                  }}
+                >
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 border rounded-md">
+              <div>
+                <h3 className="font-medium text-sm">Analytics Cookies</h3>
+                <p className="text-xs text-muted-foreground">
+                  Help understand how you interact with our website.
+                </p>
+              </div>
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2"
+                  onClick={() => onToggle('analytics')}
+                >
+                  {cookiePreferences.analytics ? 'Enabled' : 'Disabled'}
+                </Button>
+                <button
+                  type="button"
+                  aria-label="Toggle analytics cookies"
+                  className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.analytics ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
+                  onClick={() => onToggle('analytics')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onToggle('analytics')
+                    }
+                  }}
+                >
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-3 border rounded-md">
+              <div>
+                <h3 className="font-medium text-sm">Marketing Cookies</h3>
+                <p className="text-xs text-muted-foreground">
+                  Used to display relevant and engaging ads.
+                </p>
+              </div>
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2"
+                  onClick={() => onToggle('marketing')}
+                >
+                  {cookiePreferences.marketing ? 'Enabled' : 'Disabled'}
+                </Button>
+                <button
+                  type="button"
+                  aria-label="Toggle marketing cookies"
+                  className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.marketing ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
+                  onClick={() => onToggle('marketing')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onToggle('marketing')
+                    }
+                  }}
+                >
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground mt-4">
+            For more details, please check the Cookie Policy, Privacy
+            Policy, and Terms and Conditions links in our footer.
+          </p>
+        </CardContent>
+        <CardFooter className="flex justify-end space-x-2 border-t pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            className="cursor-pointer"
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={onSave}
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
+          >
+            Save Preferences
+          </Button>
+        </CardFooter>
+      </Card>
+    </m.div>
+  )
+}
+
 export default function CookieConsent() {
-  const [consentGiven, setConsentGiven] = useState<boolean>(() => {
-    if (typeof window === 'undefined')
-      return false
-    return localStorage.getItem('cookieConsent') === 'true'
-  })
+  const [consentGiven, setConsentGiven] = useState<boolean>(getInitialConsent)
   const [cookiePreferences, setCookiePreferences] = useState(() => {
     if (typeof window === 'undefined') {
       return {
@@ -28,7 +224,7 @@ export default function CookieConsent() {
         marketing: false,
       }
     }
-    const savedPreferences = localStorage.getItem('cookiePreferences')
+    const savedPreferences = localStorage.getItem('cookiePreferences:v1') ?? localStorage.getItem('cookiePreferences')
     return savedPreferences
       ? JSON.parse(savedPreferences)
       : {
@@ -39,17 +235,12 @@ export default function CookieConsent() {
         }
   })
   const [showPreferences, setShowPreferences] = useState(false)
-  const [isVisible, setIsVisible] = useState<boolean>(() => {
-    if (typeof window === 'undefined')
-      return false
-    const consent = localStorage.getItem('cookieConsent')
-    return consent === null
-  })
+  const [isVisible, setIsVisible] = useState<boolean>(() => consentItem === null)
 
   const handleAccept = () => {
-    localStorage.setItem('cookieConsent', 'true')
+    localStorage.setItem('cookieConsent:v1', 'true')
     localStorage.setItem(
-      'cookiePreferences',
+      'cookiePreferences:v1',
       JSON.stringify(cookiePreferences),
     )
     setConsentGiven(true)
@@ -63,9 +254,9 @@ export default function CookieConsent() {
       analytics: false,
       marketing: false,
     }
-    localStorage.setItem('cookieConsent', 'false')
+    localStorage.setItem('cookieConsent:v1', 'false')
     localStorage.setItem(
-      'cookiePreferences',
+      'cookiePreferences:v1',
       JSON.stringify(declinedPreferences),
     )
     setCookiePreferences(declinedPreferences)
@@ -89,9 +280,9 @@ export default function CookieConsent() {
   }
 
   const handleSavePreferences = () => {
-    localStorage.setItem('cookieConsent', 'true')
+    localStorage.setItem('cookieConsent:v1', 'true')
     localStorage.setItem(
-      'cookiePreferences',
+      'cookiePreferences:v1',
       JSON.stringify(cookiePreferences),
     )
     setConsentGiven(true)
@@ -100,10 +291,10 @@ export default function CookieConsent() {
   }
 
   return (
-    <>
+    <LazyMotion features={domAnimation}>
       <AnimatePresence>
         {isVisible && !showPreferences && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
@@ -167,163 +358,21 @@ export default function CookieConsent() {
                 </div>
               </CardFooter>
             </Card>
-          </motion.div>
+          </m.div>
         )}
 
         {isVisible && showPreferences && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          >
-            <Card className="shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                    <CookieIcon size={20} />
-                    <span>Cookie Preferences</span>
-                  </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowPreferences(false)}
-                    className="h-8 w-8 cursor-pointer"
-                  >
-                    <X size={16} />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="text-left space-y-4">
-                <p className="text-sm">
-                  Customize your cookie preferences below. Necessary cookies are
-                  always enabled as they are essential for the website to
-                  function properly.
-                </p>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 border rounded-md">
-                    <div>
-                      <h3 className="font-medium text-sm">Necessary Cookies</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Essential for the website to function properly.
-                      </p>
-                    </div>
-                    <div className="flex items-center h-4">
-                      <span className="text-xs mr-2 text-muted-foreground">
-                        Always on
-                      </span>
-                      <div className="w-8 h-4 bg-primary rounded-full"></div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border rounded-md">
-                    <div>
-                      <h3 className="font-medium text-sm">
-                        Functional Cookies
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        Enable enhanced functionality and personalization.
-                      </p>
-                    </div>
-                    <div className="flex items-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2"
-                        onClick={() => handleToggle('functional')}
-                      >
-                        {cookiePreferences.functional === true
-                          ? 'Enabled'
-                          : 'Disabled'}
-                      </Button>
-                      <div
-                        className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.functional ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
-                        onClick={() => handleToggle('functional')}
-                      >
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border rounded-md">
-                    <div>
-                      <h3 className="font-medium text-sm">Analytics Cookies</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Help understand how you interact with our website.
-                      </p>
-                    </div>
-                    <div className="flex items-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2"
-                        onClick={() => handleToggle('analytics')}
-                      >
-                        {cookiePreferences.analytics ? 'Enabled' : 'Disabled'}
-                      </Button>
-                      <div
-                        className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.analytics ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
-                        onClick={() => handleToggle('analytics')}
-                      >
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border rounded-md">
-                    <div>
-                      <h3 className="font-medium text-sm">Marketing Cookies</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Used to display relevant and engaging ads.
-                      </p>
-                    </div>
-                    <div className="flex items-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2"
-                        onClick={() => handleToggle('marketing')}
-                      >
-                        {cookiePreferences.marketing ? 'Enabled' : 'Disabled'}
-                      </Button>
-                      <div
-                        className={`w-8 h-4 rounded-full cursor-pointer ${cookiePreferences.marketing ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-700'}`}
-                        onClick={() => handleToggle('marketing')}
-                      >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-muted-foreground mt-4">
-                  For more details, please check the Cookie Policy, Privacy
-                  Policy, and Terms and Conditions links in our footer.
-                </p>
-              </CardContent>
-              <CardFooter className="flex justify-end space-x-2 border-t pt-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowPreferences(false)}
-                  className="cursor-pointer"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={handleSavePreferences}
-                  className="bg-primary hover:bg-primary/90 cursor-pointer"
-                >
-                  Save Preferences
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
+          <CookiePreferencesPanel
+            cookiePreferences={cookiePreferences}
+            onToggle={handleToggle}
+            onSave={handleSavePreferences}
+            onClose={() => setShowPreferences(false)}
+          />
         )}
       </AnimatePresence>
       <GoogleAnalytics
         consentGiven={consentGiven && cookiePreferences.analytics}
       />
-    </>
+    </LazyMotion>
   )
 }

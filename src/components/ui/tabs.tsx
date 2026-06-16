@@ -12,15 +12,23 @@ function Tabs({
   ...props
 }: TabsPrimitive.Root.Props) {
   return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      data-orientation={orientation}
+    <div
       className={cn(
-        'group/tabs flex gap-2 data-horizontal:flex-col',
-        className,
+        'group/tabs',
+        orientation === 'horizontal' ? 'data-horizontal' : 'data-vertical',
       )}
-      {...props}
-    />
+    >
+      <TabsPrimitive.Root
+        data-slot="tabs"
+        data-orientation={orientation}
+        className={cn(
+          'flex gap-2',
+          orientation === 'horizontal' ? 'flex-col' : 'flex-row',
+          className,
+        )}
+        {...props}
+      />
+    </div>
   )
 }
 
@@ -80,4 +88,4 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   )
 }
 
-export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger }
+export { Tabs, TabsContent, TabsList, TabsTrigger }

@@ -23,23 +23,23 @@ export async function PUT(
     return unauthorized()
   }
 
+  const attempt = await db.query.practiceAttempts.findFirst({
+    where: attempt => eq(attempt.id, attemptId),
+  })
+
+  if (!attempt) {
+    return NextResponse.json(
+      { error: 'Attempt not found' },
+      { status: 404 },
+    )
+  }
+
+  if (attempt.userId !== session.user.id) {
+    return unauthorized()
+  }
+
   try {
     const { answers, timeSpent } = await request.json()
-
-    const attempt = await db.query.practiceAttempts.findFirst({
-      where: attempt => eq(attempt.id, attemptId),
-    })
-
-    if (!attempt) {
-      return NextResponse.json(
-        { error: 'Attempt not found' },
-        { status: 404 },
-      )
-    }
-
-    if (attempt.userId !== session.user.id) {
-      return unauthorized()
-    }
 
     // Get practice questions with correct answers
     const practiceQuestions = await db.query.questions.findMany({

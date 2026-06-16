@@ -3,6 +3,7 @@
  */
 
 import type { Metadata } from 'next'
+import type { ComponentType } from 'react'
 import {
   ArrowRight,
   Award,
@@ -41,6 +42,176 @@ export const metadata: Metadata = {
   description: 'Meet a new range of thinking with mathematics',
 }
 
+function HeroSection() {
+  return (
+    <section className="w-full py-16">
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
+        <div className="w-32 h-32 relative animate-pulse">
+          <video autoPlay loop muted playsInline className="object-contain" aria-label="CSMC promotional video">
+            <source src="/CSMC.webm" type="video/webm" />
+          </video>
+        </div>
+        <div className="text-4xl md:text-5xl font-bold bg-clip-text w-full">
+          <div className="w-full h-20">
+            <TextHoverEffect text="Collegiate School Math Club" />
+          </div>
+        </div>
+        <p className="text-xl text-muted-foreground max-w-2xl">
+          Meet a new range of thinking with mathematics
+        </p>
+        <HoverBorderGradient
+          className="text-white py-2 px-4 font-medium flex"
+          as="button"
+          aria-label="Latest contest"
+          type="button"
+        >
+          <Trophy className="mr-2" />
+          <span>Our latest contest: CSMC Math Hunt</span>
+        </HoverBorderGradient>
+      </div>
+    </section>
+  )
+}
+
+interface Announcement {
+  id: number
+  title: string
+  description: string
+  link: string
+  icon: string
+  date: string
+}
+
+function AnnouncementsSection({ announcements }: { announcements: Announcement[] }) {
+  return (
+    <section className="w-full max-w-6xl my-12 px-4">
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 inline-flex items-center justify-center w-full">
+        <Award className="mr-2 text-primary" size={28} />
+        Latest Announcements
+      </h2>
+      <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
+        Stay updated with the latest news and events from our club.
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {announcements.map(announcement => (
+          <Card
+            key={announcement.id}
+            className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group"
+          >
+            <div className="bg-gradient-to-r from-primary to-purple-600 h-2"></div>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center">
+                  {announcement.icon === 'Trophy'
+                    ? (
+                        <Trophy className="mr-2 text-primary" size={20} />
+                      )
+                    : (
+                        <BookOpen className="mr-2 text-primary" size={20} />
+                      )}
+                  {announcement.title}
+                </CardTitle>
+                <Badge variant="outline" className="text-xs font-normal">
+                  {announcement.date}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-grow pt-2 pb-4">
+              <p className="text-muted-foreground">
+                {announcement.description}
+              </p>
+            </CardContent>
+            <CardFooter className="pt-0">
+              <Button variant="link" className="px-0 group-hover:text-primary transition-colors duration-300" render={<Link href={announcement.link} />} nativeButton={false}>
+                Click To Learn More
+                <ArrowRight
+                  className="ml-1 group-hover:translate-x-1 transition-transform duration-300"
+                  size={16}
+                />
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+interface FaqItem {
+  id: string
+  question: string
+  answer: string
+}
+
+function FaqSection({ faqItems }: { faqItems: FaqItem[] }) {
+  return (
+    <section className="w-full max-w-4xl my-16 px-4">
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 inline-flex items-center justify-center w-full">
+        <CircleHelp className="mr-2 text-primary" size={28} />
+        Frequently Asked Questions
+      </h2>
+      <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
+        Find answers to common questions about our math club and activities.
+      </p>
+      <div className="rounded-xl shadow-lg p-6">
+        <Accordion className="w-full">
+          {faqItems.map(faq => (
+            <AccordionItem
+              key={faq.id}
+              value={faq.id}
+              className="border-b border-muted last:border-0"
+            >
+              <AccordionTrigger className="text-left hover:text-primary transition-colors duration-300 py-4">
+                <div className="flex items-center">{faq.question}</div>
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground pl-8">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  )
+}
+
+function FeatureCard({
+  icon: Icon,
+  title,
+  description,
+  linkHref,
+  linkText,
+}: {
+  icon: ComponentType<{ className?: string, size?: number }>
+  title: string
+  description: string
+  linkHref: string
+  linkText: string
+}) {
+  return (
+    <div className="flex flex-col items-center text-center group">
+      <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
+        <Icon className="text-primary" size={32} />
+      </div>
+      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
+        {title}
+      </h3>
+      <p className="text-muted-foreground">
+        {description}
+      </p>
+      <Link href={linkHref}>
+        <Button
+          variant="link"
+          className="mt-4 text-primary cursor-pointer"
+        >
+          {linkText}
+          <ChevronRight className="ml-1" size={16} />
+        </Button>
+      </Link>
+    </div>
+  )
+}
+
 export default function Home() {
   const announcements = [
     {
@@ -74,7 +245,7 @@ export default function Home() {
       id: 'item-2',
       question: 'What is the fee purchased for joining?',
       answer:
-        'Collegiate School Math Club club is dedicated to serve the students with quality and knowledge for all. So that, to ensure everyone can join the club without any hesitation. Collegiate School Math Club requires very low registration fee of only ৳50.',
+        'Collegiate School Math Club club is dedicated to serve the students with quality and knowledge for all. So that, to ensure everyone can join the club without any hesitation. Collegiate School Math Club requires very low registration fee of only \u09F350.',
     },
     {
       id: 'item-3',
@@ -98,33 +269,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
-      {/* Hero Section with Background Gradient */}
-      <section className="w-full py-16">
-        <div className="max-w-6xl mx-auto flex flex-col items-center text-center space-y-6 px-4">
-          <div className="w-32 h-32 relative animate-pulse">
-            <video autoPlay loop muted playsInline className="object-contain">
-              <source src="/CSMC.webm" type="video/webm" />
-            </video>
-          </div>
-          <div className="text-4xl md:text-5xl font-bold bg-clip-text w-full">
-            <div className="w-full h-20">
-              <TextHoverEffect text="Collegiate School Math Club" />
-            </div>
-          </div>
-          <p className="text-xl text-muted-foreground max-w-2xl">
-            Meet a new range of thinking with mathematics
-          </p>
-          <HoverBorderGradient
-            className="text-white py-2 px-4 font-medium flex"
-            as="button"
-            aria-label="Latest contest"
-            type="button"
-          >
-            <Trophy className="mr-2" />
-            <span>Our latest contest: CSMC Math Hunt</span>
-          </HoverBorderGradient>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Carousel Section with Navigation Controls */}
       <section className="w-full max-w-5xl my-12 px-4">
@@ -139,6 +284,7 @@ export default function Home() {
               size="sm"
               className="rounded-full w-8 h-8 p-0 cursor-pointer"
               id="carousel-prev"
+              aria-label="Previous slide"
             >
               <ChevronRight className="rotate-180" size={16} />
               <span className="sr-only">Previous slide</span>
@@ -148,6 +294,7 @@ export default function Home() {
               size="sm"
               className="rounded-full w-8 h-8 p-0 cursor-pointer"
               id="carousel-next"
+              aria-label="Next slide"
             >
               <ChevronRight size={16} />
               <span className="sr-only">Next slide</span>
@@ -242,158 +389,33 @@ export default function Home() {
             comprehensive features.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Competitions Feature */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
-                <Trophy className="text-primary" size={32} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
-                Contests
-              </h3>
-              <p className="text-muted-foreground">
-                Participate in exciting math contests and challenge yourself
-                against peers from different schools.
-              </p>
-              <Link href="/contests">
-                <Button
-                  variant="link"
-                  className="mt-4 text-primary cursor-pointer"
-                >
-                  View Contests
-                  <ChevronRight className="ml-1" size={16} />
-                </Button>
-              </Link>
-            </div>
-
-            {/* Practice Feature */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
-                <BookOpen className="text-primary" size={32} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
-                Practice
-              </h3>
-              <p className="text-muted-foreground">
-                Improve your skills with our structured practice problems and
-                contests designed by experienced educators.
-              </p>
-              <Link href="/practices">
-                <Button
-                  variant="link"
-                  className="mt-4 text-primary cursor-pointer"
-                >
-                  Start Practicing
-                  <ChevronRight className="ml-1" size={16} />
-                </Button>
-              </Link>
-            </div>
-
-            {/* Community Feature */}
-            <div className="flex flex-col items-center text-center group">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
-                <Users className="text-primary" size={32} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
-                Community
-              </h3>
-              <p className="text-muted-foreground">
-                Join a community of math enthusiasts, learn together, and build
-                lasting friendships with like-minded peers.
-              </p>
-              <Link href="https://www.facebook.com/collegiateschoolmathclub">
-                <Button
-                  variant="link"
-                  className="mt-4 text-primary cursor-pointer"
-                >
-                  Join Community
-                  <ChevronRight className="ml-1" size={16} />
-                </Button>
-              </Link>
-            </div>
+            <FeatureCard
+              icon={Trophy}
+              title="Contests"
+              description="Participate in exciting math contests and challenge yourself against peers from different schools."
+              linkHref="/contests"
+              linkText="View Contests"
+            />
+            <FeatureCard
+              icon={BookOpen}
+              title="Practice"
+              description="Improve your skills with our structured practice problems and contests designed by experienced educators."
+              linkHref="/practices"
+              linkText="Start Practicing"
+            />
+            <FeatureCard
+              icon={Users}
+              title="Community"
+              description="Join a community of math enthusiasts, learn together, and build lasting friendships with like-minded peers."
+              linkHref="https://www.facebook.com/collegiateschoolmathclub"
+              linkText="Join Community"
+            />
           </div>
         </div>
       </section>
 
-      {/* Latest Announcements */}
-      <section className="w-full max-w-6xl my-12 px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 inline-flex items-center justify-center w-full">
-          <Award className="mr-2 text-primary" size={28} />
-          Latest Announcements
-        </h2>
-        <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
-          Stay updated with the latest news and events from our club.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {announcements.map(announcement => (
-            <Card
-              key={announcement.id}
-              className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group"
-            >
-              <div className="bg-gradient-to-r from-primary to-purple-600 h-2"></div>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="flex items-center">
-                    {announcement.icon === 'Trophy'
-                      ? (
-                          <Trophy className="mr-2 text-primary" size={20} />
-                        )
-                      : (
-                          <BookOpen className="mr-2 text-primary" size={20} />
-                        )}
-                    {announcement.title}
-                  </CardTitle>
-                  <Badge variant="outline" className="text-xs font-normal">
-                    {announcement.date}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow pt-2 pb-4">
-                <p className="text-muted-foreground">
-                  {announcement.description}
-                </p>
-              </CardContent>
-              <CardFooter className="pt-0">
-                <Button variant="link" className="px-0 group-hover:text-primary transition-colors duration-300" render={<Link href={announcement.link} />} nativeButton={false}>
-                  Click To Learn More
-                  <ArrowRight
-                    className="ml-1 group-hover:translate-x-1 transition-transform duration-300"
-                    size={16}
-                  />
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Section with Updated Design */}
-      <section className="w-full max-w-4xl my-16 px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 inline-flex items-center justify-center w-full">
-          <CircleHelp className="mr-2 text-primary" size={28} />
-          Frequently Asked Questions
-        </h2>
-        <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
-          Find answers to common questions about our math club and activities.
-        </p>
-        <div className="rounded-xl shadow-lg p-6">
-          <Accordion className="w-full">
-            {faqItems.map(faq => (
-              <AccordionItem
-                key={faq.id}
-                value={faq.id}
-                className="border-b border-muted last:border-0"
-              >
-                <AccordionTrigger className="text-left hover:text-primary transition-colors duration-300 py-4">
-                  <div className="flex items-center">{faq.question}</div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pl-8">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
+      <AnnouncementsSection announcements={announcements} />
+      <FaqSection faqItems={faqItems} />
     </main>
   )
 }

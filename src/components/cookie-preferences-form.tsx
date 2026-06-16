@@ -25,7 +25,7 @@ export default function CookiePreferencesForm() {
   }
 
   const handleSavePreferences = () => {
-    localStorage.setItem('cookiePreferences', JSON.stringify(cookiePreferences))
+    localStorage.setItem('cookiePreferences:v1', JSON.stringify(cookiePreferences))
     toast.success('Your cookie preferences have been saved.')
   }
 

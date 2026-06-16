@@ -4,12 +4,13 @@ import { formatDistanceToNow } from 'date-fns'
 import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { safeFetch } from '@/lib/fetch-utils'
 
 interface Practice {
   id: number
@@ -26,49 +27,79 @@ interface PracticeAttempt {
   score: number | null
 }
 
+interface State {
+  practices: Practice[]
+  attempts: Record<number, PracticeAttempt | null>
+  loading: boolean
+}
+
+type Action
+  = | { type: 'FETCH_START' }
+    | { type: 'FETCH_SUCCESS', practices: Practice[], attempts: Record<number, PracticeAttempt | null> }
+    | { type: 'FETCH_ERROR' }
+
+const initialState: State = {
+  practices: [],
+  attempts: {},
+  loading: true,
+}
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'FETCH_START':
+      return { ...state, loading: true }
+    case 'FETCH_SUCCESS':
+      return { practices: action.practices, attempts: action.attempts, loading: false }
+    case 'FETCH_ERROR':
+      return { ...state, loading: false }
+    default:
+      return state
+  }
+}
+
 export default function PracticesPage() {
-  const [practices, setPractices] = useState<Practice[]>([])
-  const [attempts, setAttempts] = useState<Record<number, PracticeAttempt | null>>({})
-  const [loading, setLoading] = useState(true)
+  const [state, dispatch] = useReducer(reducer, initialState)
   const [selectedPractice, setSelectedPractice] = useState<Practice | null>(null)
   const [showDialog, setShowDialog] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
+    let ignore = false
     const fetchPracticesAndAttempts = async () => {
-      try {
-        // Fetch practices
-        const practicesResponse = await fetch('/api/practices')
-        if (!practicesResponse.ok) {
-          throw new Error('Failed to fetch practices')
-        }
-        const practicesData = await practicesResponse.json()
-        setPractices(practicesData)
-
-        // Fetch user attempts
-        const attemptsResponse = await fetch('/api/practice-attempts/user')
-        if (attemptsResponse.ok) {
-          const attemptsData = await attemptsResponse.json()
-
-          // Create a map of practice ID to attempt
-          const attemptsMap: Record<number, PracticeAttempt | null> = {}
-          attemptsData.forEach((attempt: PracticeAttempt) => {
-            attemptsMap[attempt.id] = attempt
-          })
-
-          setAttempts(attemptsMap)
-        }
+      // Fetch practices
+      const { data: practicesData, error: practicesError } = await safeFetch<Practice[]>('/api/practices')
+      if (practicesError) {
+        if (!ignore)
+          console.error('Error fetching practices:', practicesError)
+        if (!ignore)
+          toast.error('Failed to fetch practice exercises')
+        if (!ignore)
+          dispatch({ type: 'FETCH_ERROR' })
+        return
       }
-      catch (error) {
-        console.error('Error fetching data:', error)
-        toast.error('Failed to fetch practice exercises')
+
+      // Fetch user attempts
+      const { data: attemptsData } = await safeFetch<PracticeAttempt[]>('/api/practice-attempts/user')
+      const attemptsMap: Record<number, PracticeAttempt | null> = {}
+      if (!ignore && attemptsData) {
+        attemptsData.forEach((attempt: PracticeAttempt) => {
+          attemptsMap[attempt.id] = attempt
+        })
       }
-      finally {
-        setLoading(false)
+
+      if (!ignore) {
+        dispatch({
+          type: 'FETCH_SUCCESS',
+          practices: practicesData || [],
+          attempts: attemptsMap,
+        })
       }
     }
 
     fetchPracticesAndAttempts()
+    return () => {
+      ignore = true
+    }
   }, [])
 
   const handlePracticeClick = (practice: Practice) => {
@@ -83,10 +114,10 @@ export default function PracticesPage() {
   }
 
   const hasCompletedAttempt = (practiceId: number) => {
-    return attempts[practiceId]?.completedAt !== null && attempts[practiceId]?.completedAt !== undefined
+    return state.attempts[practiceId]?.completedAt !== null && state.attempts[practiceId]?.completedAt !== undefined
   }
 
-  if (loading) {
+  if (state.loading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -98,7 +129,7 @@ export default function PracticesPage() {
     <div className="container py-8 mx-auto text-center">
       <h1 className="text-3xl font-bold mb-6">Practice Exercises</h1>
 
-      {practices.length === 0
+      {state.practices.length === 0
         ? (
             <div className="text-center py-8">
               <p>No practice exercises available at the moment.</p>
@@ -106,7 +137,7 @@ export default function PracticesPage() {
           )
         : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {practices.map((practice) => {
+              {state.practices.map((practice) => {
                 const completed = hasCompletedAttempt(practice.id)
 
                 return (
@@ -148,7 +179,7 @@ export default function PracticesPage() {
                         </div>
                         {completed
                           ? (
-                              <Button size="sm" variant="outline" render={<Link href={`/practices/${practice.slug}/results?attemptId=${attempts[practice.id]?.id}`} />} nativeButton={false}>
+                              <Button size="sm" variant="outline" render={<Link href={`/practices/${practice.slug}/results?attemptId=${state.attempts[practice.id]?.id}`} />} nativeButton={false}>
                                 View Results
                               </Button>
                             )
@@ -212,7 +243,7 @@ export default function PracticesPage() {
                   <Button
                     onClick={() => {
                       setShowDialog(false)
-                      router.push(`/practices/${selectedPractice?.slug}/results?attemptId=${attempts[selectedPractice?.id || 0]?.id}`)
+                      router.push(`/practices/${selectedPractice?.slug}/results?attemptId=${state.attempts[selectedPractice?.id || 0]?.id}`)
                     }}
                   >
                     View Results

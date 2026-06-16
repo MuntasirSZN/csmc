@@ -1,5 +1,5 @@
 'use client'
-import { motion } from 'motion/react'
+import { LazyMotion, m, domAnimation } from 'motion/react'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -15,8 +15,17 @@ export function TextHoverEffect({
   const textRef = useRef<SVGTextElement>(null)
   const [cursor, setCursor] = useState({ x: 0, y: 0 })
   const [hovered, setHovered] = useState(false)
-  const [maskPosition, setMaskPosition] = useState({ cx: '50%', cy: '50%' })
   const [dimensions, setDimensions] = useState({ width: 800, height: 120 }) // Default larger dimensions
+
+  // Store SVG bounding rect to avoid reading svgRef.current during render (blocks React Compiler)
+  const [svgRect, setSvgRect] = useState<DOMRect | null>(null)
+
+  const maskPosition = !svgRect
+    ? { cx: '50%', cy: '50%' }
+    : {
+        cx: `${Math.max(0, Math.min(100, ((cursor.x - svgRect.left) / svgRect.width) * 100))}%`,
+        cy: `${Math.max(0, Math.min(100, ((cursor.y - svgRect.top) / svgRect.height) * 100))}%`,
+      }
 
   // Calculate text dimensions on mount and window resize
   useEffect(() => {
@@ -42,21 +51,9 @@ export function TextHoverEffect({
     }
   }, [text])
 
-  useEffect(() => {
-    if (svgRef.current && cursor.x !== null && cursor.y !== null) {
-      const svgRect = svgRef.current.getBoundingClientRect()
-      const cxPercentage = ((cursor.x - svgRect.left) / svgRect.width) * 100
-      const cyPercentage = ((cursor.y - svgRect.top) / svgRect.height) * 100
-      const newMaskPosition = {
-        cx: `${cxPercentage}%`,
-        cy: `${cyPercentage}%`,
-      }
-      setMaskPosition(newMaskPosition)
-    }
-  }, [cursor])
-
   return (
-    <svg
+    <LazyMotion features={domAnimation}>
+      <svg
       ref={svgRef}
       width="100%"
       height="100%"
@@ -64,7 +61,11 @@ export function TextHoverEffect({
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onMouseMove={e => setCursor({ x: e.clientX, y: e.clientY })}
+      onMouseMove={(e) => {
+        setCursor({ x: e.clientX, y: e.clientY })
+        if (svgRef.current)
+          setSvgRect(svgRef.current.getBoundingClientRect())
+      }}
       className="select-none w-full"
       preserveAspectRatio="xMidYMid meet" // This helps maintain the aspect ratio
     >
@@ -87,7 +88,7 @@ export function TextHoverEffect({
           )}
         </linearGradient>
 
-        <motion.radialGradient
+        <m.radialGradient
           id="revealMask"
           gradientUnits="userSpaceOnUse"
           r="20%"
@@ -97,7 +98,7 @@ export function TextHoverEffect({
         >
           <stop offset="0%" stopColor="white" />
           <stop offset="100%" stopColor="black" />
-        </motion.radialGradient>
+        </m.radialGradient>
         <mask id="textMask">
           <rect
             x="0"
@@ -120,7 +121,7 @@ export function TextHoverEffect({
       >
         {text}
       </text>
-      <motion.text
+      <m.text
         x="50%"
         y="50%"
         textAnchor="middle"
@@ -138,7 +139,7 @@ export function TextHoverEffect({
         }}
       >
         {text}
-      </motion.text>
+      </m.text>
       <text
         x="50%"
         y="50%"
@@ -152,5 +153,6 @@ export function TextHoverEffect({
         {text}
       </text>
     </svg>
+    </LazyMotion>
   )
 }

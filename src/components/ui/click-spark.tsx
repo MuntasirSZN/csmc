@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface ClickSparkProps {
   sparkColor?: string
@@ -73,21 +73,20 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     }
   }, [])
 
-  const easeFunc = useCallback(
-    (t: number) => {
-      switch (easing) {
-        case 'linear':
-          return t
-        case 'ease-in':
-          return t * t
-        case 'ease-in-out':
-          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
-        default:
-          return t * (2 - t)
-      }
-    },
-    [easing],
-  )
+  const easeFunc = (t: number) => {
+    switch (easing) {
+      case 'linear':
+        return t
+      case 'ease-in':
+        return t * t
+      case 'ease-in-out':
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+      default:
+        return t * (2 - t)
+    }
+  }
+  const easeFuncRef = useRef(easeFunc)
+  useEffect(() => { easeFuncRef.current = easeFunc })
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -113,7 +112,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         }
 
         const progress = elapsed / duration
-        const eased = easeFunc(progress)
+        const eased = easeFuncRef.current(progress)
 
         const distance = eased * sparkRadius * extraScale
         const lineLength = sparkSize * (1 - eased)
@@ -143,9 +142,9 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     return () => {
       cancelAnimationFrame(animationId)
     }
-  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale])
+  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, extraScale])
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>): void => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     const canvas = canvasRef.current
     if (!canvas)
       return
@@ -164,17 +163,40 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     sparksRef.current.push(...newSparks)
   }
 
+  const handleKeyDownClickspark = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const canvas = canvasRef.current
+      if (!canvas)
+        return
+      const rect = canvas.getBoundingClientRect()
+      const x = rect.width / 2
+      const y = rect.height / 2
+
+      const now = performance.now()
+      const newSparks: Spark[] = Array.from({ length: sparkCount }, (_, i) => ({
+        x,
+        y,
+        angle: (2 * Math.PI * i) / sparkCount,
+        startTime: now,
+      }))
+
+      sparksRef.current.push(...newSparks)
+    }
+  }
+
   return (
-    <div
+    <button
+      type="button"
       className="relative w-full h-full"
       onClick={handleClick}
+      onKeyDown={handleKeyDownClickspark}
     >
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none"
       />
       {children}
-    </div>
+    </button>
   )
 }
 

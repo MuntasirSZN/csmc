@@ -1,8 +1,8 @@
 'use client'
-import { motion } from 'motion/react'
+import { LazyMotion, m, domAnimation } from 'motion/react'
 
 import * as React from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 type Direction = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
@@ -39,14 +39,17 @@ export function HoverBorderGradient<E extends React.ElementType = 'button'>({
   const [hovered, setHovered] = useState<boolean>(false)
   const [direction, setDirection] = useState<Direction>('TOP')
 
-  const rotateDirection = useCallback((currentDirection: Direction): Direction => {
+  const rotateDirection = (currentDirection: Direction): Direction => {
     const directions: Direction[] = ['TOP', 'LEFT', 'BOTTOM', 'RIGHT']
     const currentIndex = directions.indexOf(currentDirection)
     const nextIndex = clockwise
       ? (currentIndex - 1 + directions.length) % directions.length
       : (currentIndex + 1) % directions.length
     return directions[nextIndex]
-  }, [clockwise])
+  }
+
+  const rotateDirectionRef = useRef(rotateDirection)
+  useEffect(() => { rotateDirectionRef.current = rotateDirection })
 
   const movingMap: Record<Direction, string> = {
     TOP: 'radial-gradient(20.7% 50% at 50% 0%, hsl(0, 0%, 100%) 0%, rgba(255, 255, 255, 0) 100%)',
@@ -63,14 +66,15 @@ export function HoverBorderGradient<E extends React.ElementType = 'button'>({
   useEffect(() => {
     if (!hovered) {
       const interval = setInterval(() => {
-        setDirection(prevState => rotateDirection(prevState))
+        setDirection(prevState => rotateDirectionRef.current(prevState))
       }, duration * 1000)
       return () => clearInterval(interval)
     }
-  }, [hovered, duration, rotateDirection])
+  }, [hovered, duration])
   return (
-    <Tag
-      onMouseEnter={() => {
+    <LazyMotion features={domAnimation}>
+      <Tag
+        onMouseEnter={() => {
         setHovered(true)
       }}
       onMouseLeave={() => setHovered(false)}
@@ -88,7 +92,7 @@ export function HoverBorderGradient<E extends React.ElementType = 'button'>({
       >
         {children}
       </div>
-      <motion.div
+      <m.div
         className={cn(
           'flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]',
         )}
@@ -108,5 +112,6 @@ export function HoverBorderGradient<E extends React.ElementType = 'button'>({
       />
       <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
     </Tag>
+    </LazyMotion>
   )
 }

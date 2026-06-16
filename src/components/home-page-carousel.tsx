@@ -3,11 +3,37 @@
 import Autoplay from 'embla-carousel-autoplay'
 import Fade from 'embla-carousel-fade'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  useCarouselApi,
 } from '@/components/ui/carousel'
+
+function CarouselButtonAttacher() {
+  const api = useCarouselApi()
+
+  useEffect(() => {
+    if (!api)
+      return
+    const controller = new AbortController()
+    const timer = setTimeout(() => {
+      const prevButton = document.getElementById('carousel-prev')
+      const nextButton = document.getElementById('carousel-next')
+      if (prevButton && nextButton) {
+        prevButton.addEventListener('click', () => api.scrollPrev(), { signal: controller.signal })
+        nextButton.addEventListener('click', () => api.scrollNext(), { signal: controller.signal })
+      }
+    }, 100)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
+  }, [api])
+
+  return null
+}
 
 export default function HomePageCarousel() {
   const carouselImages = [
@@ -35,18 +61,9 @@ export default function HomePageCarousel() {
         loop: true,
         align: 'start',
       }}
-      setApi={(api) => {
-        setTimeout(() => {
-          const prevButton = document.getElementById('carousel-prev')
-          const nextButton = document.getElementById('carousel-next')
-          if (prevButton && nextButton && api) {
-            prevButton.addEventListener('click', () => api.scrollPrev())
-            nextButton.addEventListener('click', () => api.scrollNext())
-          }
-        }, 100)
-      }}
       className="w-full"
     >
+      <CarouselButtonAttacher />
       <CarouselContent>
         {carouselImages.map(image => (
           <CarouselItem
@@ -58,6 +75,7 @@ export default function HomePageCarousel() {
                 src={image.src}
                 alt={image.alt}
                 fill
+                sizes="(max-width: 768px) 100vw, 100vw"
                 className="object-cover hover:scale-105 transition-all duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">

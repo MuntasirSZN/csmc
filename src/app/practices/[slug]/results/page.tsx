@@ -1,19 +1,15 @@
 'use client'
 
 import { formatDistanceToNow } from 'date-fns'
-import { BarChart2, CheckCircle2, Clock, Home, XCircle } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
-import Markdown from 'react-markdown'
 import { toast } from 'sonner'
-import { ExplanationCallout } from '@/components/explanation-callout'
-import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress, ProgressIndicator, ProgressTrack } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { isAnswerCorrect } from '@/lib/answer-utils'
+import { safeFetch } from '@/lib/fetch-utils'
+import { QuestionReviewList } from './question-review-list'
+import { ResultsSummary } from './results-summary'
 
 interface Question {
   id: number
@@ -43,47 +39,45 @@ interface PracticeAttempt {
 
 export default function ResultsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
-  const router = useRouter()
   const searchParams = useSearchParams()
   const attemptId = searchParams.get('attemptId')
 
   const [attemptResult, setAttemptResult] = useState<PracticeAttempt | null>(null)
-  const [loading, setLoading] = useState(true)
+  const loading = attemptResult === null
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
 
+  /* eslint-disable react-you-might-not-need-an-effect/no-external-store-subscription -- data fetching pattern */
   useEffect(() => {
     if (!attemptId) {
       toast.error('No attempt ID provided', {
         description: 'Unable to load results without an attempt ID',
       })
-      router.push('/practices')
+      window.location.href = '/practices'
       return
     }
 
+    let ignore = false
     const fetchResults = async () => {
-      try {
-        const response = await fetch(`/api/practice-attempts/${attemptId}/results`)
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch results')
+      const { data, error } = await safeFetch(`/api/practice-attempts/${attemptId}/results`)
+      if (error) {
+        if (!ignore) {
+          toast.error('Failed to load results', {
+            description: error.message || 'An unexpected error occurred',
+          })
         }
-
-        const data = await response.json()
+        if (!ignore)
+          window.location.href = '/practices'
+        return
+      }
+      if (!ignore)
         setAttemptResult(data)
-      }
-      catch (error: any) {
-        toast.error('Failed to load results', {
-          description: error.message || 'An unexpected error occurred',
-        })
-        router.push('/practices')
-      }
-      finally {
-        setLoading(false)
-      }
     }
-
     fetchResults()
-  }, [attemptId, router])
+    return () => {
+      ignore = true
+    }
+  }, [attemptId])
+  /* eslint-enable react-you-might-not-need-an-effect/no-external-store-subscription */
 
   if (loading) {
     return (
@@ -116,36 +110,6 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
 
   const { score, totalQuestions, timeSpent, completedAt, practice, questions, answers } = attemptResult
   const percentageScore = (score / totalQuestions) * 100
-  const currentQuestion = questions[activeQuestionIndex]
-  const userAnswer = answers[currentQuestion.id]
-
-  // Check if the user's answer is correct
-  const isCorrectAnswer = (() => {
-    if (currentQuestion.questionType === 'option') {
-      if (currentQuestion.answerType === 'single') {
-        return userAnswer === currentQuestion.correctAnswer
-      }
-      else {
-        const userAnswerArray = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-        return (
-          currentQuestion.correctAnswers
-          && userAnswerArray.length === currentQuestion.correctAnswers.length
-          && userAnswerArray.every(answer => currentQuestion.correctAnswers?.includes(answer))
-        )
-      }
-    }
-    else {
-      // For text questions, use normalized comparison
-      return isAnswerCorrect(userAnswer as string, currentQuestion.correctAnswers)
-    }
-  })()
-
-  // Format time spent
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes}m ${remainingSeconds}s`
-  }
 
   // Navigate between questions
   const goToNextQuestion = () => {
@@ -179,194 +143,20 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
           </p>
         </div>
 
-        {/* Score Summary */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-center">Your Score</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-center">
-              <div className="text-4xl font-bold text-primary">
-                {score}
-                {' '}
-                /
-                {totalQuestions}
-                {' '}
-                (
-                {percentageScore.toFixed(0)}
-                %)
-              </div>
-            </div>
-            <Progress value={percentageScore}><ProgressTrack className="h-3"><ProgressIndicator /></ProgressTrack></Progress>
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
-                <div className="flex items-center text-xl font-semibold">
-                  <BarChart2 className="mr-2 h-5 w-5 text-primary" />
-                  {score}
-                  {' '}
-                  /
-                  {totalQuestions}
-                </div>
-                <p className="text-sm text-muted-foreground">Score</p>
-              </div>
-              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
-                <div className="flex items-center text-xl font-semibold">
-                  <Clock className="mr-2 h-5 w-5 text-primary" />
-                  {formatTime(timeSpent)}
-                </div>
-                <p className="text-sm text-muted-foreground">Time Spent</p>
-              </div>
-              <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
-                <div className="flex items-center text-xl font-semibold">
-                  {percentageScore >= 70
-                    ? (
-                        <CheckCircle2 className="mr-2 h-5 w-5 text-green-600" />
-                      )
-                    : (
-                        <XCircle className="mr-2 h-5 w-5 text-red-500" />
-                      )}
-                  {percentageScore >= 70 ? 'Passed' : 'Try Again'}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {percentageScore >= 70 ? 'Well done!' : 'Keep practicing'}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <ResultsSummary
+          score={score}
+          totalQuestions={totalQuestions}
+          timeSpent={timeSpent}
+          percentageScore={percentageScore}
+        />
 
-        {/* Question Review */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              <span>Question Review</span>
-              <span className="text-sm font-medium">
-                {activeQuestionIndex + 1}
-                {' '}
-                of
-                {questions.length}
-              </span>
-            </CardTitle>
-            <Progress value={((activeQuestionIndex + 1) / questions.length) * 100}><ProgressTrack className="h-2"><ProgressIndicator /></ProgressTrack></Progress>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Question content */}
-            <div className="space-y-4">
-              <div className="text-left">
-                <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                  {currentQuestion.content}
-                </Markdown>
-              </div>
-
-              {/* Multiple choice answers */}
-              {currentQuestion.questionType === 'option' && currentQuestion.options && (
-                <div className="space-y-3 mt-4">
-                  {currentQuestion.options.map((option, i) => {
-                    const isUserSelected = currentQuestion.answerType === 'single'
-                      ? userAnswer === option
-                      : Array.isArray(userAnswer) && userAnswer.includes(option)
-
-                    const isCorrectOption = currentQuestion.answerType === 'single'
-                      ? currentQuestion.correctAnswer === option
-                      : currentQuestion.correctAnswers?.includes(option)
-
-                    let optionClass = 'border p-3 rounded-md'
-
-                    if (isUserSelected && isCorrectOption) {
-                      optionClass += ' border-green-500 bg-green-50 dark:bg-green-900/20'
-                    }
-                    else if (isUserSelected && !isCorrectOption) {
-                      optionClass += ' border-red-500 bg-red-50 dark:bg-red-900/20'
-                    }
-                    else if (!isUserSelected && isCorrectOption) {
-                      optionClass += ' border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
-                    }
-
-                    return (
-                      <div key={`question-${currentQuestion.id}-option-${option}`} className={optionClass}>
-                        <div className="flex items-start">
-                          <div className="mr-3 text-sm font-medium text-muted-foreground">
-                            {String.fromCharCode(65 + i)}
-                            .
-                          </div>
-                          <div className="flex-1">
-                            <Markdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins}>
-                              {option}
-                            </Markdown>
-                          </div>
-                          <div className="flex-shrink-0 ml-2">
-                            {isUserSelected && isCorrectOption && (
-                              <CheckCircle2 className="h-5 w-5 text-green-600" />
-                            )}
-                            {isUserSelected && !isCorrectOption && (
-                              <XCircle className="h-5 w-5 text-red-500" />
-                            )}
-                            {!isUserSelected && isCorrectOption && (
-                              <CheckCircle2 className="h-5 w-5 text-yellow-600" />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-
-              {/* Text input answers */}
-              {currentQuestion.questionType === 'text' && (
-                <div className="space-y-4 mt-4">
-                  <div className="border p-4 rounded-md">
-                    <div className="text-sm font-medium mb-2">Your Answer:</div>
-                    <div className={`p-2 rounded-md ${isCorrectAnswer ? 'bg-green-50 border-green-200 dark:bg-green-900/20' : 'bg-red-50 border-red-200 dark:bg-red-900/20'}`}>
-                      {userAnswer ? userAnswer.toString() : 'No answer provided'}
-                    </div>
-                    {!isCorrectAnswer && (
-                      <div className="mt-4">
-                        <div className="text-sm font-medium mb-2">Acceptable Answers:</div>
-                        <div className="p-2 bg-yellow-50 border-yellow-200 rounded-md dark:bg-yellow-900/20">
-                          <ul className="list-disc pl-4 space-y-1">
-                            {currentQuestion.correctAnswers?.map(answer => (
-                              <li key={`question-${currentQuestion.id}-correct-${answer}`}>{answer}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Explanation */}
-              {currentQuestion.explanation && (
-                <div className="mt-6">
-                  <ExplanationCallout explanation={currentQuestion.explanation} />
-                </div>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between border-t p-4">
-            <Button
-              variant="outline"
-              onClick={goToPrevQuestion}
-              disabled={activeQuestionIndex === 0}
-            >
-              Previous Question
-            </Button>
-
-            {activeQuestionIndex < questions.length - 1
-              ? (
-                  <Button onClick={goToNextQuestion}>
-                    Next Question
-                  </Button>
-                )
-              : (
-                  <Button render={<Link href="/practices" />} nativeButton={false}>
-                    <Home className="mr-2 h-4 w-4" />
-                    Return to Practices
-                  </Button>
-                )}
-          </CardFooter>
-        </Card>
+        <QuestionReviewList
+          questions={questions}
+          answers={answers}
+          activeQuestionIndex={activeQuestionIndex}
+          onNext={goToNextQuestion}
+          onPrev={goToPrevQuestion}
+        />
 
         <div className="flex justify-center gap-4">
           <Button variant="outline" render={<Link href={`/practices/${slug}`} />} nativeButton={false}>

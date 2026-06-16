@@ -5,7 +5,7 @@
  * - Normalizing internal whitespace (multiple spaces → single space)
  * - Removing extra characters that don't affect mathematical meaning
  */
-export function normalizeAnswer(answer: string): string {
+function normalizeAnswer(answer: string): string {
   if (!answer)
     return ''
 
