@@ -3,20 +3,25 @@
  * and pass header().
  */
 
-import { passkey } from '@better-auth/passkey'
+import { getAuthenticatorName, passkey } from '@better-auth/passkey'
+import { redisStorage } from '@better-auth/redis-storage'
 import { EmailTemplate } from '@daveyplate/better-auth-ui/server'
+import { dymoEmailPlugin } from '@dymo-api/better-auth'
 import { Section } from '@react-email/components'
 import { render } from '@react-email/render'
-import { betterAuth } from 'better-auth'
 import { emailHarmony } from 'better-auth-harmony'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { admin, haveIBeenPwned, openAPI, twoFactor } from 'better-auth/plugins'
+import { betterAuth } from 'better-auth/minimal'
+import { admin, haveIBeenPwned, multiSession, openAPI, twoFactor, username } from 'better-auth/plugins'
 import { db } from '@/lib/db'
 import { transporter } from './email'
 import { redis } from './redis'
 import { authSchema } from './schema'
 
 export const auth = betterAuth({
+  rateLimit: {
+    storage: 'secondary-storage',
+  },
   experimental: {
     joins: true,
   },
@@ -109,25 +114,16 @@ export const auth = betterAuth({
       clientSecret: process.env.FACEBOOK_SECRET as string,
     },
   },
-  secondaryStorage: {
-    get: async (key) => {
-      const value = await redis.get(key)
-      return value || null
-    },
-    set: async (key, value, ttl) => {
-      if (ttl)
-        await redis.set(key, value, 'EX', ttl)
-      else await redis.set(key, value)
-    },
-    delete: async (key) => {
-      await redis.del(key)
-    },
-  },
+  secondaryStorage: redisStorage({
+    client: redis,
+  }),
   plugins: [
     haveIBeenPwned(),
     openAPI(),
     admin(),
     emailHarmony(),
+    username(),
+    multiSession(),
     twoFactor({
       issuer: 'CSMC',
       otpOptions: {
@@ -169,9 +165,17 @@ export const auth = betterAuth({
       },
     }),
     passkey({
-      rpID: 'CSMC',
+      rpID: process.env.BASE_URL!.replace(/^https:\/\//, ''),
       rpName: 'Collegiate School Math Club',
       origin: process.env.BASE_URL!,
+      registration: {
+        afterVerification: async ({ verification }) => ({
+          name: getAuthenticatorName(verification.registrationInfo?.aaguid),
+        }),
+      },
+    }),
+    dymoEmailPlugin({
+      apiKey: process.env.DYMO_API_KEY!,
     }),
   ],
 })

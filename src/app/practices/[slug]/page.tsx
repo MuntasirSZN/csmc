@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Progress } from '@/components/ui/progress'
+import { Progress, ProgressIndicator, ProgressTrack } from '@/components/ui/progress'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { convertSecondsToTime } from '@/lib/utils'
@@ -446,7 +446,7 @@ export default function PracticePage({ params }: { params: Promise<{ slug: strin
                 {renderSubmitButton()}
               </Button>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress}><ProgressTrack className="h-2"><ProgressIndicator /></ProgressTrack></Progress>
 
             {answeredCount < totalQuestions && (
               <div className="mt-3 flex items-center justify-center text-sm text-muted-foreground">

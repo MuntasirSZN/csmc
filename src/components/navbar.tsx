@@ -1,15 +1,16 @@
 'use client'
 
 import { SignedIn, SignedOut, UserButton } from '@daveyplate/better-auth-ui'
+import { LogIn } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   MobileNav,
   MobileNavHeader,
   MobileNavMenu,
   MobileNavToggle,
   Navbar,
-  NavbarButton,
   NavbarLogo,
   NavBody,
   NavItems,
@@ -79,12 +80,15 @@ export default function NavBar() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
+          <div className="relative z-[100] flex items-center gap-4">
             <SignedIn>
               <UserButton size="icon" />
             </SignedIn>
             <SignedOut>
-              <NavbarButton variant="primary" href="/auth/sign-in">Sign In</NavbarButton>
+              <Button render={<Link href="/auth/sign-in" />} nativeButton={false}>
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
             </SignedOut>
           </div>
         </NavBody>
@@ -118,14 +122,10 @@ export default function NavBar() {
                 <UserButton />
               </SignedIn>
               <SignedOut>
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="primary"
-                  className="w-full"
-                  href="/auth/sign-in"
-                >
+                <Button className="w-full" render={<Link href="/auth/sign-in" />} nativeButton={false} onClick={() => setIsMobileMenuOpen(false)}>
+                  <LogIn className="h-4 w-4" />
                   Sign In
-                </NavbarButton>
+                </Button>
               </SignedOut>
             </div>
           </MobileNavMenu>

@@ -1,23 +1,20 @@
-// Label component extends from shadcnui - https://ui.shadcn.com/docs/components/label
-
 'use client'
-import * as LabelPrimitive from '@radix-ui/react-label'
+
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Label({ ref, className, ...props }: React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { ref?: React.RefObject<React.ElementRef<typeof LabelPrimitive.Root> | null> }) {
+function Label({ className, ...props }: React.ComponentProps<'label'>) {
   return (
-    <LabelPrimitive.Root
-      ref={ref}
+    <label
+      data-slot="label"
       className={cn(
-        'text-sm font-medium text-black dark:text-white leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
         className,
       )}
       {...props}
     />
   )
 }
-Label.displayName = LabelPrimitive.Root.displayName
 
 export { Label }

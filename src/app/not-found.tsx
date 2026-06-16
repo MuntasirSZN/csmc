@@ -42,9 +42,7 @@ function NotFound({
       </p>
       <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-y-3 gap-x-6">
         <NotFoundButton />
-        <Button className="-order-1 sm:order-none" asChild>
-          <Link href="/">Take me home</Link>
-        </Button>
+        <Button className="-order-1 sm:order-none" render={<Link href="/" />} nativeButton={false}>Take me home</Button>
       </div>
     </div>
   )

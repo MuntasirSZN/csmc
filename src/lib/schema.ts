@@ -27,6 +27,8 @@ export const user = sqliteTable('user', {
   banReason: text('ban_reason'),
   banExpires: integer('ban_expires', { mode: 'timestamp_ms' }),
   normalizedEmail: text('normalized_email').unique(),
+  username: text('username').unique(),
+  displayUsername: text('display_username'),
   twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' }).default(
     false,
   ),
@@ -191,10 +193,6 @@ export const questionsRelations = relations(questions, ({ one }) => ({
   }),
 }))
 
-export const usersRelations = relations(user, ({ many }) => ({
-  attempts: many(practiceAttempts),
-}))
-
 export const practiceAttemptsRelations = relations(practiceAttempts, ({ one }) => ({
   user: one(user, {
     fields: [practiceAttempts.userId],
@@ -210,6 +208,7 @@ export const userRelations = relations(user, ({ many }) => ({
   accounts: many(account),
   twoFactors: many(twoFactor),
   passkeys: many(passkey),
+  attempts: many(practiceAttempts),
 }))
 
 export const accountRelations = relations(account, ({ one }) => ({

@@ -11,7 +11,7 @@ import { ExplanationCallout } from '@/components/explanation-callout'
 import { rehypePlugins, remarkPlugins } from '@/components/markdown-plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
+import { Progress, ProgressIndicator, ProgressTrack } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { isAnswerCorrect } from '@/lib/answer-utils'
 
@@ -108,9 +108,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Results not found</h1>
           <p className="mb-6">We couldn't find the results for this attempt.</p>
-          <Button asChild>
-            <Link href="/practices">Return to Practices</Link>
-          </Button>
+          <Button render={<Link href="/practices" />} nativeButton={false}>Return to Practices</Button>
         </div>
       </div>
     )
@@ -199,7 +197,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                 %)
               </div>
             </div>
-            <Progress value={percentageScore} className="h-3" />
+            <Progress value={percentageScore}><ProgressTrack className="h-3"><ProgressIndicator /></ProgressTrack></Progress>
             <div className="grid grid-cols-3 gap-4 mt-4">
               <div className="flex flex-col items-center justify-center p-3 bg-muted rounded-lg">
                 <div className="flex items-center text-xl font-semibold">
@@ -249,10 +247,7 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                 {questions.length}
               </span>
             </CardTitle>
-            <Progress
-              value={((activeQuestionIndex + 1) / questions.length) * 100}
-              className="h-2"
-            />
+            <Progress value={((activeQuestionIndex + 1) / questions.length) * 100}><ProgressTrack className="h-2"><ProgressIndicator /></ProgressTrack></Progress>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Question content */}
@@ -365,26 +360,20 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
                   </Button>
                 )
               : (
-                  <Button asChild>
-                    <Link href="/practices">
-                      <Home className="mr-2 h-4 w-4" />
-                      Return to Practices
-                    </Link>
+                  <Button render={<Link href="/practices" />} nativeButton={false}>
+                    <Home className="mr-2 h-4 w-4" />
+                    Return to Practices
                   </Button>
                 )}
           </CardFooter>
         </Card>
 
         <div className="flex justify-center gap-4">
-          <Button asChild variant="outline">
-            <Link href={`/practices/${slug}`}>
-              Try Again
-            </Link>
+          <Button variant="outline" render={<Link href={`/practices/${slug}`} />} nativeButton={false}>
+            Try Again
           </Button>
-          <Button asChild>
-            <Link href="/practices">
-              All Practices
-            </Link>
+          <Button render={<Link href="/practices" />} nativeButton={false}>
+            All Practices
           </Button>
         </div>
       </div>

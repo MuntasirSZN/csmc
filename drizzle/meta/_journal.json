@@ -15,6 +15,27 @@
       "when": 1781453040818,
       "tag": "0001_safe_johnny_blaze",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1781600758688,
+      "tag": "0002_rare_carmella_unuscione",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1781602244593,
+      "tag": "0003_eager_viper",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1781602530634,
+      "tag": "0004_aspiring_kitty_pryde",
+      "breakpoints": true
     }
   ]
 }

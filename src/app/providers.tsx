@@ -28,12 +28,14 @@ export function Providers({ children }: { children: ReactNode }) {
       credentials={{
         rememberMe: true,
         confirmPassword: true,
+        username: true,
       }}
       deleteUser={{
         verification: true,
       }}
       avatar
       emailVerification
+      multiSession
       social={{
         providers: ['github', 'google', 'facebook'],
       }}

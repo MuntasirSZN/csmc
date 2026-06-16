@@ -353,18 +353,12 @@ export default function Home() {
                 </p>
               </CardContent>
               <CardFooter className="pt-0">
-                <Button
-                  variant="link"
-                  asChild
-                  className="px-0 group-hover:text-primary transition-colors duration-300"
-                >
-                  <Link href={announcement.link} className="flex items-center">
-                    Click To Learn More
-                    <ArrowRight
-                      className="ml-1 group-hover:translate-x-1 transition-transform duration-300"
-                      size={16}
-                    />
-                  </Link>
+                <Button variant="link" className="px-0 group-hover:text-primary transition-colors duration-300" render={<Link href={announcement.link} />} nativeButton={false}>
+                  Click To Learn More
+                  <ArrowRight
+                    className="ml-1 group-hover:translate-x-1 transition-transform duration-300"
+                    size={16}
+                  />
                 </Button>
               </CardFooter>
             </Card>
@@ -382,7 +376,7 @@ export default function Home() {
           Find answers to common questions about our math club and activities.
         </p>
         <div className="rounded-xl shadow-lg p-6">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion className="w-full">
             {faqItems.map(faq => (
               <AccordionItem
                 key={faq.id}

@@ -15,5 +15,6 @@ export default antfu({
   ignores: [
     'drizzle/**/*',
     'public/**/*',
+    'src/components/ui/**/*',
   ],
 })

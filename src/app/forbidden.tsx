@@ -44,9 +44,7 @@ function Forbidden({
       <p className="mt-6 text-pretty text-lg font-medium text-muted-foreground sm:text-xl/8">{description}</p>
       <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-y-3 gap-x-6">
         <HistoryBackButton />
-        <Button className="-order-1 sm:order-none" asChild>
-          <Link href="/">Take me home</Link>
-        </Button>
+        <Button className="-order-1 sm:order-none" render={<Link href="/" />} nativeButton={false}>Take me home</Button>
       </div>
     </div>
   )

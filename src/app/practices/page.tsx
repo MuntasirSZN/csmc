@@ -148,10 +148,8 @@ export default function PracticesPage() {
                         </div>
                         {completed
                           ? (
-                              <Button size="sm" variant="outline" asChild>
-                                <Link href={`/practices/${practice.slug}/results?attemptId=${attempts[practice.id]?.id}`}>
-                                  View Results
-                                </Link>
+                              <Button size="sm" variant="outline" render={<Link href={`/practices/${practice.slug}/results?attemptId=${attempts[practice.id]?.id}`} />} nativeButton={false}>
+                                View Results
                               </Button>
                             )
                           : (

@@ -131,7 +131,7 @@ function Footer() {
             <div className="mb-6 flex space-x-4">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Button variant="outline" size="icon" className="rounded-full cursor-pointer">
                       <Link href="https://www.facebook.com/collegiateschoolmathclub">
                         <IconBrandFacebook className="h-4 w-4" />
@@ -146,7 +146,7 @@ function Footer() {
               </TooltipProvider>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Button variant="outline" size="icon" className="rounded-full">
                       <IconBrandTwitter className="h-4 w-4" />
                       <span className="sr-only">Twitter</span>
@@ -159,7 +159,7 @@ function Footer() {
               </TooltipProvider>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Button variant="outline" size="icon" className="rounded-full">
                       <IconBrandInstagram className="h-4 w-4" />
                       <span className="sr-only">Instagram</span>
@@ -172,7 +172,7 @@ function Footer() {
               </TooltipProvider>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Button variant="outline" size="icon" className="rounded-full">
                       <IconBrandLinkedin className="h-4 w-4" />
                       <span className="sr-only">LinkedIn</span>
