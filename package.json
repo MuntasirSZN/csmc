@@ -39,7 +39,7 @@
     "embla-carousel-fade": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "eslint-plugin-react-you-might-not-need-an-effect": "^1.0.1",
-    "ioredis": "^5.11.1",
+    "ioredis": "^6.0.0",
     "katex": "^0.18.1",
     "ldrs": "^1.1.9",
     "lucide-react": "^1.27.0",
