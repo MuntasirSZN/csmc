@@ -2,13 +2,7 @@
  * Utilities used by app
  */
 
-import type { ClassValue } from 'clsx'
-import { clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+export { cn } from 'cnfast'
 
 export function convertSecondsToTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
