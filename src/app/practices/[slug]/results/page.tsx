@@ -43,7 +43,8 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
   const attemptId = searchParams.get('attemptId')
 
   const [attemptResult, setAttemptResult] = useState<PracticeAttempt | null>(null)
-  const loading = attemptResult === null
+  const [fetchError, setFetchError] = useState<string | null>(null)
+  const loading = attemptResult === null && fetchError === null
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
 
   /* eslint-disable react-you-might-not-need-an-effect/no-external-store-subscription -- data fetching pattern */
@@ -52,7 +53,6 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
       toast.error('No attempt ID provided', {
         description: 'Unable to load results without an attempt ID',
       })
-      window.location.href = '/practices'
       return
     }
 
@@ -64,9 +64,8 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
           toast.error('Failed to load results', {
             description: error.message || 'An unexpected error occurred',
           })
+          setFetchError(error.message || 'Failed to load results')
         }
-        if (!ignore)
-          window.location.href = '/practices'
         return
       }
       if (!ignore)
@@ -78,6 +77,18 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
     }
   }, [attemptId])
   /* eslint-enable react-you-might-not-need-an-effect/no-external-store-subscription */
+
+  if (!attemptId) {
+    return (
+      <div className="container py-8 mx-auto max-w-3xl">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Unable to load results</h1>
+          <p className="mb-6">No attempt ID provided</p>
+          <Button render={<Link href="/practices" />} nativeButton={false}>Return to Practices</Button>
+        </div>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -91,6 +102,18 @@ export default function ResultsPage({ params }: { params: Promise<{ slug: string
             <Skeleton className="h-24 w-full" />
           </div>
           <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    )
+  }
+
+  if (fetchError) {
+    return (
+      <div className="container py-8 mx-auto max-w-3xl">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Unable to load results</h1>
+          <p className="mb-6">{fetchError}</p>
+          <Button render={<Link href="/practices" />} nativeButton={false}>Return to Practices</Button>
         </div>
       </div>
     )

@@ -79,6 +79,8 @@ export function OptionsEditor({
     dispatchForm({ type: 'SET_QUESTIONS', questions: updatedQuestions })
   }
 
+  const correctAnswersSet = new Set(question.correctAnswers ?? [])
+
   return (
     <div className="space-y-3">
       <Label>Options</Label>
@@ -118,7 +120,7 @@ export function OptionsEditor({
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id={`correct-${questionIndex}-${optionIndex}-${option.replace(/\s+/g, '-').substring(0, 10)}`}
-                    checked={(question.correctAnswers || []).includes(option)}
+                    checked={correctAnswersSet.has(option)}
                     onCheckedChange={(checked) => {
                       const updatedQuestions = [...questions]
                       const updatedQuestion = {

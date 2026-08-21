@@ -108,7 +108,8 @@ function Carousel({
     api.on('select', handler)
 
     return () => {
-      api?.off('select', handler)
+      api.off('reInit', handler)
+      api.off('select', handler)
     }
   }, [api])
 

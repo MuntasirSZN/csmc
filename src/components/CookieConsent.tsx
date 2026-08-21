@@ -2,7 +2,7 @@
 
 import { CircleCheck, CircleSlash, CookieIcon, X } from 'lucide-react'
 import { AnimatePresence, domAnimation, LazyMotion, m } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,12 +13,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-const consentItem = typeof window !== 'undefined'
-  ? (localStorage.getItem('cookieConsent:v1') ?? localStorage.getItem('cookieConsent'))
-  : null
-
-function getInitialConsent() {
-  return consentItem === 'true'
+function getServerConsent() {
+  return false
 }
 
 function CookiePreferencesPanel({
@@ -214,28 +210,31 @@ function CookiePreferencesPanel({
 }
 
 export default function CookieConsent() {
-  const [consentGiven, setConsentGiven] = useState<boolean>(getInitialConsent)
-  const [cookiePreferences, setCookiePreferences] = useState(() => {
-    if (typeof window === 'undefined') {
-      return {
-        necessary: true,
-        functional: true,
-        analytics: true,
-        marketing: false,
-      }
-    }
-    const savedPreferences = localStorage.getItem('cookiePreferences:v1') ?? localStorage.getItem('cookiePreferences')
-    return savedPreferences
-      ? JSON.parse(savedPreferences)
-      : {
-          necessary: true,
-          functional: true,
-          analytics: true,
-          marketing: false,
-        }
-  })
+  const [consentGiven, setConsentGiven] = useState<boolean>(getServerConsent)
+  const [cookiePreferences, setCookiePreferences] = useState(() => ({
+    necessary: true,
+    functional: true,
+    analytics: true,
+    marketing: false,
+  }))
   const [showPreferences, setShowPreferences] = useState(false)
-  const [isVisible, setIsVisible] = useState<boolean>(() => consentItem === null)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+
+  useEffect(() => {
+    const item = localStorage.getItem('cookieConsent:v1') ?? localStorage.getItem('cookieConsent')
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state, react/set-state-in-effect
+    setConsentGiven(item === 'true') // react-doctor-disable-line react-hooks-js/set-state-in-effect -- intentional hydration-safe read of localStorage after mount
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state, react/set-state-in-effect
+    setIsVisible(item === null) // react-doctor-disable-line react-hooks-js/set-state-in-effect -- intentional hydration-safe read of localStorage after mount
+    const saved = localStorage.getItem('cookiePreferences:v1') ?? localStorage.getItem('cookiePreferences')
+    if (saved) {
+      try {
+        // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state, react/set-state-in-effect
+        setCookiePreferences(JSON.parse(saved)) // react-doctor-disable-line react-hooks-js/set-state-in-effect -- intentional hydration-safe read after mount
+      }
+      catch {}
+    }
+  }, [])
 
   const handleAccept = () => {
     localStorage.setItem('cookieConsent:v1', 'true')

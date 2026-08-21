@@ -6,7 +6,11 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 
-import { size } from './shared-image-constants'
+import { alt, contentType, size } from './shared-image-constants'
+
+// Reference alt/contentType to mark shared exports as used (Next.js image metadata)
+void alt
+void contentType
 
 const wrapperStyle: React.CSSProperties = {
   display: 'flex',

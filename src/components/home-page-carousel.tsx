@@ -17,18 +17,15 @@ function CarouselButtonAttacher() {
   useEffect(() => {
     if (!api)
       return
-    const controller = new AbortController()
-    const timer = setTimeout(() => {
-      const prevButton = document.getElementById('carousel-prev')
-      const nextButton = document.getElementById('carousel-next')
-      if (prevButton && nextButton) {
-        prevButton.addEventListener('click', () => api.scrollPrev(), { signal: controller.signal })
-        nextButton.addEventListener('click', () => api.scrollNext(), { signal: controller.signal })
-      }
-    }, 100)
+    const onPrev = () => api.scrollPrev()
+    const onNext = () => api.scrollNext()
+    const prevButton = document.getElementById('carousel-prev')
+    const nextButton = document.getElementById('carousel-next')
+    prevButton?.addEventListener('click', onPrev)
+    nextButton?.addEventListener('click', onNext)
     return () => {
-      clearTimeout(timer)
-      controller.abort()
+      prevButton?.removeEventListener('click', onPrev)
+      nextButton?.removeEventListener('click', onNext)
     }
   }, [api])
 
@@ -76,7 +73,7 @@ export default function HomePageCarousel() {
                 alt={image.alt}
                 fill
                 sizes="(max-width: 768px) 100vw, 100vw"
-                className="object-cover hover:scale-105 transition-all duration-700"
+                className="object-cover hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
                 <h3 className="text-white text-2xl font-bold">

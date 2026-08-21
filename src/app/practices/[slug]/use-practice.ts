@@ -90,11 +90,10 @@ export function usePractice(slug: string) {
         updated[questionId] = answer
       }
 
-      // Save to localStorage after state update
-      setTimeout(saveAttemptToLocalStorage, 0)
-
       return updated
     })
+    // Persist after state queue — keep updater pure (React may replay it)
+    setTimeout(saveAttemptToLocalStorage, 0)
   }
 
   // Show the submit confirmation dialog
@@ -179,8 +178,13 @@ export function usePractice(slug: string) {
   // Main effect to load practice and check for existing attempts
   /* eslint-disable react-you-might-not-need-an-effect/no-external-store-subscription -- data fetching on mount */
   useEffect(() => {
+    let cancelled = false
+
     const checkForExistingAttempt = async () => {
       const { data, error } = await safeFetch<{ exists: boolean, completed: boolean, attemptId: number }>(`/api/practice-attempts/check/${slug}`)
+
+      if (cancelled)
+        return false
 
       if (error) {
         console.error('Error checking for existing attempt:', error)
@@ -188,10 +192,13 @@ export function usePractice(slug: string) {
       }
 
       if (data && data.exists && data.completed) {
-        practiceDataDispatch({ type: 'SET_HAS_EXISTING_ATTEMPT', hasExistingAttempt: true })
-        setExistingAttemptId(data.attemptId)
+        if (!cancelled) {
+          practiceDataDispatch({ type: 'SET_HAS_EXISTING_ATTEMPT', hasExistingAttempt: true })
+          setExistingAttemptId(data.attemptId)
+        }
         // Clear any existing attempt data
-        localStorage.removeItem(`practice_attempt_${slug}`)
+        if (!cancelled)
+          localStorage.removeItem(`practice_attempt_${slug}`)
         return true // Indicate we found a completed attempt
       }
       return false // No completed attempt found
@@ -201,22 +208,31 @@ export function usePractice(slug: string) {
       // First check if user has already completed this practice
       const hasCompleted = await checkForExistingAttempt()
 
+      if (cancelled)
+        return
+
       // If completed, no need to fetch or start a new attempt
       if (hasCompleted) {
-        practiceDataDispatch({ type: 'SET_LOADING', loading: false })
+        if (!cancelled)
+          practiceDataDispatch({ type: 'SET_LOADING', loading: false })
         return
       }
 
       const { data: fetchedPractice, error: practiceError } = await safeFetch<Practice>(`/api/practices/${slug}`)
 
+      if (cancelled)
+        return
+
       if (practiceError || !fetchedPractice) {
         console.error('Error fetching practice:', practiceError)
         toast.error('Failed to load practice exercise')
-        practiceDataDispatch({ type: 'SET_LOADING', loading: false })
+        if (!cancelled)
+          practiceDataDispatch({ type: 'SET_LOADING', loading: false })
         return
       }
 
-      practiceDataDispatch({ type: 'SET_PRACTICE', practice: fetchedPractice })
+      if (!cancelled)
+        practiceDataDispatch({ type: 'SET_PRACTICE', practice: fetchedPractice })
 
       // Get saved attempt from localStorage
       const savedAttemptStr = localStorage.getItem(`practice_attempt_${slug}`)
@@ -230,6 +246,8 @@ export function usePractice(slug: string) {
           if (savedAttempt && savedAttempt.timeRemaining > 0 && savedAttempt.attemptId) {
             // Verify the attempt actually exists in the database and isn't completed
             const { data: checkData, error: checkError } = await safeFetch<{ exists: boolean, completed: boolean }>(`/api/practice-attempts/${savedAttempt.attemptId}/verify`)
+            if (cancelled)
+              return
             if (!checkError && checkData && checkData.exists && !checkData.completed) {
               validSavedAttempt = true
             }
@@ -240,20 +258,28 @@ export function usePractice(slug: string) {
         }
       }
 
+      if (cancelled)
+        return
+
       if (validSavedAttempt && savedAttempt) {
         // Resume the existing attempt
-        practiceDataDispatch({ type: 'SET_TIME_REMAINING', timeRemaining: savedAttempt.timeRemaining })
-        setUserAnswers(savedAttempt.userAnswers || {})
-        attemptIdRef.current = savedAttempt.attemptId
+        if (!cancelled) {
+          practiceDataDispatch({ type: 'SET_TIME_REMAINING', timeRemaining: savedAttempt.timeRemaining })
+          setUserAnswers(savedAttempt.userAnswers || {})
+          attemptIdRef.current = savedAttempt.attemptId
+        }
       }
       else {
         // Clean up any invalid data and start fresh
-        localStorage.removeItem(`practice_attempt_${slug}`)
-        practiceDataDispatch({ type: 'SET_TIME_REMAINING', timeRemaining: fetchedPractice.timeLimit * 60 })
-        startNewAttemptRef.current(fetchedPractice.id)
+        if (!cancelled) {
+          localStorage.removeItem(`practice_attempt_${slug}`)
+          practiceDataDispatch({ type: 'SET_TIME_REMAINING', timeRemaining: fetchedPractice.timeLimit * 60 })
+          startNewAttemptRef.current(fetchedPractice.id)
+        }
       }
 
-      practiceDataDispatch({ type: 'SET_LOADING', loading: false })
+      if (!cancelled)
+        practiceDataDispatch({ type: 'SET_LOADING', loading: false })
     }
 
     fetchPractice()
@@ -265,6 +291,7 @@ export function usePractice(slug: string) {
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
+      cancelled = true
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       clearInterval(timerRef.current!)
     }

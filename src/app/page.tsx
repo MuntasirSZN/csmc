@@ -96,7 +96,7 @@ function AnnouncementsSection({ announcements }: { announcements: Announcement[]
         {announcements.map(announcement => (
           <Card
             key={announcement.id}
-            className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300 group"
           >
             <div className="bg-gradient-to-r from-primary to-purple-600 h-2"></div>
             <CardHeader className="pb-2">
@@ -190,10 +190,10 @@ function FeatureCard({
 }) {
   return (
     <div className="flex flex-col items-center text-center group">
-      <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 shadow-md">
+      <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300 shadow-md">
         <Icon className="text-primary" size={32} />
       </div>
-      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-all duration-300">
+      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
         {title}
       </h3>
       <p className="text-muted-foreground">
@@ -316,7 +316,7 @@ export default function Home() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Primary Category */}
-          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2"></div>
             <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
               <CardTitle className="text-center flex items-center justify-center">
@@ -336,7 +336,7 @@ export default function Home() {
           </Card>
 
           {/* Junior Category */}
-          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2"></div>
             <CardHeader className="bg-green-50 dark:bg-green-900/20">
               <CardTitle className="text-center flex items-center justify-center">
@@ -356,7 +356,7 @@ export default function Home() {
           </Card>
 
           {/* Senior Category */}
-          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="flex flex-col overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2"></div>
             <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
               <CardTitle className="text-center flex items-center justify-center">

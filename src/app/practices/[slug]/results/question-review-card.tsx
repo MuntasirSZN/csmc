@@ -24,6 +24,8 @@ interface QuestionReviewCardProps {
 
 export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardProps) {
   const explanation = question.explanation
+  const correctAnswersSet = new Set(question.correctAnswers ?? [])
+  const userAnswerSet = Array.isArray(userAnswer) ? new Set(userAnswer) : new Set<string>()
 
   // Check if the user's answer is correct
   const isCorrectAnswer = (() => {
@@ -36,7 +38,7 @@ export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardP
         return (
           question.correctAnswers
           && userAnswerArray.length === question.correctAnswers.length
-          && userAnswerArray.every(answer => question.correctAnswers?.includes(answer))
+          && userAnswerArray.every(answer => correctAnswersSet.has(answer))
         )
       }
     }
@@ -59,11 +61,11 @@ export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardP
           {question.options.map((option, i) => {
             const isUserSelected = question.answerType === 'single'
               ? userAnswer === option
-              : Array.isArray(userAnswer) && userAnswer.includes(option)
+              : userAnswerSet.has(option)
 
             const isCorrectOption = question.answerType === 'single'
               ? question.correctAnswer === option
-              : question.correctAnswers?.includes(option)
+              : correctAnswersSet.has(option)
 
             let optionClass = 'border p-3 rounded-md'
 

@@ -99,7 +99,7 @@ function Footer() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
-            <nav className="space-y-2 text-sm">
+            <nav aria-label="Quick links" className="space-y-2 text-sm">
               <Link href="/" className="block transition-colors hover:text-primary">
                 Home
               </Link>
@@ -196,7 +196,7 @@ function Footer() {
           <p className="text-sm text-muted-foreground">
             © 2025 CSMC. All rights reserved.
           </p>
-          <nav className="flex gap-4 text-sm">
+          <nav aria-label="Legal" className="flex gap-4 text-sm">
             <Link href="/privacy-policy" className="transition-colors hover:text-primary">
               Privacy Policy
             </Link>

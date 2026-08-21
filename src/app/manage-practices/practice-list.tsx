@@ -81,7 +81,7 @@ export function PracticeList({ practices, fetchingPractices, onCreate, onView, o
                             minutes
                           </TableCell>
                           <TableCell>
-                            {new Date(practice.updatedAt).toLocaleDateString()}
+                            {new Date(practice.updatedAt).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                           </TableCell>
                           <TableCell className="flex gap-2">
                             <Button
