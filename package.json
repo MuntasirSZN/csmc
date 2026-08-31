@@ -83,6 +83,8 @@
     "typescript": "npm:typescript-native-bridge@6.0.3-bridge.15.tsgo.7.0.2"
   },
   "overrides": {
+    "esbuild": "^0.25.0",
+    "postcss": "^8.5.23",
     "typescript": "$typescript"
   },
   "simple-git-hooks": {
