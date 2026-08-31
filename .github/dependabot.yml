@@ -14,3 +14,7 @@ updates:
         update-types:
           - patch
           - minor
+    ignore:
+      - dependency-name: better-auth
+      - dependency-name: '@better-auth/passkey'
+      - dependency-name: '@better-auth/redis-storage'
