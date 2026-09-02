@@ -4,6 +4,8 @@
   "private": true,
   "packageManager": "bun@1.2.10",
   "scripts": {
+    "predev": "cn build --content \"src/{app,components,lib}/**/*.{ts,tsx}\" -o src/lib/cn-tables.ts",
+    "prebuild": "cn build --content \"src/{app,components,lib}/**/*.{ts,tsx}\" -o src/lib/cn-tables.ts",
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
@@ -31,7 +33,7 @@
     "better-auth": "^1.6.29",
     "better-auth-harmony": "^1.3.2",
     "class-variance-authority": "^0.7.1",
-    "cnfast": "^0.1.0",
+    "cn": "^0.2.4",
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",

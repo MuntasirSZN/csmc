@@ -2,7 +2,11 @@
  * Utilities used by app
  */
 
-export { cn } from 'cnfast'
+import { createCn } from 'cn/engine'
+
+import tables from './cn-tables'
+
+export const cn = createCn(tables)
 
 export function convertSecondsToTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)

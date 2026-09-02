@@ -16,5 +16,6 @@ export default antfu({
     'drizzle/**/*',
     'public/**/*',
     'src/components/ui/**/*',
+    'src/lib/cn-tables.ts',
   ],
 })
