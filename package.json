@@ -59,7 +59,7 @@
     "remark-math": "^6.0.0",
     "remark-rehype": "^11.1.2",
     "sonner": "^2.0.8",
-    "zod": "^4.6.4"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
