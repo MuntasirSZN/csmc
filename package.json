@@ -59,11 +59,11 @@
     "remark-math": "^6.0.0",
     "remark-rehype": "^11.1.2",
     "sonner": "^2.0.8",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
-    "@eslint-react/eslint-plugin": "^5.26.0",
+    "@eslint-react/eslint-plugin": "^5.26.1",
     "@serwist/turbopack": "^9.5.13",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
