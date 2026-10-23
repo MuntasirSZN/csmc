@@ -45,7 +45,7 @@
     "katex": "^0.19.0",
     "ldrs": "^1.1.9",
     "lucide-react": "^1.59.0",
-    "motion": "^14.3.0",
+    "motion": "^14.4.0",
     "next": "16.4.2",
     "next-themes": "^0.4.6",
     "nodemailer": "^10.1.7",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
-    "@eslint-react/eslint-plugin": "^5.28.1",
+    "@eslint-react/eslint-plugin": "^5.28.2",
     "@serwist/turbopack": "^9.5.13",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
