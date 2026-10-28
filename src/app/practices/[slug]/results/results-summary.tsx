@@ -64,10 +64,14 @@ export function ResultsSummary({ score, totalQuestions, timeSpent, percentageSco
                 : (
                     <XCircle className="mr-2 h-5 w-5 text-red-500" />
                   )}
-              {percentageScore >= 70 ? 'Passed' : 'Try Again'}
+              {percentageScore >= 70
+                ? 'Passed'
+                : 'Try Again'}
             </div>
             <p className="text-sm text-muted-foreground">
-              {percentageScore >= 70 ? 'Well done!' : 'Keep practicing'}
+              {percentageScore >= 70
+                ? 'Well done!'
+                : 'Keep practicing'}
             </p>
           </div>
         </div>

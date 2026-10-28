@@ -17,7 +17,9 @@ export async function safeFetch<T = any>(
   catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err : new Error(String(err)),
+      error: err instanceof Error
+        ? err
+        : new Error(String(err)),
     }
   }
 }

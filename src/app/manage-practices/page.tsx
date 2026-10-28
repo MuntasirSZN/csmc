@@ -25,9 +25,15 @@ export default function ManagePracticesPage() {
     timeLimit,
     questions: questions.map(q => ({
       content: q.content,
-      options: q.questionType === 'option' ? q.options?.filter(Boolean) : undefined,
-      correctAnswer: q.questionType === 'option' && q.answerType === 'single' ? q.correctAnswer : undefined,
-      correctAnswers: q.questionType === 'text' || q.answerType === 'multiple' ? q.correctAnswers : undefined,
+      options: q.questionType === 'option'
+        ? q.options?.filter(Boolean)
+        : undefined,
+      correctAnswer: q.questionType === 'option' && q.answerType === 'single'
+        ? q.correctAnswer
+        : undefined,
+      correctAnswers: q.questionType === 'text' || q.answerType === 'multiple'
+        ? q.correctAnswers
+        : undefined,
       explanation: q.explanation,
       questionType: q.questionType,
       answerType: q.answerType,
@@ -255,7 +261,9 @@ export default function ManagePracticesPage() {
           dispatchForm={dispatchForm}
           loading={loading}
           onBack={() => dispatchManage({ type: 'SET_MODE', mode: 'list' })}
-          onSubmit={mode === 'create' ? handleCreate : handleUpdate}
+          onSubmit={mode === 'create'
+            ? handleCreate
+            : handleUpdate}
         />
       )}
 

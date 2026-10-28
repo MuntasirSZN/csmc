@@ -10,7 +10,9 @@ import { practices } from '@/lib/schema'
 export async function GET() {
   try {
     const practicesList = await db.query.practices.findMany({
-      orderBy: [desc(practices.createdAt)],
+      orderBy: [
+        desc(practices.createdAt),
+      ],
     })
 
     return NextResponse.json(practicesList)

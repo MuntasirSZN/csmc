@@ -19,7 +19,9 @@ export async function GET(
       where: eq(practices.slug, slug),
       with: {
         questions: {
-          orderBy: (questions, { asc }) => [asc(questions.order)],
+          orderBy: (questions, { asc }) => [
+            asc(questions.order),
+          ],
           columns: {
             correctAnswer: false, // Don't send correct answers to client
             correctAnswers: false, // Don't send correct answers to client

@@ -39,7 +39,9 @@ export function PracticeForm({ mode, formState, dispatchForm, loading, onBack, o
           Back to List
         </Button>
         <h2 className="text-xl font-semibold">
-          {mode === 'create' ? 'Create New Practice' : 'Edit Practice'}
+          {mode === 'create'
+            ? 'Create New Practice'
+            : 'Edit Practice'}
         </h2>
       </div>
 
@@ -151,7 +153,9 @@ export function PracticeForm({ mode, formState, dispatchForm, loading, onBack, o
                 <Button
                   variant="outline"
                   size="sm"
-                  className={previewMode === 'details' ? 'bg-muted' : ''}
+                  className={previewMode === 'details'
+                    ? 'bg-muted'
+                    : ''}
                   onClick={() => dispatchForm({ type: 'SET_PREVIEW_MODE', mode: 'details' })}
                 >
                   Content
@@ -159,7 +163,9 @@ export function PracticeForm({ mode, formState, dispatchForm, loading, onBack, o
                 <Button
                   variant="outline"
                   size="sm"
-                  className={previewMode === 'questions' ? 'bg-muted' : ''}
+                  className={previewMode === 'questions'
+                    ? 'bg-muted'
+                    : ''}
                   onClick={() => dispatchForm({ type: 'SET_PREVIEW_MODE', mode: 'questions' })}
                 >
                   Questions
@@ -191,7 +197,9 @@ export function PracticeForm({ mode, formState, dispatchForm, loading, onBack, o
                             <span className="text-sm font-normal text-muted-foreground">
                               (
                               {question.questionType === 'option'
-                                ? `Multiple Choice (${question.answerType === 'single' ? 'Single Answer' : 'Multiple Answers'})`
+                                ? `Multiple Choice (${question.answerType === 'single'
+                                  ? 'Single Answer'
+                                  : 'Multiple Answers'})`
                                 : 'Text Input'}
                               )
                             </span>
@@ -297,7 +305,9 @@ export function PracticeForm({ mode, formState, dispatchForm, loading, onBack, o
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         {' '}
-                        {mode === 'create' ? 'Creating...' : 'Updating...'}
+                        {mode === 'create'
+                          ? 'Creating...'
+                          : 'Updating...'}
                       </>
                     )
                   : mode === 'create'

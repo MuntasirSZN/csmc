@@ -61,7 +61,9 @@ export const account = sqliteTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  table => [index('account_userId_idx').on(table.userId)],
+  table => [
+    index('account_userId_idx').on(table.userId),
+  ],
 )
 
 export const passkey = sqliteTable(
