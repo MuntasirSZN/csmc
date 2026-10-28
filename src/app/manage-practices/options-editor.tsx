@@ -41,7 +41,9 @@ export function OptionsEditor({
     if (currentQuestion.answerType === 'multiple' && currentQuestion.correctAnswers) {
       if (currentQuestion.correctAnswers.includes(oldValue)) {
         currentQuestion.correctAnswers = currentQuestion.correctAnswers.map(a =>
-          a === oldValue ? value : a,
+          a === oldValue
+            ? value
+            : a,
         )
       }
     }
@@ -54,7 +56,9 @@ export function OptionsEditor({
     const updatedQuestion = { ...updatedQuestions[questionIndex] }
 
     if (updatedQuestion.answerType === 'multiple') {
-      const correctAnswers = [...(updatedQuestion.correctAnswers || [])]
+      const correctAnswers = [
+        ...(updatedQuestion.correctAnswers || []),
+      ]
       const index = correctAnswers.indexOf(option)
 
       if (index >= 0) {

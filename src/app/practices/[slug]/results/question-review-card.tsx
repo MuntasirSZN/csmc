@@ -25,7 +25,9 @@ interface QuestionReviewCardProps {
 export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardProps) {
   const explanation = question.explanation
   const correctAnswersSet = new Set(question.correctAnswers ?? [])
-  const userAnswerSet = Array.isArray(userAnswer) ? new Set(userAnswer) : new Set<string>()
+  const userAnswerSet = Array.isArray(userAnswer)
+    ? new Set(userAnswer)
+    : new Set<string>()
 
   // Check if the user's answer is correct
   const isCorrectAnswer = (() => {
@@ -34,7 +36,11 @@ export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardP
         return userAnswer === question.correctAnswer
       }
       else {
-        const userAnswerArray: string[] = Array.isArray(userAnswer) ? userAnswer : (userAnswer ? [userAnswer] : [])
+        const userAnswerArray: string[] = Array.isArray(userAnswer)
+          ? userAnswer
+          : (userAnswer
+              ? [userAnswer]
+              : [])
         return (
           question.correctAnswers
           && userAnswerArray.length === question.correctAnswers.length
@@ -115,7 +121,9 @@ export function QuestionReviewCard({ question, userAnswer }: QuestionReviewCardP
           <div className="border p-4 rounded-md">
             <div className="text-sm font-medium mb-2">Your Answer:</div>
             <div className={`p-2 rounded-md ${isCorrectAnswer ? 'bg-green-50 border-green-200 dark:bg-green-900/20' : 'bg-red-50 border-red-200 dark:bg-red-900/20'}`}>
-              {userAnswer ? userAnswer.toString() : 'No answer provided'}
+              {userAnswer
+                ? userAnswer.toString()
+                : 'No answer provided'}
             </div>
             {!isCorrectAnswer && (
               <div className="mt-4">

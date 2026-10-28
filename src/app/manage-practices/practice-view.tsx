@@ -91,7 +91,9 @@ export function PracticeView({ practice, onBack, onEdit, onDelete }: PracticeVie
                           <span className="text-sm font-normal text-muted-foreground">
                             (
                             {question.questionType === 'option'
-                              ? `Multiple Choice (${question.answerType === 'single' ? 'Single Answer' : 'Multiple Answers'})`
+                              ? `Multiple Choice (${question.answerType === 'single'
+                                ? 'Single Answer'
+                                : 'Multiple Answers'})`
                               : 'Text Input'}
                             )
                           </span>

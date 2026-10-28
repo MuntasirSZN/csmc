@@ -47,7 +47,10 @@ export const metadata: Metadata = {
     'Aceternity UI',
     'Bun',
   ],
-  authors: [{ name: 'Muntasir', url: 'https://muntasirmahmud.me' }, { name: 'Kayef', url: 'https://github.com/Nowazish-Nur-Kayef' }],
+  authors: [
+    { name: 'Muntasir', url: 'https://muntasirmahmud.me' },
+    { name: 'Kayef', url: 'https://github.com/Nowazish-Nur-Kayef' },
+  ],
   creator: 'Muntasir Mahmud And Nowazish Nur Kayef',
   publisher: 'Muntasir Mahmud And Nowazish Nur Kayef',
   formatDetection: {

@@ -73,7 +73,9 @@ export async function PUT(
         else {
           // Multiple answers
           const correctAnswersSet = new Set(question.correctAnswers || [])
-          const userAnswersSet = new Set(Array.isArray(userAnswer) ? userAnswer : [userAnswer])
+          const userAnswersSet = new Set(Array.isArray(userAnswer)
+            ? userAnswer
+            : [userAnswer])
 
           // Check if sets are equal
           if (correctAnswersSet.size === userAnswersSet.size
