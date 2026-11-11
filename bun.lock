@@ -26,7 +26,7 @@
         "embla-carousel-autoplay": "^8.6.0",
         "embla-carousel-fade": "^8.6.0",
         "embla-carousel-react": "^8.6.0",
-        "eslint-plugin-react-you-might-not-need-an-effect": "^1.1.0",
+        "eslint-plugin-react-you-might-not-need-an-effect": "^1.2.0",
         "ioredis": "^6.0.0",
         "katex": "^0.19.1",
         "ldrs": "^1.1.9",
@@ -34,7 +34,7 @@
         "motion": "^14.10.1",
         "next": "16.4.5",
         "next-themes": "^0.4.6",
-        "nodemailer": "^10.3.1",
+        "nodemailer": "^10.4.0",
         "nuqs": "^2.10.2",
         "react": "19.3.1",
         "react-dom": "19.3.1",
@@ -1276,7 +1276,7 @@
 
     "eslint-plugin-react-x": ["eslint-plugin-react-x@5.28.8", "", { "dependencies": { "@eslint-react/ast": "5.28.8", "@eslint-react/core": "5.28.8", "@eslint-react/eslint": "5.28.8", "@eslint-react/jsx": "5.28.8", "@eslint-react/shared": "5.28.8", "@eslint-react/var": "5.28.8", "@typescript-eslint/scope-manager": "^8.72.0", "@typescript-eslint/types": "^8.72.0", "@typescript-eslint/typescript-estree": "^8.72.0", "@typescript-eslint/utils": "^8.72.0", "compare-versions": "^6.1.1", "string-ts": "^2.3.1", "ts-api-utils": "^2.5.0", "ts-pattern": "^5.9.2" }, "peerDependencies": { "eslint": "*", "typescript": "*" }, "optionalPeers": ["eslint"] }, "sha512-nkS3sYNh0MQL6dH8QYXf9QC+JA9SJvnSmgzsfaR1fPg9lfDJREi89K9q6QLsvRC22hgzRENoh+RiwgArVRKITw=="],
 
-    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@1.1.0", "", { "peerDependencies": { "eslint": ">=8.40.0" } }, "sha512-cufMxMG0clISeHDMbJpOVmUSk2Hc1wQyFTW5mHO/POvAJNN3gfSSinPjxHN66iqGpsmGzon7y4HsEvcXRkHD0w=="],
+    "eslint-plugin-react-you-might-not-need-an-effect": ["eslint-plugin-react-you-might-not-need-an-effect@1.2.0", "", { "peerDependencies": { "eslint": ">=8.40.0" } }, "sha512-ieSAjWnVO92c2kyDPYgGJplcX1Fs4dhCmbEVgM9PMJ3Kg0mE9BBacT7HQRyKqrhaxVyneiIlA8BsY7vzF+bQ4A=="],
 
     "eslint-plugin-regexp": ["eslint-plugin-regexp@3.3.1", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.2.0", "@eslint-community/regexpp": "^4.11.0", "comment-parser": "^1.4.0", "jsdoc-type-pratt-parser": "^9.0.0", "refa": "^0.12.1", "regexp-ast-analysis": "^0.7.1", "scslre": "^0.3.0" }, "peerDependencies": { "eslint": ">=9.38.0" } }, "sha512-58bGUci/AaWAo1ETj6Lsnmy6QXwnSyVONRA805828nnqp7vrTwdaQMc02vtowmYB3A5OB3SLr3r5HgmfxX4dLg=="],
 
@@ -1806,7 +1806,7 @@
 
     "node-releases": ["node-releases@2.0.54", "", {}, "sha512-YHs7BmmcsdAI5Ozuf8JZo6PT0mv2GIWC9vMfvUC3dp65M8hn7Ux8CPL+2oBI7juNuj9d0ndhTcznq2ODBps9cQ=="],
 
-    "nodemailer": ["nodemailer@10.3.1", "", {}, "sha512-uF0AFsJC07Y1vdW7p580DKAnh7rAO+4UPSSB3mDCPNDufoiaOebV6JmrzpxB14OjEEEiBsNdYoM2Y+fN8M7BBA=="],
+    "nodemailer": ["nodemailer@10.4.0", "", {}, "sha512-fyy6r4Q5euRJ9Qr3Cts9K7SZrfe9zmz9oLOYiAR02MEJRDRci+99y0OoYBYBgpLffOqkkjXrB/d26VfiMje/kA=="],
 
     "nopt": ["nopt@7.2.1", "", { "dependencies": { "abbrev": "^2.0.0" }, "bin": { "nopt": "bin/nopt.js" } }, "sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w=="],
 
